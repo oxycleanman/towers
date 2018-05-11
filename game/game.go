@@ -2,6 +2,7 @@ package game
 
 import (
 	"os"
+	"fmt"
 )
 
 type Game struct {
@@ -13,6 +14,7 @@ type Game struct {
 type Level struct {
 	Player *Player
 	Enemies []*Enemy
+	Bullets []*Bullet
 }
 
 type Direction float64
@@ -102,6 +104,26 @@ func (game *Game) handleInput(input *Input) {
 			game.Level.Player.Xvel++
 			game.Level.Player.Direction = DRight
 			break
+		case FirePrimary:
+			fmt.Println("Got Mouse Click")
+			bullet := NewBullet()
+			bullet.Direction = game.Level.Player.Direction
+			fmt.Println("Creating bullet, direction", bullet.Direction)
+			bullet.X = game.Level.Player.X
+			bullet.Y = game.Level.Player.Y
+			switch bullet.Direction {
+			case DUp:
+				bullet.Yvel = -50
+			case DDown:
+				bullet.Yvel = +50
+			case DLeft:
+				bullet.Xvel = -50
+			case DRight:
+				bullet.Xvel = +50
+			}
+			game.Level.Bullets = append(game.Level.Bullets, bullet)
+		default:
+			fmt.Println("Some input pressed")
 		}
 	} else {
 		switch input.Type {
@@ -125,6 +147,8 @@ func (game *Game) handleInput(input *Input) {
 				game.Level.Player.Xvel = 0
 			}
 			break
+		default:
+			fmt.Println("Some input not pressed")
 		}
 	}
 }

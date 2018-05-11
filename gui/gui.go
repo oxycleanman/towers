@@ -94,9 +94,28 @@ func (ui *ui) DrawPlayer(level *game.Level) {
 		panic(err)
 	}
 
+	player.W = int(w)
+	player.H = int(h)
 	player.Move()
 
-	ui.renderer.CopyEx(ui.textureMap["tank_huge"], nil, &sdl.Rect{int32(player.X), int32(player.Y), w, h}, float64(player.Direction), &sdl.Point{w/2, h/2}, 0)
+	ui.renderer.CopyEx(tex, nil, &sdl.Rect{int32(player.X), int32(player.Y), w, h}, float64(player.Direction), &sdl.Point{w/2, h/2}, 0)
+}
+
+func (ui *ui) DrawBullet(level *game.Level) {
+	tex := ui.textureMap["bulletRed1"]
+	_, _, w, h, err := tex.Query()
+	if err != nil {
+		panic(err)
+	}
+
+	bulletCenterX := w / 2
+	bulletCenterY := h / 2
+
+	for _, bullet := range level.Bullets {
+		fmt.Println("Found bullets, drawing them")
+		bullet.Update()
+		ui.renderer.CopyEx(tex, nil, &sdl.Rect{int32(bullet.X), int32(bullet.Y), w, h}, float64(bullet.Direction + 180.0), &sdl.Point{bulletCenterX, bulletCenterY}, 0)
+	}
 }
 
 func imgFileToTexture(renderer *sdl.Renderer, filename string) *sdl.Texture {
@@ -147,7 +166,9 @@ func determineInputType(event *sdl.KeyboardEvent) *game.Input {
 	case sdl.KEYDOWN:
 		input.Pressed = true
 		switch event.Keysym.Scancode {
-		case sdl.SCANCODE_UP:
+		case sdl.SCANCODE_W:
+			input.Type = game.Up
+		case sdl.SCANCODE_S:
 			input.Type = game.Down
 		case sdl.SCANCODE_A:
 			input.Type = game.Left
@@ -159,7 +180,9 @@ func determineInputType(event *sdl.KeyboardEvent) *game.Input {
 	case sdl.KEYUP:
 		input.Pressed = false
 		switch event.Keysym.Scancode {
-		case sdl.SCANCODE_UP:
+		case sdl.SCANCODE_W:
+			input.Type = game.Up
+		case sdl.SCANCODE_S:
 			input.Type = game.Down
 		case sdl.SCANCODE_A:
 			input.Type = game.Left
@@ -172,10 +195,29 @@ func determineInputType(event *sdl.KeyboardEvent) *game.Input {
 	return input
 }
 
+func determineMouseInput(event *sdl.MouseButtonEvent) *game.Input {
+	input := &game.Input{}
+	switch event.Type {
+	case sdl.MOUSEBUTTONDOWN:
+		fmt.Println("Mouse Key Pressed")
+		input.Pressed = true
+		switch event.Button {
+		case sdl.BUTTON_LEFT:
+			input.Type = game.FirePrimary
+		case sdl.BUTTON_RIGHT:
+			input.Type = game.FireSecondary
+		}
+	default:
+		fmt.Println("Some other key event on mouse")
+	}
+	return input
+}
+
 func (ui *ui) Draw(level *game.Level) {
 	ui.renderer.Clear()
 	ui.DrawGround()
 	ui.DrawPlayer(level)
+	ui.DrawBullet(level)
 	ui.renderer.Present()
 }
 
@@ -191,11 +233,14 @@ func (ui *ui) Run() {
 				return
 			case *sdl.KeyboardEvent:
 				ui.inputChan <- determineInputType(e)
+			case *sdl.MouseButtonEvent:
+				ui.inputChan <- determineMouseInput(e)
 			}
 		}
 
 		select {
 		case newLevel := <-ui.levelChan:
+			fmt.Println("Drawing New Level")
 			ui.Draw(newLevel)
 		default:
 		}
