@@ -2,7 +2,6 @@ package game
 
 import (
 	"os"
-	"fmt"
 )
 
 type Game struct {
@@ -60,6 +59,9 @@ type Velocity struct {
 type Entity struct {
 	Pos
 	Size
+	TextureName string
+	FireOffsetX int
+	FireOffsetY int
 }
 
 type Character struct {
@@ -76,12 +78,11 @@ type Tile struct {
 
 func NewGame() *Game {
 	game := &Game{}
-	game.InputChan = make(chan *Input)
-	game.LevelChan = make(chan *Level)
+	game.InputChan = make(chan *Input, 2)
+	game.LevelChan = make(chan *Level, 2)
 
 	game.Level = &Level{}
-	game.Level.Player = NewPlayer()
-
+	game.Level.Player = NewPlayer("tank_huge")
 	return game
 }
 
@@ -89,41 +90,37 @@ func (game *Game) handleInput(input *Input) {
 	if input.Pressed {
 		switch input.Type {
 		case Up:
-			game.Level.Player.Yvel--
+			if game.Level.Player.Yvel > -5 {
+				game.Level.Player.Yvel--
+			}
 			game.Level.Player.Direction = DUp
 			break
 		case Down:
-			game.Level.Player.Yvel++
+			if game.Level.Player.Yvel < 5 {
+				game.Level.Player.Yvel++
+			}
 			game.Level.Player.Direction = DDown
 			break
 		case Left:
-			game.Level.Player.Xvel--
+			if game.Level.Player.Xvel > -5 {
+				game.Level.Player.Xvel--
+			}
 			game.Level.Player.Direction = DLeft
 			break
 		case Right:
-			game.Level.Player.Xvel++
+			if game.Level.Player.Xvel < 5 {
+				game.Level.Player.Xvel++
+			}
 			game.Level.Player.Direction = DRight
 			break
-		case FirePrimary:
-			fmt.Println("Got Mouse Click")
-			bullet := NewBullet()
-			bullet.Direction = game.Level.Player.Direction
-			fmt.Println("Creating bullet, direction", bullet.Direction)
-			bullet.X = game.Level.Player.X
-			bullet.Y = game.Level.Player.Y
-			switch bullet.Direction {
-			case DUp:
-				bullet.Yvel = -50
-			case DDown:
-				bullet.Yvel = +50
-			case DLeft:
-				bullet.Xvel = -50
-			case DRight:
-				bullet.Xvel = +50
-			}
-			game.Level.Bullets = append(game.Level.Bullets, bullet)
+		//case FirePrimary:
+		//	game.leftButtonDown = true
+		//	break
+		//case FireSecondary:
+		//	game.rightButtonDown = true
+		//	break
 		default:
-			fmt.Println("Some input pressed")
+			//fmt.Println("Some input pressed")
 		}
 	} else {
 		switch input.Type {
@@ -147,8 +144,14 @@ func (game *Game) handleInput(input *Input) {
 				game.Level.Player.Xvel = 0
 			}
 			break
+		//case FirePrimary:
+		//	game.leftButtonDown = false
+		//	break
+		//case FireSecondary:
+		//	game.rightButtonDown = false
+		//	break
 		default:
-			fmt.Println("Some input not pressed")
+			//fmt.Println("Some input not pressed")
 		}
 	}
 }

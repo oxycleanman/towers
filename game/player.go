@@ -5,7 +5,7 @@ type Player struct {
 	Direction Direction
 }
 
-func NewPlayer() *Player {
+func NewPlayer(textureName string) *Player {
 	player := &Player{}
 	player.Direction = DDown
 	player.Hitpoints = 100
@@ -14,8 +14,11 @@ func NewPlayer() *Player {
 	player.Yvel = 0
 	player.X = 0
 	player.Y = 0
-	player.W = 64
-	player.H = 64
+	player.W = 0
+	player.H = 0
+	player.FireOffsetX = -50
+	player.FireOffsetY = -50
+	player.TextureName = textureName
 	return player
 }
 

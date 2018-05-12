@@ -3,10 +3,12 @@ package game
 type Bullet struct {
 	Entity
 	Velocity
+	IsNew bool
 }
 
-func NewBullet() *Bullet {
+func NewBullet(textureName string) *Bullet {
 	bullet := &Bullet{}
+	bullet.TextureName = textureName
 	bullet.Direction = DDown
 	bullet.X = 0
 	bullet.Y = 0

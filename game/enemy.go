@@ -12,8 +12,9 @@ const (
 	//XLarge
 )
 
-func NewEnemy(etype EnemyType) *Enemy {
+func NewEnemy(etype EnemyType, textureName string) *Enemy {
 	enemy := &Enemy{}
+	enemy.TextureName = textureName
 	switch etype {
 	case Basic:
 		enemy.Hitpoints = 10

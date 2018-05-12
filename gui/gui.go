@@ -16,8 +16,11 @@ type ui struct {
 	renderer  *sdl.Renderer
 	window    *sdl.Window
 	textureMap map[string]*sdl.Texture
+	keyboardState []uint8
 	inputChan chan *game.Input
 	levelChan chan *game.Level
+	leftButtonDown bool
+	bulletTimer int
 }
 
 func init() {
@@ -60,6 +63,7 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 }
 
 func (ui *ui) loadTextures(dirName string) {
+	fmt.Println("Loading Textures into Texture Map")
 	files, err := ioutil.ReadDir(dirName)
 	if err != nil {
 		panic(err)
@@ -88,7 +92,7 @@ func (ui *ui) DrawGround() {
 
 func (ui *ui) DrawPlayer(level *game.Level) {
 	player := level.Player
-	tex := ui.textureMap["tank_huge"]
+	tex := ui.textureMap[player.TextureName]
 	_, _, w, h, err := tex.Query()
 	if err != nil {
 		panic(err)
@@ -96,26 +100,80 @@ func (ui *ui) DrawPlayer(level *game.Level) {
 
 	player.W = int(w)
 	player.H = int(h)
-	player.Move()
+	player.FireOffsetX = player.W/2
+	player.FireOffsetY = player.H/2
 
-	ui.renderer.CopyEx(tex, nil, &sdl.Rect{int32(player.X), int32(player.Y), w, h}, float64(player.Direction), &sdl.Point{w/2, h/2}, 0)
+	player.Move()
+	ui.renderer.CopyEx(tex, nil, &sdl.Rect{int32(player.X), int32(player.Y), w, h}, float64(player.Direction), nil, 0)
 }
 
 func (ui *ui) DrawBullet(level *game.Level) {
-	tex := ui.textureMap["bulletRed1"]
-	_, _, w, h, err := tex.Query()
-	if err != nil {
-		panic(err)
+	if ui.leftButtonDown == true && ui.bulletTimer == 20 {
+		bullet := game.NewBullet("bulletDark1")
+		tex := ui.textureMap[bullet.TextureName]
+		_, _, w, h, err := tex.Query()
+		if err != nil {
+			panic(err)
+		}
+		bullet.IsNew = true
+		bullet.W = int(w)
+		bullet.H = int(h)
+		bullet.Direction = level.Player.Direction
+		bullet.X = (level.Player.X + level.Player.FireOffsetX) - bullet.W/2
+		bullet.Y = (level.Player.Y + level.Player.FireOffsetY) - bullet.H/2
+		switch bullet.Direction {
+		case game.DUp:
+			bullet.Yvel = -10
+		case game.DDown:
+			bullet.Yvel = 10
+		case game.DLeft:
+			bullet.Xvel = -10
+		case game.DRight:
+			bullet.Xvel = 10
+		}
+		level.Bullets = append(level.Bullets, bullet)
+		ui.bulletTimer = 0
+	} else if ui.leftButtonDown == true {
+		ui.bulletTimer++
 	}
 
-	bulletCenterX := w / 2
-	bulletCenterY := h / 2
-
-	for _, bullet := range level.Bullets {
-		fmt.Println("Found bullets, drawing them")
+	index := 0
+	for i, bullet := range level.Bullets {
+		tex := ui.textureMap[bullet.TextureName]
+		_, _, w, h, err := tex.Query()
+		if err != nil {
+			panic(err)
+		}
 		bullet.Update()
-		ui.renderer.CopyEx(tex, nil, &sdl.Rect{int32(bullet.X), int32(bullet.Y), w, h}, float64(bullet.Direction + 180.0), &sdl.Point{bulletCenterX, bulletCenterY}, 0)
+		if bullet.IsNew {
+			fireTex := ui.textureMap["explosionSmoke2"]
+			_, _, w, h, err := fireTex.Query()
+			if err != nil {
+				panic(err)
+			}
+			posX := level.Player.X + level.Player.FireOffsetX - int(w/4)
+			posY := level.Player.Y + level.Player.FireOffsetY - int(h/4)
+			ui.renderer.Copy(fireTex, nil, &sdl.Rect{int32(posX), int32(posY), w/2, h/2})
+		}
+		ui.renderer.CopyEx(tex, nil, &sdl.Rect{int32(bullet.X), int32(bullet.Y), w, h}, float64(bullet.Direction + 180.0), nil, sdl.FLIP_NONE)
+
+		// Keep bullets in the slice that aren't out of bounds (drop the bullets that go off screen so they aren't redrawn)
+		if !ui.checkBulletOutOfBounds(bullet.X, bullet.Y, w, h) {
+			if index != i {
+				bullet.IsNew = false
+				level.Bullets[index] = bullet
+			}
+			index++
+		}
 	}
+	level.Bullets = level.Bullets[:index]
+}
+
+func (ui *ui) checkBulletOutOfBounds(x, y int, w,h int32) bool {
+	if x > ui.WinWidth + int(w) || x < int(0 - w) || y > ui.WinHeight + int(h) || y < int(0 - h) {
+		return true
+	}
+	return false
 }
 
 func imgFileToTexture(renderer *sdl.Renderer, filename string) *sdl.Texture {
@@ -195,22 +253,28 @@ func determineInputType(event *sdl.KeyboardEvent) *game.Input {
 	return input
 }
 
-func determineMouseInput(event *sdl.MouseButtonEvent) *game.Input {
-	input := &game.Input{}
+func (ui *ui) determineMouseInput(event *sdl.MouseButtonEvent) {
 	switch event.Type {
 	case sdl.MOUSEBUTTONDOWN:
-		fmt.Println("Mouse Key Pressed")
-		input.Pressed = true
 		switch event.Button {
 		case sdl.BUTTON_LEFT:
-			input.Type = game.FirePrimary
+			ui.leftButtonDown = true
+		//case sdl.BUTTON_RIGHT:
+		//	input.Type = game.FireSecondary
+		}
+	case sdl.MOUSEBUTTONUP:
+		switch event.Button {
+		case sdl.BUTTON_LEFT:
+			ui.leftButtonDown = false
 		case sdl.BUTTON_RIGHT:
-			input.Type = game.FireSecondary
+			//input.Type = game.FireSecondary
 		}
 	default:
-		fmt.Println("Some other key event on mouse")
 	}
-	return input
+}
+
+func (ui *ui) UpdateEntitiesAndDraw(level *game.Level) {
+
 }
 
 func (ui *ui) Draw(level *game.Level) {
@@ -224,9 +288,19 @@ func (ui *ui) Draw(level *game.Level) {
 func (ui *ui) Run() {
 	var frameStart time.Time
 	var elapsedTime float64
+	var level *game.Level
 
 	for {
 		frameStart = time.Now()
+
+		select {
+		case newLevel := <-ui.levelChan:
+			level = newLevel
+			ui.Draw(level)
+		default:
+			ui.Draw(level)
+		}
+
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 			switch e := event.(type) {
 			case *sdl.QuitEvent:
@@ -234,15 +308,8 @@ func (ui *ui) Run() {
 			case *sdl.KeyboardEvent:
 				ui.inputChan <- determineInputType(e)
 			case *sdl.MouseButtonEvent:
-				ui.inputChan <- determineMouseInput(e)
+				ui.determineMouseInput(e)
 			}
-		}
-
-		select {
-		case newLevel := <-ui.levelChan:
-			fmt.Println("Drawing New Level")
-			ui.Draw(newLevel)
-		default:
 		}
 
 		elapsedTime = time.Since(frameStart).Seconds()
