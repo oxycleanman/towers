@@ -2,10 +2,80 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="aa15563f-51fd-49f7-9a92-a4a96db69d25" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke00.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke01.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke02.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke03.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke04.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke05.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke06.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke07.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke08.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke09.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke10.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke11.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke12.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke13.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke14.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke15.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke16.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke17.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke18.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke19.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke20.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke21.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke22.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke23.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/blackSmoke24.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/cross-02.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/explosion00.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/explosion01.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/explosion02.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/explosion03.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/explosion04.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/explosion05.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/explosion06.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/explosion07.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/explosion08.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/flash00.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/flash01.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/flash02.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/flash03.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/flash04.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/flash05.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/flash06.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/flash07.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/flash08.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff00.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff01.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff02.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff03.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff04.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff05.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff06.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff07.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff08.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff09.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff10.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff11.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff12.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff13.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff14.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff15.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff16.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff17.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff18.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff19.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff20.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff21.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff22.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff23.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/whitePuff24.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game/bullet.go" beforeDir="false" afterPath="$PROJECT_DIR$/game/bullet.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/bullet.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/enemy.go" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/game/game.go" beforeDir="false" afterPath="$PROJECT_DIR$/game/game.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game/player.go" beforeDir="false" afterPath="$PROJECT_DIR$/game/player.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/player.go" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/gui/gui.go" beforeDir="false" afterPath="$PROJECT_DIR$/gui/gui.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -20,38 +90,20 @@
       <file leaf-file-name="game.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/game/game.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="483">
-              <caret line="47" column="21" selection-start-line="47" selection-start-column="21" selection-end-line="47" selection-end-column="21" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="bullet.go" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/game/bullet.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="504">
-              <caret line="28" column="40" selection-start-line="28" selection-start-column="40" selection-end-line="28" selection-end-column="40" />
+            <state relative-caret-position="-2289">
+              <caret line="82" column="19" selection-start-line="82" selection-start-column="19" selection-end-line="82" selection-end-column="19" />
               <folding>
-                <element signature="e#14#39#0" expanded="true" />
+                <element signature="e#14#30#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="player.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/game/player.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="11" column="22" lean-forward="true" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="gui.go" pinned="false" current-in-tab="false">
+      <file leaf-file-name="gui.go" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/gui/gui.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="108" column="62" selection-start-line="108" selection-start-column="62" selection-end-line="108" selection-end-column="62" />
+            <state relative-caret-position="145">
+              <caret line="223" column="24" lean-forward="true" selection-start-line="223" selection-start-column="24" selection-end-line="223" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -61,15 +113,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="144">
               <caret line="11" column="7" selection-start-line="11" selection-start-column="7" selection-end-line="11" selection-end-column="7" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="enemy.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/game/enemy.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="54">
-              <caret line="3" column="13" selection-start-line="3" selection-start-column="13" selection-end-line="3" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -98,11 +141,11 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/main.go" />
-        <option value="$PROJECT_DIR$/game/enemy.go" />
         <option value="$PROJECT_DIR$/game/player.go" />
-        <option value="$PROJECT_DIR$/game/game.go" />
-        <option value="$PROJECT_DIR$/gui/gui.go" />
         <option value="$PROJECT_DIR$/game/bullet.go" />
+        <option value="$PROJECT_DIR$/game/enemy.go" />
+        <option value="$PROJECT_DIR$/gui/gui.go" />
+        <option value="$PROJECT_DIR$/game/game.go" />
       </list>
     </option>
   </component>
@@ -120,7 +163,9 @@
     <option name="width" value="1294" />
     <option name="height" value="1407" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -169,6 +214,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="DefaultGoTemplateProperty" value="Go File" />
+    <property name="GO_FMT" value="true" />
     <property name="configurable.Global.GOPATH.is.expanded" value="true" />
     <property name="configurable.Module.GOPATH.is.expanded" value="false" />
     <property name="configurable.Project.GOPATH.is.expanded" value="true" />
@@ -180,7 +226,11 @@
     <property name="settings.editor.selected.configurable" value="com.goide.configuration.GoLibrariesConfigurableProvider" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets\images" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets\images" />
       <recent name="$PROJECT_DIR$/gui/assets" />
     </key>
   </component>
@@ -213,16 +263,17 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1273" y="0" width="1294" height="1407" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25283632" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3282504" />
-      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="7" weight="0.3282504" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.3282504" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39967898" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -233,26 +284,6 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Find" order="1" />
     </layout>
-    <layout-to-restore>
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3282504" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24878444" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="10" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39967898" />
-      <window_info anchor="right" id="Database" order="3" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32905295" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -260,9 +291,16 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added Mouse Tracking" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Mouse Tracking" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="7" />
+      <option name="time" value="10" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="GoApplicationRunConfiguration">
@@ -275,6 +313,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1098">
           <caret line="63" column="16" selection-start-line="63" selection-start-column="16" selection-end-line="63" selection-end-column="16" />
+          <folding>
+            <element signature="e#14#30#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -282,9 +323,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
           <caret line="5" column="14" selection-start-line="5" selection-start-column="14" selection-end-line="5" selection-end-column="14" />
-          <folding>
-            <element signature="e#14#39#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -320,6 +358,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1926">
           <caret line="110" column="70" selection-start-line="110" selection-start-column="70" selection-end-line="110" selection-end-column="70" />
+          <folding>
+            <element signature="e#14#30#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -355,6 +396,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="12" selection-start-column="12" selection-end-column="12" />
+          <folding>
+            <element signature="e#14#30#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -407,13 +451,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/game/enemy.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="3" column="13" selection-start-line="3" selection-start-column="13" selection-end-line="3" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/Go/src/fmt/print.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="431">
@@ -442,12 +479,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/barrelBlack_side.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/game/player.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="11" column="22" lean-forward="true" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
+        <state relative-caret-position="36">
+          <caret line="2" selection-start-line="2" selection-end-line="2" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/bullet.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="2" selection-start-line="2" selection-end-line="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/enemy.go">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/tank_dark.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/tank_red.png">
+      <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$PROJECT_DIR$/main.go">
       <provider selected="true" editor-type-id="text-editor">
@@ -456,27 +512,35 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gui/gui.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="108" column="62" selection-start-line="108" selection-start-column="62" selection-end-line="108" selection-end-column="62" />
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/explosionSmoke5.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/tank_bigRed.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/tankBody_blue_outline.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/tankBody_dark_outline.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/tankDark_barrel2.png">
+      <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$PROJECT_DIR$/game/game.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="483">
-          <caret line="47" column="21" selection-start-line="47" selection-start-column="21" selection-end-line="47" selection-end-column="21" />
+        <state relative-caret-position="-2289">
+          <caret line="82" column="19" selection-start-line="82" selection-start-column="19" selection-end-line="82" selection-end-column="19" />
+          <folding>
+            <element signature="e#14#30#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/game/bullet.go">
+    <entry file="file://$PROJECT_DIR$/gui/gui.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="504">
-          <caret line="28" column="40" selection-start-line="28" selection-start-column="40" selection-end-line="28" selection-end-column="40" />
-          <folding>
-            <element signature="e#14#39#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="145">
+          <caret line="223" column="24" lean-forward="true" selection-start-line="223" selection-start-column="24" selection-end-line="223" selection-end-column="24" />
         </state>
       </provider>
     </entry>
