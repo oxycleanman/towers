@@ -7,24 +7,17 @@ import (
 type Game struct {
 	InputChan chan *Input
 	LevelChan chan *Level
-	Level *Level
+	Level     *Level
 }
 
 type Level struct {
-	Player *Player
+	Player  *Player
 	Enemies []*Enemy
 	Bullets []*Bullet
 }
 
-type Direction float64
-const (
-	DDown Direction = 0.0
-	DUp Direction = 180.0
-	DLeft Direction = 90.0
-	DRight Direction = 270.0
-)
-
 type InputType int
+
 const (
 	None InputType = iota
 	Up
@@ -39,7 +32,7 @@ const (
 
 type Input struct {
 	Pos
-	Type InputType
+	Type    InputType
 	Pressed bool
 }
 
@@ -53,7 +46,7 @@ type Size struct {
 
 type Velocity struct {
 	Xvel, Yvel int
-	Direction Direction
+	Direction  float64
 }
 
 type Entity struct {
@@ -68,7 +61,7 @@ type Character struct {
 	Entity
 	Velocity
 	Hitpoints int
-	Speed float64
+	Speed     float64
 }
 
 type Tile struct {
@@ -93,25 +86,25 @@ func (game *Game) handleInput(input *Input) {
 			if game.Level.Player.Yvel > -5 {
 				game.Level.Player.Yvel--
 			}
-			game.Level.Player.Direction = DUp
+			//game.Level.Player.Direction = DUp
 			break
 		case Down:
 			if game.Level.Player.Yvel < 5 {
 				game.Level.Player.Yvel++
 			}
-			game.Level.Player.Direction = DDown
+			//game.Level.Player.Direction = DDown
 			break
 		case Left:
 			if game.Level.Player.Xvel > -5 {
 				game.Level.Player.Xvel--
 			}
-			game.Level.Player.Direction = DLeft
+			//game.Level.Player.Direction = DLeft
 			break
 		case Right:
 			if game.Level.Player.Xvel < 5 {
 				game.Level.Player.Xvel++
 			}
-			game.Level.Player.Direction = DRight
+			//game.Level.Player.Direction = DRight
 			break
 		//case FirePrimary:
 		//	game.leftButtonDown = true

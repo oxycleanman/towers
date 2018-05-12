@@ -2,12 +2,12 @@ package game
 
 type Player struct {
 	Character
-	Direction Direction
+	Direction float64
 }
 
 func NewPlayer(textureName string) *Player {
 	player := &Player{}
-	player.Direction = DDown
+	player.Direction = 0.0
 	player.Hitpoints = 100
 	player.Speed = 1.0
 	player.Xvel = 0
