@@ -144,12 +144,12 @@ func (ui *ui) initEnemy(level *game.Level) *game.Enemy {
 
 func (ui *ui) DrawGround() {
 	w, h := ui.window.GetSize()
-	numTilesX := w / 128
-	numTilesY := h / 128
+	numTilesX := w / (128 / 2)
+	numTilesY := h / (128 / 2)
 
 	for y := int32(0); y <= numTilesY; y++ {
 		for x := int32(0); x < numTilesX; x++ {
-			destRect := &sdl.Rect{x * 128, y * 128, 128, 128}
+			destRect := &sdl.Rect{x * 128 / 2, y * 128 / 2, 128 / 2, 128 / 2}
 			ui.renderer.Copy(ui.textureMap["tileGrass1"], nil, destRect)
 		}
 	}
@@ -258,7 +258,7 @@ func (ui *ui) DrawBullet(level *game.Level) {
 				bullet.DestroyAnimationPlayed = true
 				bullet.ExplodeCounter = 0
 			}
-			ui.renderer.CopyEx(tex, nil, &sdl.Rect{int32(bullet.X), int32(bullet.Y), int32(bullet.W), int32(bullet.H)}, float64(bullet.Direction+180.0), nil, sdl.FLIP_NONE)
+			ui.renderer.CopyEx(tex, nil, &sdl.Rect{int32(bullet.X + bullet.W/2), int32(bullet.Y + bullet.H/2), int32(bullet.W), int32(bullet.H)}, float64(bullet.Direction+180.0), nil, sdl.FLIP_NONE)
 		}
 		// Keep bullets in the slice that aren't out of bounds (drop the bullets that go off screen so they aren't redrawn)
 		if !ui.checkBulletOutOfBounds(bullet.X, bullet.Y, int32(bullet.W), int32(bullet.H)) && !bullet.DestroyAnimationPlayed {
@@ -271,7 +271,7 @@ func (ui *ui) DrawBullet(level *game.Level) {
 	level.Bullets = level.Bullets[:index]
 }
 
-func (ui *ui) checkCollisions(level *game.Level) {
+func (ui *ui) checkBulletCollisions(level *game.Level) {
 	for _, bullet := range level.Bullets {
 		for _, enemy := range level.Enemies {
 			if game.CheckCollision(enemy, bullet) && !bullet.IsColliding && !enemy.IsDestroyed {
@@ -393,7 +393,7 @@ func (ui *ui) determineMouseButtonInput(event *sdl.MouseButtonEvent) {
 func (ui *ui) Draw(level *game.Level) {
 	ui.renderer.Clear()
 	ui.DrawGround()
-	ui.checkCollisions(level)
+	ui.checkBulletCollisions(level)
 	ui.DrawPlayer(level)
 	ui.DrawEnemy(level)
 	ui.DrawBullet(level)

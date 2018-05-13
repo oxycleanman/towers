@@ -137,8 +137,8 @@ func (bullet *Bullet) Update() {
 	if !bullet.IsColliding {
 		bulletDirRad := DegreeToRad(bullet.Direction + 90)
 		nextX, nextY := findNextPointInTravel(bullet.Speed, bulletDirRad)
-		bullet.X += int(nextX)
-		bullet.Y += int(nextY)
+		bullet.X += nextX
+		bullet.Y += nextY
 	}
 }
 
@@ -159,7 +159,7 @@ func NewGame() *Game {
 func findNextPointInTravel(dist, rotationRad float64) (int, int) {
 	nextX := dist * math.Cos(rotationRad)
 	nextY := dist * math.Sin(rotationRad)
-	return int(nextX), int(nextY)
+	return int(math.Round(nextX)), int(math.Round(nextY))
 }
 
 func (game *Game) handleInput(input *Input) {
@@ -223,7 +223,7 @@ func (game *Game) handleInput(input *Input) {
 //func DetectCollision()
 
 func FindDegreeRotation(originY, originX, pointY, pointX int32) float64 {
-	return math.Atan2(float64(pointY-originY), float64(pointX-originX)) * (180 / math.Pi)
+	return math.Atan2(float64(pointY-originY), float64(pointX-originX)) * (180.0 / math.Pi)
 }
 
 func DegreeToRad(degree float64) float64 {
