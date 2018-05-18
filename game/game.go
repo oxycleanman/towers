@@ -1,15 +1,17 @@
 package game
 
 import (
+	"fmt"
 	"github.com/veandco/go-sdl2/sdl"
 	"math"
 	"os"
 )
 
 type Game struct {
-	InputChan chan *Input
-	LevelChan chan *Level
-	Level     *Level
+	InputChan          chan *Input
+	LevelChan          chan *Level
+	Level              *Level
+	primaryFirePressed bool
 }
 
 type Level struct {
@@ -86,6 +88,7 @@ type Enemy struct {
 type Bullet struct {
 	Entity
 	Velocity
+	FiredByEnemy           bool
 	Damage                 int
 	FlashCounter           int
 	ExplodeCounter         int
@@ -133,12 +136,87 @@ func CheckCollision(obj1, obj2 Dimensional) bool {
 	return false
 }
 
+func (level *Level) initBullet() *Bullet {
+	bullet := &Bullet{}
+	bullet.TextureName = "bulletDark1"
+	bullet.Speed = 10.0
+	//bullet.Texture = tex
+	bullet.FlashCounter = 0
+	bullet.FireAnimationPlayed = false
+	bullet.DestroyAnimationPlayed = false
+	bullet.Damage = 50
+	bullet.IsColliding = false
+	//bullet.W = int(w)
+	//bullet.H = int(h)
+	//bullet.Direction = level.Player.Direction
+	//bullet.X = (level.Player.X + level.Player.FireOffsetX) - bullet.W/2
+	//bullet.Y = (level.Player.Y + level.Player.FireOffsetY) - bullet.H/2
+	return bullet
+}
+
+func (level *Level) initPlayer() {
+	player := &Player{}
+	player.TextureName = "tank_huge"
+	player.IsDestroyed = false
+	player.Hitpoints = 100
+	player.Speed = 1.0
+	//player.W = int(w)
+	//player.H = int(h)
+	//player.X = ui.WinWidth/2 - player.W/2
+	//player.Y = ui.WinHeight/2 - player.H/2
+
+	//player.Texture = tex
+	level.Player = player
+}
+
+func (level *Level) initEnemy() *Enemy {
+	enemy := &Enemy{}
+	enemy.TextureName = "tank_dark"
+	enemy.IsDestroyed = false
+	enemy.Hitpoints = 50
+	enemy.Speed = 1.0
+	//enemy.W = int(w)
+	//enemy.H = int(h)
+	//enemy.X = 300 - enemy.W/2
+	//enemy.Y = 300 - enemy.H/2
+	//enemy.FireOffsetX = enemy.W / 2
+	//enemy.FireOffsetY = enemy.H / 2
+	//enemy.Texture = tex
+	return enemy
+}
+
 func (bullet *Bullet) Update() {
 	if !bullet.IsColliding {
 		bulletDirRad := DegreeToRad(bullet.Direction + 90)
 		nextX, nextY := findNextPointInTravel(bullet.Speed, bulletDirRad)
 		bullet.X += nextX
 		bullet.Y += nextY
+	}
+}
+
+func (level *Level) checkBulletCollisions() {
+	for _, bullet := range level.Bullets {
+		for _, enemy := range level.Enemies {
+			if CheckCollision(enemy, bullet) && !bullet.IsColliding && !enemy.IsDestroyed {
+				bullet.IsColliding = true
+				enemy.Hitpoints -= bullet.Damage
+				if enemy.Hitpoints <= 0 {
+					enemy.IsDestroyed = true
+				}
+			}
+			if CheckCollision(level.Player, bullet) && !bullet.IsColliding && bullet.FiredByEnemy {
+				bullet.IsColliding = true
+				level.Player.Hitpoints -= bullet.Damage
+			}
+		}
+	}
+}
+
+func (enemy *Enemy) Update(level *Level) {
+	if enemy.FireCounter == 30 {
+
+	} else {
+		enemy.FireCounter++
 	}
 }
 
@@ -153,6 +231,8 @@ func NewGame() *Game {
 	game.LevelChan = make(chan *Level, 2)
 
 	game.Level = &Level{}
+	game.Level.initPlayer()
+
 	return game
 }
 
@@ -189,6 +269,9 @@ func (game *Game) handleInput(input *Input) {
 			}
 			//game.Level.Player.Direction = DRight
 			break
+		case FirePrimary:
+			fmt.Println("Holding Primary Fire")
+			game.primaryFirePressed = true
 		default:
 			//fmt.Println("Some input pressed")
 		}
@@ -214,13 +297,14 @@ func (game *Game) handleInput(input *Input) {
 				game.Level.Player.Xvel = 0
 			}
 			break
+		case FirePrimary:
+			fmt.Println("Releasing Primary Fire")
+			game.primaryFirePressed = false
 		default:
 			//fmt.Println("Some input not pressed")
 		}
 	}
 }
-
-//func DetectCollision()
 
 func FindDegreeRotation(originY, originX, pointY, pointX int32) float64 {
 	return math.Atan2(float64(pointY-originY), float64(pointX-originX)) * (180.0 / math.Pi)
@@ -234,12 +318,21 @@ func (game *Game) Run() {
 	game.LevelChan <- game.Level
 
 	for input := range game.InputChan {
+		if input.Type == None {
+			if game.primaryFirePressed {
+				game.Level.Bullets = append(game.Level.Bullets, game.Level.initBullet())
+			}
+			continue
+		}
 		if input.Type == Quit {
 			close(game.LevelChan)
 			close(game.InputChan)
 			os.Exit(0)
 		}
 		game.handleInput(input)
+		if game.primaryFirePressed {
+			game.Level.Bullets = append(game.Level.Bullets, game.Level.initBullet())
+		}
 
 		game.LevelChan <- game.Level
 	}

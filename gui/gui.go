@@ -11,19 +11,17 @@ import (
 )
 
 type ui struct {
-	WinWidth       int
-	WinHeight      int
-	renderer       *sdl.Renderer
-	window         *sdl.Window
-	textureMap     map[string]*sdl.Texture
-	keyboardState  []uint8
-	inputChan      chan *game.Input
-	levelChan      chan *game.Level
-	leftButtonDown bool
-	bulletTimer    int
-	currentMouseX  int32
-	currentMouseY  int32
-	playerInit     bool
+	WinWidth      int
+	WinHeight     int
+	renderer      *sdl.Renderer
+	window        *sdl.Window
+	textureMap    map[string]*sdl.Texture
+	keyboardState []uint8
+	inputChan     chan *game.Input
+	levelChan     chan *game.Level
+	currentMouseX int32
+	currentMouseY int32
+	playerInit    bool
 }
 
 func init() {
@@ -77,71 +75,7 @@ func (ui *ui) loadTextures(dirName string) {
 	}
 }
 
-func (ui *ui) initBullet(level *game.Level) *game.Bullet {
-	bullet := &game.Bullet{}
-	bullet.TextureName = "bulletDark1"
-	tex := ui.textureMap[bullet.TextureName]
-	_, _, w, h, err := tex.Query()
-	if err != nil {
-		panic(err)
-	}
-	bullet.Speed = 10.0
-	bullet.Texture = tex
-	bullet.FlashCounter = 0
-	bullet.FireAnimationPlayed = false
-	bullet.DestroyAnimationPlayed = false
-	bullet.Damage = 50
-	bullet.W = int(w)
-	bullet.H = int(h)
-	bullet.Direction = level.Player.Direction
-	bullet.X = (level.Player.X + level.Player.FireOffsetX) - bullet.W/2
-	bullet.Y = (level.Player.Y + level.Player.FireOffsetY) - bullet.H/2
-	return bullet
-}
-
-func (ui *ui) initPlayer(level *game.Level) {
-	player := &game.Player{}
-	player.TextureName = "tank_huge"
-	tex := ui.textureMap[player.TextureName]
-	_, _, w, h, err := tex.Query()
-	if err != nil {
-		panic(err)
-	}
-	player.IsDestroyed = false
-	player.Hitpoints = 100
-	player.Speed = 1.0
-	player.W = int(w)
-	player.H = int(h)
-	player.X = ui.WinWidth/2 - player.W/2
-	player.Y = ui.WinHeight/2 - player.H/2
-	player.FireOffsetX = player.W / 2
-	player.FireOffsetY = player.H / 2
-	player.Texture = tex
-	level.Player = player
-	ui.playerInit = true
-}
-
-func (ui *ui) initEnemy(level *game.Level) *game.Enemy {
-	enemy := &game.Enemy{}
-	enemy.TextureName = "tank_dark"
-	tex := ui.textureMap[enemy.TextureName]
-	_, _, w, h, err := tex.Query()
-	if err != nil {
-		panic(err)
-	}
-	enemy.IsDestroyed = false
-	enemy.Hitpoints = 50
-	enemy.Speed = 1.0
-	enemy.W = int(w)
-	enemy.H = int(h)
-	enemy.X = 300 - enemy.W/2
-	enemy.Y = 300 - enemy.H/2
-	enemy.FireOffsetX = enemy.W / 2
-	enemy.FireOffsetY = enemy.H / 2
-	enemy.Texture = tex
-	return enemy
-}
-
+// TODO: Need to rework this to draw a meaningful map
 func (ui *ui) DrawGround() {
 	w, h := ui.window.GetSize()
 	numTilesX := w / (128 / 2)
@@ -165,6 +99,20 @@ func (ui *ui) DrawCursor() {
 }
 
 func (ui *ui) DrawPlayer(level *game.Level) {
+	if level.Player.Texture == nil {
+		tex := ui.textureMap[level.Player.TextureName]
+		level.Player.Texture = tex
+		_, _, w, h, err := tex.Query()
+		if err != nil {
+			panic(err)
+		}
+		level.Player.W = int(w)
+		level.Player.H = int(h)
+		level.Player.X = ui.WinWidth/2 - level.Player.W/2
+		level.Player.Y = ui.WinHeight/2 - level.Player.H/2
+		level.Player.FireOffsetX = level.Player.W / 2
+		level.Player.FireOffsetY = level.Player.H / 2
+	}
 	player := level.Player
 	tex := player.Texture
 	player.Direction = game.FindDegreeRotation(int32(player.Y+player.H/2), int32(player.X+player.W/2), ui.currentMouseY, ui.currentMouseX) - 90
@@ -216,16 +164,21 @@ func (ui *ui) DrawExplosions(level *game.Level) {
 }
 
 func (ui *ui) DrawBullet(level *game.Level) {
-	if ui.leftButtonDown == true && ui.bulletTimer == 10 {
-		bullet := ui.initBullet(level)
-		level.Bullets = append(level.Bullets, bullet)
-		ui.bulletTimer = 0
-	} else if ui.leftButtonDown == true {
-		ui.bulletTimer++
-	}
-
 	index := 0
 	for i, bullet := range level.Bullets {
+		if bullet.Texture == nil {
+			tex := ui.textureMap[bullet.TextureName]
+			bullet.Texture = tex
+			_, _, w, h, err := tex.Query()
+			if err != nil {
+				panic(err)
+			}
+			bullet.W = int(w)
+			bullet.H = int(h)
+			bullet.Direction = level.Player.Direction
+			bullet.X = (level.Player.X + level.Player.FireOffsetX) - bullet.W/2
+			bullet.Y = (level.Player.Y + level.Player.FireOffsetY) - bullet.H/2
+		}
 		tex := bullet.Texture
 		bullet.Update()
 		if bullet.FlashCounter < 5 && !bullet.FireAnimationPlayed {
@@ -269,20 +222,6 @@ func (ui *ui) DrawBullet(level *game.Level) {
 		}
 	}
 	level.Bullets = level.Bullets[:index]
-}
-
-func (ui *ui) checkBulletCollisions(level *game.Level) {
-	for _, bullet := range level.Bullets {
-		for _, enemy := range level.Enemies {
-			if game.CheckCollision(enemy, bullet) && !bullet.IsColliding && !enemy.IsDestroyed {
-				bullet.IsColliding = true
-				enemy.Hitpoints -= bullet.Damage
-				if enemy.Hitpoints <= 0 {
-					enemy.IsDestroyed = true
-				}
-			}
-		}
-	}
 }
 
 func (ui *ui) checkBulletOutOfBounds(x, y int, w, h int32) bool {
@@ -369,31 +308,36 @@ func determineInputType(event *sdl.KeyboardEvent) *game.Input {
 	return input
 }
 
-func (ui *ui) determineMouseButtonInput(event *sdl.MouseButtonEvent) {
+func (ui *ui) determineMouseButtonInput(event *sdl.MouseButtonEvent) *game.Input {
+	input := &game.Input{}
 	switch event.Type {
 	case sdl.MOUSEBUTTONDOWN:
 		switch event.Button {
 		case sdl.BUTTON_LEFT:
-			ui.leftButtonDown = true
+			input.Type = game.FirePrimary
+			input.Pressed = true
 		case sdl.BUTTON_RIGHT:
-			//	input.Type = game.FireSecondary
+			input.Type = game.FireSecondary
+			input.Pressed = true
 		}
 	case sdl.MOUSEBUTTONUP:
 		switch event.Button {
 		case sdl.BUTTON_LEFT:
-			ui.leftButtonDown = false
+			input.Type = game.FirePrimary
+			input.Pressed = false
 		case sdl.BUTTON_RIGHT:
-			//input.Type = game.FireSecondary
+			input.Type = game.FireSecondary
+			input.Pressed = false
 		}
 	default:
 	}
+	return input
 }
 
 // Remember to always draw from the ground up
 func (ui *ui) Draw(level *game.Level) {
 	ui.renderer.Clear()
 	ui.DrawGround()
-	ui.checkBulletCollisions(level)
 	ui.DrawPlayer(level)
 	ui.DrawEnemy(level)
 	ui.DrawBullet(level)
@@ -415,9 +359,6 @@ func (ui *ui) Run() {
 		select {
 		case newLevel := <-ui.levelChan:
 			level = newLevel
-			if !ui.playerInit {
-				ui.initPlayer(level)
-			}
 			ui.Draw(level)
 		default:
 			ui.Draw(level)
@@ -430,14 +371,13 @@ func (ui *ui) Run() {
 			case *sdl.KeyboardEvent:
 				input := determineInputType(e)
 				ui.inputChan <- input
-				if input.Type == game.Pause {
-					level.Enemies = append(level.Enemies, ui.initEnemy(level))
-				}
 			case *sdl.MouseButtonEvent:
-				ui.determineMouseButtonInput(e)
+				ui.inputChan <- ui.determineMouseButtonInput(e)
 			case *sdl.MouseMotionEvent:
 				ui.currentMouseX = e.X
 				ui.currentMouseY = e.Y
+			default:
+				ui.inputChan <- &game.Input{Type: game.None}
 			}
 		}
 
