@@ -1,6 +1,7 @@
 package gui
 
 import (
+	"fmt"
 	"github.com/oxycleanman/towers/game"
 	"github.com/veandco/go-sdl2/sdl"
 	"image/png"
@@ -99,6 +100,9 @@ func (ui *ui) DrawCursor() {
 }
 
 func (ui *ui) DrawPlayer(level *game.Level) {
+	if level.Player.IsFiring {
+		level.Player.FireRateTimer++
+	}
 	if level.Player.Texture == nil {
 		tex := ui.textureMap[level.Player.TextureName]
 		level.Player.Texture = tex
@@ -110,8 +114,8 @@ func (ui *ui) DrawPlayer(level *game.Level) {
 		level.Player.H = int(h)
 		level.Player.X = ui.WinWidth/2 - level.Player.W/2
 		level.Player.Y = ui.WinHeight/2 - level.Player.H/2
-		level.Player.FireOffsetX = level.Player.W / 2
-		level.Player.FireOffsetY = level.Player.H / 2
+		level.Player.FireOffsetX = 0
+		level.Player.FireOffsetY = 0
 	}
 	player := level.Player
 	tex := player.Texture
@@ -121,11 +125,34 @@ func (ui *ui) DrawPlayer(level *game.Level) {
 
 }
 
+func (ui *ui) SpawnEnemies(level *game.Level) {
+	if level.EnemySpawnTimer >= 100 && len(level.Enemies) < 1 {
+		level.Enemies = append(level.Enemies, level.InitEnemy())
+		level.EnemySpawnTimer = 0
+	} else {
+		level.EnemySpawnTimer++
+	}
+}
+
 func (ui *ui) DrawEnemy(level *game.Level) {
 	player := level.Player
 	for _, enemy := range level.Enemies {
+		if enemy.Texture == nil {
+			tex := ui.textureMap[enemy.TextureName]
+			enemy.Texture = tex
+			_, _, w, h, err := tex.Query()
+			if err != nil {
+				panic(err)
+			}
+			enemy.W = int(w)
+			enemy.H = int(h)
+			enemy.FireOffsetX = int(w / 2)
+			enemy.FireOffsetY = 0
+		}
 		if !enemy.IsDestroyed {
-			enemy.Direction = game.FindDegreeRotation(int32(enemy.Y+enemy.H/2), int32(enemy.X+enemy.W/2), int32(player.Y+player.H/2), int32(player.X+player.W/2)) - 90
+			//enemy.Update(level)
+			ui.CheckFiring(level, enemy)
+			enemy.Direction = game.FindDegreeRotation(int32(enemy.Y), int32(enemy.X), int32(player.Y), int32(player.X)) - 90
 			ui.renderer.CopyEx(enemy.Texture, nil, &sdl.Rect{int32(enemy.X), int32(enemy.Y), int32(enemy.W), int32(enemy.H)}, float64(enemy.Direction), nil, sdl.FLIP_NONE)
 		}
 	}
@@ -163,6 +190,19 @@ func (ui *ui) DrawExplosions(level *game.Level) {
 	level.Enemies = append(level.Enemies[:index])
 }
 
+func (ui *ui) CheckFiring(level *game.Level, entity game.Shooter) {
+	timer, reset, isPlayer := entity.GetFireSettings()
+	if timer >= reset {
+		bullet := level.InitBullet()
+		bullet.FiredByEnemy = !isPlayer
+		bullet.FiredBy = entity.GetSelf()
+		level.Bullets = append(level.Bullets, bullet)
+		entity.SetFireTimer(0)
+	} else if !isPlayer {
+		entity.SetFireTimer(timer + 1)
+	}
+}
+
 func (ui *ui) DrawBullet(level *game.Level) {
 	index := 0
 	for i, bullet := range level.Bullets {
@@ -175,20 +215,22 @@ func (ui *ui) DrawBullet(level *game.Level) {
 			}
 			bullet.W = int(w)
 			bullet.H = int(h)
-			bullet.Direction = level.Player.Direction
-			bullet.X = (level.Player.X + level.Player.FireOffsetX) - bullet.W/2
-			bullet.Y = (level.Player.Y + level.Player.FireOffsetY) - bullet.H/2
+			bullet.Direction = bullet.FiredBy.Direction
+			bullet.X = (bullet.FiredBy.X + bullet.FiredBy.W/2) - bullet.W/2 + bullet.FiredBy.FireOffsetX
+			bullet.Y = (bullet.FiredBy.Y + bullet.FiredBy.H/2) - bullet.H/2 + bullet.FiredBy.FireOffsetY
 		}
 		tex := bullet.Texture
 		bullet.Update()
+
+		// Fire Animation
 		if bullet.FlashCounter < 5 && !bullet.FireAnimationPlayed {
 			fireTex := ui.textureMap["explosionSmoke2"]
 			_, _, w, h, err := fireTex.Query()
 			if err != nil {
 				panic(err)
 			}
-			posX := level.Player.X + level.Player.FireOffsetX - int(w/4)
-			posY := level.Player.Y + level.Player.FireOffsetY - int(h/4)
+			posX := (bullet.FiredBy.X + bullet.FiredBy.W/2) - int(w/4) + bullet.FiredBy.FireOffsetX
+			posY := (bullet.FiredBy.Y + bullet.FiredBy.H/2) - int(h/4) + bullet.FiredBy.FireOffsetY
 			ui.renderer.CopyEx(fireTex, nil, &sdl.Rect{int32(posX), int32(posY), w / 2, h / 2}, float64(bullet.Direction), nil, sdl.FLIP_NONE)
 			bullet.FlashCounter++
 		}
@@ -196,6 +238,8 @@ func (ui *ui) DrawBullet(level *game.Level) {
 			bullet.FlashCounter = 0
 			bullet.FireAnimationPlayed = true
 		}
+
+		// Collision Animation && Normal Travel
 		if bullet.ExplodeCounter < 5 && bullet.IsColliding && !bullet.DestroyAnimationPlayed {
 			fireTex := ui.textureMap["explosion2"]
 			_, _, w, h, err := fireTex.Query()
@@ -211,7 +255,8 @@ func (ui *ui) DrawBullet(level *game.Level) {
 				bullet.DestroyAnimationPlayed = true
 				bullet.ExplodeCounter = 0
 			}
-			ui.renderer.CopyEx(tex, nil, &sdl.Rect{int32(bullet.X + bullet.W/2), int32(bullet.Y + bullet.H/2), int32(bullet.W), int32(bullet.H)}, float64(bullet.Direction+180.0), nil, sdl.FLIP_NONE)
+			point := &sdl.Point{int32(bullet.FiredBy.X), int32(bullet.FiredBy.Y)}
+			ui.renderer.CopyEx(tex, nil, &sdl.Rect{int32(bullet.X), int32(bullet.Y), int32(bullet.W), int32(bullet.H)}, float64(bullet.Direction+180.0), point, sdl.FLIP_NONE)
 		}
 		// Keep bullets in the slice that aren't out of bounds (drop the bullets that go off screen so they aren't redrawn)
 		if !ui.checkBulletOutOfBounds(bullet.X, bullet.Y, int32(bullet.W), int32(bullet.H)) && !bullet.DestroyAnimationPlayed {
@@ -266,7 +311,7 @@ func imgFileToTexture(renderer *sdl.Renderer, filename string) *sdl.Texture {
 		panic(err)
 	}
 	tex.Update(nil, pixels, w*4)
-	err = tex.SetBlendMode(sdl.BLENDMODE_BLEND)
+	err = tex.SetBlendMode(sdl.BLENDMODE_NONE)
 	if err != nil {
 		panic(err)
 	}
@@ -336,10 +381,13 @@ func (ui *ui) determineMouseButtonInput(event *sdl.MouseButtonEvent) *game.Input
 
 // Remember to always draw from the ground up
 func (ui *ui) Draw(level *game.Level) {
+	fmt.Println("Number of Enemies", len(level.Enemies))
 	ui.renderer.Clear()
 	ui.DrawGround()
 	ui.DrawPlayer(level)
+	ui.SpawnEnemies(level)
 	ui.DrawEnemy(level)
+	ui.CheckFiring(level, level.Player)
 	ui.DrawBullet(level)
 	ui.DrawExplosions(level)
 	ui.DrawCursor()

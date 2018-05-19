@@ -1,23 +1,23 @@
 package game
 
 import (
-	"fmt"
 	"github.com/veandco/go-sdl2/sdl"
 	"math"
 	"os"
 )
 
 type Game struct {
-	InputChan          chan *Input
-	LevelChan          chan *Level
-	Level              *Level
-	primaryFirePressed bool
+	InputChan chan *Input
+	LevelChan chan *Level
+	Level     *Level
 }
 
 type Level struct {
-	Player  *Player
-	Enemies []*Enemy
-	Bullets []*Bullet
+	Player             *Player
+	Enemies            []*Enemy
+	Bullets            []*Bullet
+	PrimaryFirePressed bool
+	EnemySpawnTimer    int
 }
 
 type InputType int
@@ -70,10 +70,20 @@ type Character struct {
 	DestroyedAnimationPlayed  bool
 	DestroyedAnimationCounter int
 	IsDestroyed               bool
+	FireRateTimer             int
+	FireRateResetValue        int
+	IsFiring                  bool
 }
 
 type Dimensional interface {
 	GetDimensionalData() (int, int, int, int)
+}
+
+type Shooter interface {
+	// Should return FireRateTimer, FireRateResetValue, and whether the entity is the player
+	GetFireSettings() (int, int, bool)
+	SetFireTimer(int)
+	GetSelf() *Character
 }
 
 type Player struct {
@@ -82,12 +92,12 @@ type Player struct {
 
 type Enemy struct {
 	Character
-	FireCounter int
 }
 
 type Bullet struct {
 	Entity
 	Velocity
+	FiredBy                *Character
 	FiredByEnemy           bool
 	Damage                 int
 	FlashCounter           int
@@ -97,6 +107,32 @@ type Bullet struct {
 	IsColliding            bool
 }
 
+// Player and Enemy implement Shooter
+func (player *Player) GetFireSettings() (int, int, bool) {
+	return player.FireRateTimer, player.FireRateResetValue, true
+}
+
+func (player *Player) SetFireTimer(value int) {
+	player.FireRateTimer = value
+}
+
+func (player *Player) GetSelf() *Character {
+	return &player.Character
+}
+
+func (enemy *Enemy) GetFireSettings() (int, int, bool) {
+	return enemy.FireRateTimer, enemy.FireRateResetValue, false
+}
+
+func (enemy *Enemy) SetFireTimer(value int) {
+	enemy.FireRateTimer = value
+}
+
+func (enemy *Enemy) GetSelf() *Character {
+	return &enemy.Character
+}
+
+// Bullet, Player, and Enemy implement Dimensional
 func (bullet *Bullet) GetDimensionalData() (int, int, int, int) {
 	return bullet.X, bullet.Y, bullet.W, bullet.H
 }
@@ -136,7 +172,7 @@ func CheckCollision(obj1, obj2 Dimensional) bool {
 	return false
 }
 
-func (level *Level) initBullet() *Bullet {
+func (level *Level) InitBullet() *Bullet {
 	bullet := &Bullet{}
 	bullet.TextureName = "bulletDark1"
 	bullet.Speed = 10.0
@@ -160,6 +196,8 @@ func (level *Level) initPlayer() {
 	player.IsDestroyed = false
 	player.Hitpoints = 100
 	player.Speed = 1.0
+	player.FireRateTimer = 0
+	player.FireRateResetValue = 100
 	//player.W = int(w)
 	//player.H = int(h)
 	//player.X = ui.WinWidth/2 - player.W/2
@@ -169,16 +207,18 @@ func (level *Level) initPlayer() {
 	level.Player = player
 }
 
-func (level *Level) initEnemy() *Enemy {
+func (level *Level) InitEnemy() *Enemy {
 	enemy := &Enemy{}
 	enemy.TextureName = "tank_dark"
 	enemy.IsDestroyed = false
 	enemy.Hitpoints = 50
 	enemy.Speed = 1.0
+	enemy.FireRateTimer = 0
+	enemy.FireRateResetValue = 50
 	//enemy.W = int(w)
 	//enemy.H = int(h)
-	//enemy.X = 300 - enemy.W/2
-	//enemy.Y = 300 - enemy.H/2
+	enemy.X = 300
+	enemy.Y = 300
 	//enemy.FireOffsetX = enemy.W / 2
 	//enemy.FireOffsetY = enemy.H / 2
 	//enemy.Texture = tex
@@ -213,10 +253,8 @@ func (level *Level) checkBulletCollisions() {
 }
 
 func (enemy *Enemy) Update(level *Level) {
-	if enemy.FireCounter == 30 {
-
-	} else {
-		enemy.FireCounter++
+	if !enemy.IsDestroyed && enemy.FireRateTimer < enemy.FireRateResetValue {
+		enemy.FireRateTimer++
 	}
 }
 
@@ -232,6 +270,7 @@ func NewGame() *Game {
 
 	game.Level = &Level{}
 	game.Level.initPlayer()
+	game.Level.EnemySpawnTimer = 0
 
 	return game
 }
@@ -270,8 +309,8 @@ func (game *Game) handleInput(input *Input) {
 			//game.Level.Player.Direction = DRight
 			break
 		case FirePrimary:
-			fmt.Println("Holding Primary Fire")
-			game.primaryFirePressed = true
+			game.Level.Player.IsFiring = true
+			game.Level.Player.FireRateTimer = game.Level.Player.FireRateResetValue
 		default:
 			//fmt.Println("Some input pressed")
 		}
@@ -298,8 +337,7 @@ func (game *Game) handleInput(input *Input) {
 			}
 			break
 		case FirePrimary:
-			fmt.Println("Releasing Primary Fire")
-			game.primaryFirePressed = false
+			game.Level.Player.IsFiring = false
 		default:
 			//fmt.Println("Some input not pressed")
 		}
@@ -319,9 +357,6 @@ func (game *Game) Run() {
 
 	for input := range game.InputChan {
 		if input.Type == None {
-			if game.primaryFirePressed {
-				game.Level.Bullets = append(game.Level.Bullets, game.Level.initBullet())
-			}
 			continue
 		}
 		if input.Type == Quit {
@@ -330,11 +365,7 @@ func (game *Game) Run() {
 			os.Exit(0)
 		}
 		game.handleInput(input)
-		if game.primaryFirePressed {
-			game.Level.Bullets = append(game.Level.Bullets, game.Level.initBullet())
-		}
 
 		game.LevelChan <- game.Level
 	}
-
 }
