@@ -67,6 +67,7 @@ type Character struct {
 	Entity
 	Velocity
 	Hitpoints                 int
+	Strength                  int
 	DestroyedAnimationPlayed  bool
 	DestroyedAnimationCounter int
 	IsDestroyed               bool
@@ -180,7 +181,7 @@ func (level *Level) InitBullet() *Bullet {
 	bullet.FlashCounter = 0
 	bullet.FireAnimationPlayed = false
 	bullet.DestroyAnimationPlayed = false
-	bullet.Damage = 50
+	bullet.Damage = 0
 	bullet.IsColliding = false
 	//bullet.W = int(w)
 	//bullet.H = int(h)
@@ -195,9 +196,10 @@ func (level *Level) initPlayer() {
 	player.TextureName = "tank_huge"
 	player.IsDestroyed = false
 	player.Hitpoints = 100
+	player.Strength = 10
 	player.Speed = 1.0
 	player.FireRateTimer = 0
-	player.FireRateResetValue = 100
+	player.FireRateResetValue = 50
 	//player.W = int(w)
 	//player.H = int(h)
 	//player.X = ui.WinWidth/2 - player.W/2
@@ -212,9 +214,10 @@ func (level *Level) InitEnemy() *Enemy {
 	enemy.TextureName = "tank_dark"
 	enemy.IsDestroyed = false
 	enemy.Hitpoints = 50
+	enemy.Strength = 5
 	enemy.Speed = 1.0
 	enemy.FireRateTimer = 0
-	enemy.FireRateResetValue = 50
+	enemy.FireRateResetValue = 100
 	//enemy.W = int(w)
 	//enemy.H = int(h)
 	enemy.X = 300
@@ -234,10 +237,10 @@ func (bullet *Bullet) Update() {
 	}
 }
 
-func (level *Level) checkBulletCollisions() {
+func (level *Level) CheckBulletCollisions() {
 	for _, bullet := range level.Bullets {
 		for _, enemy := range level.Enemies {
-			if CheckCollision(enemy, bullet) && !bullet.IsColliding && !enemy.IsDestroyed {
+			if CheckCollision(enemy, bullet) && !bullet.IsColliding && !enemy.IsDestroyed && !bullet.FiredByEnemy {
 				bullet.IsColliding = true
 				enemy.Hitpoints -= bullet.Damage
 				if enemy.Hitpoints <= 0 {

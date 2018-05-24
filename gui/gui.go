@@ -1,7 +1,6 @@
 package gui
 
 import (
-	"fmt"
 	"github.com/oxycleanman/towers/game"
 	"github.com/veandco/go-sdl2/sdl"
 	"image/png"
@@ -10,6 +9,11 @@ import (
 	"strconv"
 	"time"
 )
+
+type GameTile struct {
+	TextureName string
+	game.Pos
+}
 
 type ui struct {
 	WinWidth      int
@@ -23,6 +27,8 @@ type ui struct {
 	currentMouseX int32
 	currentMouseY int32
 	playerInit    bool
+	levelMap      [][]*GameTile
+	tileMap       map[int]string
 }
 
 func init() {
@@ -36,12 +42,26 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 	ui := &ui{}
 	ui.inputChan = inputChan
 	ui.levelChan = levelChan
-	ui.WinHeight = 768
-	ui.WinWidth = 1280
+	ui.WinHeight = 1080
+	ui.WinWidth = 1920
 	ui.textureMap = make(map[string]*sdl.Texture)
 	ui.playerInit = false
+	if ui.WinHeight%128 != 0 {
+		ui.levelMap = make([][]*GameTile, (ui.WinHeight/128)+1)
+	} else {
+		ui.levelMap = make([][]*GameTile, ui.WinHeight/128)
+	}
+	for i := range ui.levelMap {
+		ui.levelMap[i] = make([]*GameTile, ui.WinWidth/128)
+	}
+	for y := range ui.levelMap {
+		for x := range ui.levelMap[y] {
+			aui.levelMap[y][x] = &GameTile{"tileSand1", game.Pos{x, y}}
+		}
+	}
+	ui.tileMap = make(map[int]string)
 
-	window, err := sdl.CreateWindow("Towers", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED, 1280, 720, sdl.WINDOW_SHOWN)
+	window, err := sdl.CreateWindow("Towers", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED, int32(ui.WinWidth), int32(ui.WinHeight), sdl.WINDOW_SHOWN)
 	if err != nil {
 		panic(err)
 	}
@@ -78,14 +98,22 @@ func (ui *ui) loadTextures(dirName string) {
 
 // TODO: Need to rework this to draw a meaningful map
 func (ui *ui) DrawGround() {
-	w, h := ui.window.GetSize()
-	numTilesX := w / (128 / 2)
-	numTilesY := h / (128 / 2)
+	//w, h := ui.window.GetSize()
+	//numTilesX := w / (128 / 2)
+	//numTilesY := h / (128 / 2)
+	//
+	//for y := int32(0); y <= numTilesY; y++ {
+	//	for x := int32(0); x < numTilesX; x++ {
+	//		destRect := &sdl.Rect{x * 128 / 2, y * 128 / 2, 128 / 2, 128 / 2}
+	//		ui.renderer.Copy(ui.textureMap["tileGrass1"], nil, destRect)
+	//	}
+	//}
 
-	for y := int32(0); y <= numTilesY; y++ {
-		for x := int32(0); x < numTilesX; x++ {
-			destRect := &sdl.Rect{x * 128 / 2, y * 128 / 2, 128 / 2, 128 / 2}
-			ui.renderer.Copy(ui.textureMap["tileGrass1"], nil, destRect)
+	for y := range ui.levelMap {
+		for x := range ui.levelMap[y] {
+			tile := ui.levelMap[y][x]
+			destRect := &sdl.Rect{int32(tile.X * 128), int32(tile.Y * 128), 128, 128}
+			ui.renderer.Copy(ui.textureMap[tile.TextureName], nil, destRect)
 		}
 	}
 }
@@ -196,6 +224,7 @@ func (ui *ui) CheckFiring(level *game.Level, entity game.Shooter) {
 		bullet := level.InitBullet()
 		bullet.FiredByEnemy = !isPlayer
 		bullet.FiredBy = entity.GetSelf()
+		bullet.Damage = bullet.FiredBy.Strength
 		level.Bullets = append(level.Bullets, bullet)
 		entity.SetFireTimer(0)
 	} else if !isPlayer {
@@ -255,8 +284,8 @@ func (ui *ui) DrawBullet(level *game.Level) {
 				bullet.DestroyAnimationPlayed = true
 				bullet.ExplodeCounter = 0
 			}
-			point := &sdl.Point{int32(bullet.FiredBy.X), int32(bullet.FiredBy.Y)}
-			ui.renderer.CopyEx(tex, nil, &sdl.Rect{int32(bullet.X), int32(bullet.Y), int32(bullet.W), int32(bullet.H)}, float64(bullet.Direction+180.0), point, sdl.FLIP_NONE)
+			//point := &sdl.Point{int32(bullet.FiredBy.X), int32(bullet.FiredBy.Y)}
+			ui.renderer.CopyEx(tex, nil, &sdl.Rect{int32(bullet.X), int32(bullet.Y), int32(bullet.W), int32(bullet.H)}, float64(bullet.Direction+180.0), nil, sdl.FLIP_NONE)
 		}
 		// Keep bullets in the slice that aren't out of bounds (drop the bullets that go off screen so they aren't redrawn)
 		if !ui.checkBulletOutOfBounds(bullet.X, bullet.Y, int32(bullet.W), int32(bullet.H)) && !bullet.DestroyAnimationPlayed {
@@ -311,7 +340,7 @@ func imgFileToTexture(renderer *sdl.Renderer, filename string) *sdl.Texture {
 		panic(err)
 	}
 	tex.Update(nil, pixels, w*4)
-	err = tex.SetBlendMode(sdl.BLENDMODE_NONE)
+	err = tex.SetBlendMode(sdl.BLENDMODE_BLEND)
 	if err != nil {
 		panic(err)
 	}
@@ -381,7 +410,6 @@ func (ui *ui) determineMouseButtonInput(event *sdl.MouseButtonEvent) *game.Input
 
 // Remember to always draw from the ground up
 func (ui *ui) Draw(level *game.Level) {
-	fmt.Println("Number of Enemies", len(level.Enemies))
 	ui.renderer.Clear()
 	ui.DrawGround()
 	ui.DrawPlayer(level)
@@ -389,6 +417,7 @@ func (ui *ui) Draw(level *game.Level) {
 	ui.DrawEnemy(level)
 	ui.CheckFiring(level, level.Player)
 	ui.DrawBullet(level)
+	level.CheckBulletCollisions()
 	ui.DrawExplosions(level)
 	ui.DrawCursor()
 	ui.renderer.Present()
