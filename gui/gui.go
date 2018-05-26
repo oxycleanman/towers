@@ -1,8 +1,10 @@
 package gui
 
 import (
+	"fmt"
 	"github.com/oxycleanman/towers/game"
 	"github.com/veandco/go-sdl2/sdl"
+	"github.com/veandco/go-sdl2/ttf"
 	"image/png"
 	"io/ioutil"
 	"os"
@@ -16,36 +18,51 @@ type GameTile struct {
 }
 
 type ui struct {
-	WinWidth      int
-	WinHeight     int
-	renderer      *sdl.Renderer
-	window        *sdl.Window
-	textureMap    map[string]*sdl.Texture
-	keyboardState []uint8
-	inputChan     chan *game.Input
-	levelChan     chan *game.Level
-	currentMouseX int32
-	currentMouseY int32
-	playerInit    bool
-	levelMap      [][]*GameTile
-	tileMap       map[int]string
+	WinWidth                                     int
+	WinHeight                                    int
+	renderer                                     *sdl.Renderer
+	window                                       *sdl.Window
+	font                                         *ttf.Font
+	surface                                      *sdl.Surface
+	textureMap                                   map[string]*sdl.Texture
+	keyboardState                                []uint8
+	inputChan                                    chan *game.Input
+	levelChan                                    chan *game.Level
+	currentMouseX                                int32
+	currentMouseY                                int32
+	playerInit                                   bool
+	levelMap                                     [][]*GameTile
+	tileMap                                      map[int]string
+	testMap                                      [][]*GameTile
+	topBound, bottomBound, leftBound, rightBound int
+	fontTextureMap                               map[string]*sdl.Texture
+	test                                         bool
 }
 
 func init() {
-	err := sdl.Init(sdl.INIT_EVERYTHING)
-	if err != nil {
+	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
+		panic(err)
+	}
+	if err := ttf.Init(); err != nil {
 		panic(err)
 	}
 }
 
 func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 	ui := &ui{}
+	ui.test = false
 	ui.inputChan = inputChan
 	ui.levelChan = levelChan
 	ui.WinHeight = 1080
 	ui.WinWidth = 1920
+	ui.topBound = int(float32(ui.WinHeight) * 0.25)
+	ui.bottomBound = int(float32(ui.WinHeight) * 0.75)
+	ui.leftBound = int(float32(ui.WinWidth) * 0.25)
+	ui.rightBound = int(float32(ui.WinWidth) * 0.75)
 	ui.textureMap = make(map[string]*sdl.Texture)
+	ui.fontTextureMap = make(map[string]*sdl.Texture)
 	ui.playerInit = false
+
 	if ui.WinHeight%128 != 0 {
 		ui.levelMap = make([][]*GameTile, (ui.WinHeight/128)+1)
 	} else {
@@ -54,18 +71,46 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 	for i := range ui.levelMap {
 		ui.levelMap[i] = make([]*GameTile, ui.WinWidth/128)
 	}
+	ui.testMap = make([][]*GameTile, 30)
+	for i := range ui.testMap {
+		ui.testMap[i] = make([]*GameTile, 30)
+	}
+	for y := range ui.testMap {
+		for x := range ui.testMap[y] {
+			if y%2 == 0 {
+				if x%2 == 0 {
+					ui.testMap[y][x] = &GameTile{"tileSand1", game.Pos{x, y}}
+				} else {
+					ui.testMap[y][x] = &GameTile{"tileGrass1", game.Pos{x, y}}
+				}
+			} else {
+				if x%2 == 0 {
+					ui.testMap[y][x] = &GameTile{"tileGrass1", game.Pos{x, y}}
+				} else {
+					ui.testMap[y][x] = &GameTile{"tileSand1", game.Pos{x, y}}
+				}
+			}
+		}
+	}
 	for y := range ui.levelMap {
 		for x := range ui.levelMap[y] {
-			aui.levelMap[y][x] = &GameTile{"tileSand1", game.Pos{x, y}}
+			ui.levelMap[y][x] = ui.testMap[y][x]
 		}
 	}
 	ui.tileMap = make(map[int]string)
-
-	window, err := sdl.CreateWindow("Towers", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED, int32(ui.WinWidth), int32(ui.WinHeight), sdl.WINDOW_SHOWN)
+	var err error
+	ui.window, err = sdl.CreateWindow("Towers", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED, int32(ui.WinWidth), int32(ui.WinHeight), sdl.WINDOW_SHOWN)
 	if err != nil {
 		panic(err)
 	}
-	ui.window = window
+	ui.font, err = ttf.OpenFont("gui/assets/fonts/sharpretro.ttf", 32)
+	if err != nil {
+		panic(err)
+	}
+	ui.surface, err = ui.window.GetSurface()
+	if err != nil {
+		panic(err)
+	}
 
 	ui.currentMouseX = int32(ui.WinWidth / 2)
 	ui.currentMouseY = int32(ui.WinHeight / 2)
@@ -97,17 +142,19 @@ func (ui *ui) loadTextures(dirName string) {
 }
 
 // TODO: Need to rework this to draw a meaningful map
-func (ui *ui) DrawGround() {
-	//w, h := ui.window.GetSize()
-	//numTilesX := w / (128 / 2)
-	//numTilesY := h / (128 / 2)
-	//
-	//for y := int32(0); y <= numTilesY; y++ {
-	//	for x := int32(0); x < numTilesX; x++ {
-	//		destRect := &sdl.Rect{x * 128 / 2, y * 128 / 2, 128 / 2, 128 / 2}
-	//		ui.renderer.Copy(ui.textureMap["tileGrass1"], nil, destRect)
-	//	}
-	//}
+func (ui *ui) DrawGround(level *game.Level) {
+	// How do I know which part of the testMap to draw as the ground, and how do I change that as the player moves around?
+	p := level.Player
+	if p.AtBottom {
+		fmt.Println("Updating bottom row")
+		y := len(ui.levelMap) - 1
+		bottomRow := ui.levelMap[y]
+		for x := range bottomRow {
+			bottomRow[x] = ui.testMap[y+1][x]
+		}
+		ui.levelMap[y] = bottomRow
+		ui.test = true
+	}
 
 	for y := range ui.levelMap {
 		for x := range ui.levelMap[y] {
@@ -125,6 +172,32 @@ func (ui *ui) DrawCursor() {
 		panic(err)
 	}
 	ui.renderer.Copy(tex, nil, &sdl.Rect{ui.currentMouseX - w/8, ui.currentMouseY - h/8, w / 4, h / 4})
+}
+
+func (ui *ui) DrawUiElements(level *game.Level) {
+	p := level.Player
+	tex := ui.stringToTexture(strconv.Itoa(p.Hitpoints)+" HP", sdl.Color{255, 255, 255, 1})
+	_, _, w, h, err := tex.Query()
+	if err != nil {
+		panic(err)
+	}
+
+	ui.renderer.Copy(tex, nil, &sdl.Rect{0, 0, w, h})
+}
+
+func (ui *ui) stringToTexture(s string, color sdl.Color) *sdl.Texture {
+	if ui.fontTextureMap[s] != nil {
+		return ui.fontTextureMap[s]
+	}
+	font, err := ui.font.RenderUTF8Blended(s, color)
+	if err != nil {
+		panic(err)
+	}
+	tex, err := ui.renderer.CreateTextureFromSurface(font)
+	if err != nil {
+		panic(err)
+	}
+	return tex
 }
 
 func (ui *ui) DrawPlayer(level *game.Level) {
@@ -148,7 +221,7 @@ func (ui *ui) DrawPlayer(level *game.Level) {
 	player := level.Player
 	tex := player.Texture
 	player.Direction = game.FindDegreeRotation(int32(player.Y+player.H/2), int32(player.X+player.W/2), ui.currentMouseY, ui.currentMouseX) - 90
-	player.Move()
+	player.Move(ui.topBound, ui.bottomBound, ui.leftBound, ui.rightBound)
 	ui.renderer.CopyEx(tex, nil, &sdl.Rect{int32(player.X), int32(player.Y), int32(player.W), int32(player.H)}, float64(player.Direction), nil, 0)
 
 }
@@ -221,7 +294,13 @@ func (ui *ui) DrawExplosions(level *game.Level) {
 func (ui *ui) CheckFiring(level *game.Level, entity game.Shooter) {
 	timer, reset, isPlayer := entity.GetFireSettings()
 	if timer >= reset {
-		bullet := level.InitBullet()
+		var texName string
+		if isPlayer {
+			texName = "bulletBlue1"
+		} else {
+			texName = "bulletRed1"
+		}
+		bullet := level.InitBullet(texName)
 		bullet.FiredByEnemy = !isPlayer
 		bullet.FiredBy = entity.GetSelf()
 		bullet.Damage = bullet.FiredBy.Strength
@@ -411,7 +490,7 @@ func (ui *ui) determineMouseButtonInput(event *sdl.MouseButtonEvent) *game.Input
 // Remember to always draw from the ground up
 func (ui *ui) Draw(level *game.Level) {
 	ui.renderer.Clear()
-	ui.DrawGround()
+	ui.DrawGround(level)
 	ui.DrawPlayer(level)
 	ui.SpawnEnemies(level)
 	ui.DrawEnemy(level)
@@ -419,6 +498,7 @@ func (ui *ui) Draw(level *game.Level) {
 	ui.DrawBullet(level)
 	level.CheckBulletCollisions()
 	ui.DrawExplosions(level)
+	ui.DrawUiElements(level)
 	ui.DrawCursor()
 	ui.renderer.Present()
 }

@@ -66,6 +66,8 @@ type Entity struct {
 type Character struct {
 	Entity
 	Velocity
+	Cost                      int
+	Level                     int
 	Hitpoints                 int
 	Strength                  int
 	DestroyedAnimationPlayed  bool
@@ -89,6 +91,8 @@ type Shooter interface {
 
 type Player struct {
 	Character
+	Currency                         int
+	AtTop, AtBottom, AtLeft, AtRight bool
 }
 
 type Enemy struct {
@@ -173,9 +177,9 @@ func CheckCollision(obj1, obj2 Dimensional) bool {
 	return false
 }
 
-func (level *Level) InitBullet() *Bullet {
+func (level *Level) InitBullet(texName string) *Bullet {
 	bullet := &Bullet{}
-	bullet.TextureName = "bulletDark1"
+	bullet.TextureName = texName
 	bullet.Speed = 10.0
 	//bullet.Texture = tex
 	bullet.FlashCounter = 0
@@ -200,6 +204,10 @@ func (level *Level) initPlayer() {
 	player.Speed = 1.0
 	player.FireRateTimer = 0
 	player.FireRateResetValue = 50
+	player.AtBottom = false
+	player.AtLeft = false
+	player.AtRight = false
+	player.AtTop = false
 	//player.W = int(w)
 	//player.H = int(h)
 	//player.X = ui.WinWidth/2 - player.W/2
@@ -261,9 +269,33 @@ func (enemy *Enemy) Update(level *Level) {
 	}
 }
 
-func (player *Player) Move() {
-	player.X += player.Xvel
-	player.Y += player.Yvel
+func (player *Player) Move(topBound, bottomBound, leftBound, rightBound int) {
+	newX := player.X + player.W/2 + player.Xvel
+	newY := player.Y + player.H/2 + player.Yvel
+	if player.Xvel != 0 && newX <= rightBound && newX >= leftBound {
+		player.X += player.Xvel
+		player.AtRight = false
+		player.AtLeft = false
+	} else {
+		if newX >= rightBound {
+			player.AtRight = true
+		}
+		if newX <= leftBound {
+			player.AtLeft = true
+		}
+	}
+	if player.Yvel != 0 && newY < bottomBound && newY > topBound {
+		player.Y += player.Yvel
+		player.AtBottom = false
+		player.AtTop = false
+	} else {
+		if newY >= bottomBound {
+			player.AtBottom = true
+		}
+		if newY <= topBound {
+			player.AtTop = true
+		}
+	}
 }
 
 func NewGame() *Game {
