@@ -23,7 +23,6 @@ type ui struct {
 	renderer                                     *sdl.Renderer
 	window                                       *sdl.Window
 	font                                         *ttf.Font
-	surface                                      *sdl.Surface
 	textureMap                                   map[string]*sdl.Texture
 	keyboardState                                []uint8
 	inputChan                                    chan *game.Input
@@ -36,7 +35,8 @@ type ui struct {
 	testMap                                      [][]*GameTile
 	topBound, bottomBound, leftBound, rightBound int
 	fontTextureMap                               map[string]*sdl.Texture
-	test                                         bool
+	mapMoveDelay                                 int
+	mapMoveTimer                                 int
 }
 
 func init() {
@@ -50,7 +50,6 @@ func init() {
 
 func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 	ui := &ui{}
-	ui.test = false
 	ui.inputChan = inputChan
 	ui.levelChan = levelChan
 	ui.WinHeight = 1080
@@ -62,6 +61,8 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 	ui.textureMap = make(map[string]*sdl.Texture)
 	ui.fontTextureMap = make(map[string]*sdl.Texture)
 	ui.playerInit = false
+	ui.mapMoveTimer = 0
+	ui.mapMoveDelay = 50
 
 	if ui.WinHeight%128 != 0 {
 		ui.levelMap = make([][]*GameTile, (ui.WinHeight/128)+1)
@@ -71,15 +72,15 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 	for i := range ui.levelMap {
 		ui.levelMap[i] = make([]*GameTile, ui.WinWidth/128)
 	}
-	ui.testMap = make([][]*GameTile, 30)
+	ui.testMap = make([][]*GameTile, 300)
 	for i := range ui.testMap {
-		ui.testMap[i] = make([]*GameTile, 30)
+		ui.testMap[i] = make([]*GameTile, 300)
 	}
 	for y := range ui.testMap {
 		for x := range ui.testMap[y] {
 			if y%2 == 0 {
 				if x%2 == 0 {
-					ui.testMap[y][x] = &GameTile{"tileSand1", game.Pos{x, y}}
+					ui.testMap[y][x] = &GameTile{"tileGrass2", game.Pos{x, y}}
 				} else {
 					ui.testMap[y][x] = &GameTile{"tileGrass1", game.Pos{x, y}}
 				}
@@ -87,7 +88,7 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 				if x%2 == 0 {
 					ui.testMap[y][x] = &GameTile{"tileGrass1", game.Pos{x, y}}
 				} else {
-					ui.testMap[y][x] = &GameTile{"tileSand1", game.Pos{x, y}}
+					ui.testMap[y][x] = &GameTile{"tileGrass2", game.Pos{x, y}}
 				}
 			}
 		}
@@ -104,10 +105,6 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 		panic(err)
 	}
 	ui.font, err = ttf.OpenFont("gui/assets/fonts/sharpretro.ttf", 32)
-	if err != nil {
-		panic(err)
-	}
-	ui.surface, err = ui.window.GetSurface()
 	if err != nil {
 		panic(err)
 	}
@@ -145,24 +142,57 @@ func (ui *ui) loadTextures(dirName string) {
 func (ui *ui) DrawGround(level *game.Level) {
 	// How do I know which part of the testMap to draw as the ground, and how do I change that as the player moves around?
 	p := level.Player
-	if p.AtBottom {
-		fmt.Println("Updating bottom row")
-		y := len(ui.levelMap) - 1
-		bottomRow := ui.levelMap[y]
-		for x := range bottomRow {
-			bottomRow[x] = ui.testMap[y+1][x]
+
+	if ui.mapMoveTimer >= ui.mapMoveDelay && (p.AtTop || p.AtBottom || p.AtLeft || p.AtRight) {
+		// Need to update level map
+		ui.mapMoveTimer = 0
+		for y := range ui.levelMap {
+			for x := range ui.levelMap[y] {
+				currentTile := ui.levelMap[y][x]
+				newX, newY := currentTile.X, currentTile.Y
+				if p.AtBottom {
+					newY += 1
+				}
+				if p.AtRight {
+					newX += 1
+				}
+				if p.AtLeft {
+					newX -= 1
+				}
+				if p.AtTop {
+					newY -= 1
+				}
+				if newY < 0 {
+					newY = 0
+				}
+				if newY >= len(ui.testMap) {
+					newY = len(ui.testMap) - 1
+				}
+				if newX < 0 {
+					newX = 0
+				}
+				if newX >= len(ui.testMap[y]) {
+					newX = len(ui.testMap[y]) - 1
+				}
+				nextTile := ui.testMap[newY][newX]
+				fmt.Println("Next Tile Texture", nextTile.TextureName)
+				destRect := &sdl.Rect{int32(currentTile.X * 128), int32(currentTile.Y * 128), 128, 128}
+				ui.renderer.Copy(ui.textureMap[nextTile.TextureName], nil, destRect)
+				ui.levelMap[y][x] = nextTile
+			}
 		}
-		ui.levelMap[y] = bottomRow
-		ui.test = true
+	} else {
+		// Draw level map without updating it
+		ui.mapMoveTimer++
+		for y := range ui.levelMap {
+			for x := range ui.levelMap[y] {
+				currentTile := ui.levelMap[y][x]
+				destRect := &sdl.Rect{int32(currentTile.X * 128), int32(currentTile.Y * 128), 128, 128}
+				ui.renderer.Copy(ui.textureMap[currentTile.TextureName], nil, destRect)
+			}
+		}
 	}
 
-	for y := range ui.levelMap {
-		for x := range ui.levelMap[y] {
-			tile := ui.levelMap[y][x]
-			destRect := &sdl.Rect{int32(tile.X * 128), int32(tile.Y * 128), 128, 128}
-			ui.renderer.Copy(ui.textureMap[tile.TextureName], nil, destRect)
-		}
-	}
 }
 
 func (ui *ui) DrawCursor() {
