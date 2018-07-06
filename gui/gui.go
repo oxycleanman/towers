@@ -14,6 +14,7 @@ import (
 
 type GameTile struct {
 	TextureName string
+	IsTrack bool
 	game.Pos
 }
 
@@ -62,7 +63,7 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 	ui.fontTextureMap = make(map[string]*sdl.Texture)
 	ui.playerInit = false
 	ui.mapMoveTimer = 0
-	ui.mapMoveDelay = 50
+	ui.mapMoveDelay = 5
 
 	if ui.WinHeight%128 != 0 {
 		ui.levelMap = make([][]*GameTile, (ui.WinHeight/128)+1)
@@ -80,15 +81,15 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 		for x := range ui.testMap[y] {
 			if y%2 == 0 {
 				if x%2 == 0 {
-					ui.testMap[y][x] = &GameTile{"tileGrass2", game.Pos{x, y}}
+					ui.testMap[y][x] = &GameTile{"tileGrass1", false, game.Pos{x, y}}
 				} else {
-					ui.testMap[y][x] = &GameTile{"tileGrass1", game.Pos{x, y}}
+					ui.testMap[y][x] = &GameTile{"tileSand1", false, game.Pos{x, y}}
 				}
 			} else {
 				if x%2 == 0 {
-					ui.testMap[y][x] = &GameTile{"tileGrass1", game.Pos{x, y}}
+					ui.testMap[y][x] = &GameTile{"tileSand1", false, game.Pos{x, y}}
 				} else {
-					ui.testMap[y][x] = &GameTile{"tileGrass2", game.Pos{x, y}}
+					ui.testMap[y][x] = &GameTile{"tileGrass1", false, game.Pos{x, y}}
 				}
 			}
 		}
@@ -174,11 +175,14 @@ func (ui *ui) DrawGround(level *game.Level) {
 				if newX >= len(ui.testMap[y]) {
 					newX = len(ui.testMap[y]) - 1
 				}
-				nextTile := ui.testMap[newY][newX]
-				fmt.Println("Next Tile Texture", nextTile.TextureName)
-				destRect := &sdl.Rect{int32(currentTile.X * 128), int32(currentTile.Y * 128), 128, 128}
-				ui.renderer.Copy(ui.textureMap[nextTile.TextureName], nil, destRect)
-				ui.levelMap[y][x] = nextTile
+				if (newY < len(ui.testMap) && newY > 0) || (newX < len(ui.testMap[y]) && newX > 0) {
+					fmt.Println("Getting tile at", newX, newY)
+					nextTile := ui.testMap[newY][newX]
+					//fmt.Println("Next Tile Texture", nextTile.TextureName)
+					destRect := &sdl.Rect{int32(currentTile.X * 128), int32(currentTile.Y * 128), 128, 128}
+					ui.renderer.Copy(ui.textureMap[nextTile.TextureName], nil, destRect)
+					ui.levelMap[y][x].TextureName = nextTile.TextureName
+				}
 			}
 		}
 	} else {
@@ -547,6 +551,7 @@ func (ui *ui) Run() {
 		case newLevel := <-ui.levelChan:
 			level = newLevel
 			ui.Draw(level)
+			break
 		default:
 			ui.Draw(level)
 		}
