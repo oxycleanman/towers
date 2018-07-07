@@ -2,8 +2,582 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="aa15563f-51fd-49f7-9a92-a4a96db69d25" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/gui/assets/fonts/kenvector_future.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/fonts/kenvector_future_thin.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Damage/playerShip1_damage1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Damage/playerShip1_damage2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Damage/playerShip1_damage3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Damage/playerShip2_damage1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Damage/playerShip2_damage2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Damage/playerShip2_damage3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Damage/playerShip3_damage1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Damage/playerShip3_damage2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Damage/playerShip3_damage3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/explosion1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/explosion2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/explosion3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/explosion4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire00.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire01.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire02.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire03.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire04.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire05.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire06.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire07.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire08.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire09.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire10.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire11.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire12.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire13.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire14.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire15.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire16.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire17.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire18.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire19.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/shield1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/shield2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/shield3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/speed.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/star1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/star2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/star3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Enemies/enemyBlack1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Enemies/enemyBlack2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Enemies/enemyBlack3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Enemies/enemyBlack4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Enemies/enemyBlack5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Enemies/enemyBlue1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Enemies/enemyBlue2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Enemies/enemyBlue3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Enemies/enemyBlue4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Enemies/enemyBlue5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Enemies/enemyGreen1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Enemies/enemyGreen2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Enemies/enemyGreen3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Enemies/enemyGreen4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Enemies/enemyGreen5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Enemies/enemyRed1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Enemies/enemyRed2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Enemies/enemyRed3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Enemies/enemyRed4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Enemies/enemyRed5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserBlue01.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserBlue02.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserBlue03.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserBlue04.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserBlue05.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserBlue06.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserBlue07.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserBlue08.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserBlue09.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserBlue10.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserBlue11.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserBlue12.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserBlue13.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserBlue14.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserBlue15.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserBlue16.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserGreen01.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserGreen02.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserGreen03.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserGreen04.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserGreen05.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserGreen06.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserGreen07.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserGreen08.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserGreen09.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserGreen10.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserGreen11.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserGreen12.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserGreen13.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserGreen14.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserGreen15.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserGreen16.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserRed01.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserRed02.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserRed03.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserRed04.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserRed05.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserRed06.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserRed07.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserRed08.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserRed09.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserRed10.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserRed11.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserRed12.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserRed13.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserRed14.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserRed15.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Lasers/laserRed16.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Meteors/meteorBrown_big1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Meteors/meteorBrown_big2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Meteors/meteorBrown_big3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Meteors/meteorBrown_big4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Meteors/meteorBrown_med1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Meteors/meteorBrown_med3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Meteors/meteorBrown_small1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Meteors/meteorBrown_small2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Meteors/meteorBrown_tiny1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Meteors/meteorBrown_tiny2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Meteors/meteorGrey_big1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Meteors/meteorGrey_big2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Meteors/meteorGrey_big3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Meteors/meteorGrey_big4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Meteors/meteorGrey_med1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Meteors/meteorGrey_med2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Meteors/meteorGrey_small1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Meteors/meteorGrey_small2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Meteors/meteorGrey_tiny1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Meteors/meteorGrey_tiny2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/beam0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/beam1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/beam2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/beam3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/beam4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/beam5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/beam6.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/beamLong1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/beamLong2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitBlue_0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitBlue_1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitBlue_2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitBlue_3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitBlue_4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitBlue_5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitBlue_6.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitBlue_7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitGreen_0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitGreen_1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitGreen_2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitGreen_3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitGreen_4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitGreen_5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitGreen_6.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitGreen_7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitRed_0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitRed_1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitRed_2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitRed_3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitRed_4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitRed_5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitRed_6.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitRed_7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitYellow_0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitYellow_1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitYellow_2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitYellow_3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitYellow_4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitYellow_5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitYellow_6.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/cockpitYellow_7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/engine1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/engine2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/engine3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/engine4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/engine5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/gun00.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/gun01.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/gun02.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/gun03.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/gun04.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/gun05.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/gun06.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/gun07.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/gun08.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/gun09.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/gun10.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/scratch1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/scratch2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/scratch3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/turretBase_big.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/turretBase_small.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingBlue_0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingBlue_1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingBlue_2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingBlue_3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingBlue_4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingBlue_5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingBlue_6.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingBlue_7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingGreen_0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingGreen_1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingGreen_2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingGreen_3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingGreen_4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingGreen_5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingGreen_6.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingGreen_7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingRed_0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingRed_1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingRed_2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingRed_3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingRed_4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingRed_5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingRed_6.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingRed_7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingYellow_0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingYellow_1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingYellow_2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingYellow_3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingYellow_4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingYellow_5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingYellow_6.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Parts/wingYellow_7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/bold_silver.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/bolt_bronze.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/bolt_gold.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/pill_blue.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/pill_green.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/pill_red.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/pill_yellow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/powerupBlue.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/powerupBlue_bolt.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/powerupBlue_shield.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/powerupBlue_star.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/powerupGreen.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/powerupGreen_bolt.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/powerupGreen_shield.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/powerupGreen_star.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/powerupRed.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/powerupRed_bolt.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/powerupRed_shield.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/powerupRed_star.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/powerupYellow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/powerupYellow_bolt.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/powerupYellow_shield.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/powerupYellow_star.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/shield_bronze.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/shield_gold.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/shield_silver.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/star_bronze.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/star_gold.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/star_silver.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/things_bronze.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/things_gold.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Power-ups/things_silver.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/buttonBlue.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/buttonGreen.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/buttonRed.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/buttonYellow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/cursor.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/numeral0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/numeral1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/numeral2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/numeral3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/numeral4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/numeral5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/numeral6.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/numeral7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/numeral8.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/numeral9.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/numeralX.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/playerLife1_blue.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/playerLife1_green.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/playerLife1_orange.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/playerLife1_red.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/playerLife2_blue.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/playerLife2_green.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/playerLife2_orange.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/playerLife2_red.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/playerLife3_blue.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/playerLife3_green.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/playerLife3_orange.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/playerLife3_red.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/playerShip1_blue.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/playerShip1_green.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/playerShip1_orange.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/playerShip1_red.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/playerShip2_blue.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/playerShip2_green.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/playerShip2_orange.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/playerShip2_red.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/playerShip3_blue.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/playerShip3_green.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/playerShip3_orange.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/playerShip3_red.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/ufoBlue.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/ufoGreen.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/ufoRed.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/ufoYellow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/sounds/boom1.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/sounds/boom2.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/sounds/boom3.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/sounds/boom4.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/sounds/boom5.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/sounds/boom6.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/sounds/boom7.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/sounds/boom8.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/sounds/boom9.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/sounds/sfx_laser1.ogg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/sounds/sfx_laser2.ogg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/sounds/sfx_lose.ogg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/sounds/sfx_shieldDown.ogg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/sounds/sfx_shieldUp.ogg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/sounds/sfx_twoTone.ogg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/sounds/sfx_zap.ogg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/game.go" beforeDir="false" afterPath="$PROJECT_DIR$/game/game.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/barrelBlack_side.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/barrelBlack_top.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/barrelGreen_side.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/barrelGreen_top.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/barrelRed_side.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/barrelRed_top.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/barrelRust_side.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/barrelRust_top.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/barricadeMetal.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/barricadeWood.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke00.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke07.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke08.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke09.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke15.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke16.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke17.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke18.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke19.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke20.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke21.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke22.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke23.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/blackSmoke24.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletBlue1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletBlue1_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletBlue2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletBlue2_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletBlue3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletBlue3_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletDark1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletDark1_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletDark2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletDark2_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletDark3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletDark3_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletGreen1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletGreen1_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletGreen2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletGreen2_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletGreen3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletGreen3_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletRed1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletRed1_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletRed2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletRed2_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletRed3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletRed3_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletSand1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletSand1_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletSand2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletSand2_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletSand3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/bulletSand3_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/crateMetal.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/crateMetal_side.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/crateWood.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/crateWood_side.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/cross-02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/explosion00.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/explosion01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/explosion02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/explosion03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/explosion04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/explosion05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/explosion06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/explosion07.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/explosion08.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/explosion1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/explosion2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/explosion3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/explosion4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/explosion5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/explosionSmoke1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/explosionSmoke2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/explosionSmoke3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/explosionSmoke4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/explosionSmoke5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/fenceRed.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/fenceYellow.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/flash00.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/flash01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/flash02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/flash03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/flash04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/flash05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/flash06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/flash07.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/flash08.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/oilSpill_large.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/oilSpill_small.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/sandbagBeige.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/sandbagBeige_open.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/sandbagBrown.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/sandbagBrown_open.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/shotLarge.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/shotOrange.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/shotRed.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/shotThin.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/specialBarrel1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/specialBarrel1_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/specialBarrel2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/specialBarrel2_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/specialBarrel3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/specialBarrel3_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/specialBarrel4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/specialBarrel4_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/specialBarrel5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/specialBarrel5_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/specialBarrel6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/specialBarrel6_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/specialBarrel7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/specialBarrel7_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankBlue_barrel1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankBlue_barrel1_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankBlue_barrel2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankBlue_barrel2_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankBlue_barrel3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankBlue_barrel3_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankBody_bigRed.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankBody_bigRed_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankBody_blue.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankBody_blue_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankBody_dark.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankBody_darkLarge.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankBody_darkLarge_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankBody_dark_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankBody_green.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankBody_green_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankBody_huge.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankBody_huge_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankBody_red.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankBody_red_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankBody_sand.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankBody_sand_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankDark_barrel1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankDark_barrel1_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankDark_barrel2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankDark_barrel2_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankDark_barrel3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankDark_barrel3_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankGreen_barrel1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankGreen_barrel1_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankGreen_barrel2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankGreen_barrel2_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankGreen_barrel3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankGreen_barrel3_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankRed_barrel1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankRed_barrel1_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankRed_barrel2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankRed_barrel2_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankRed_barrel3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankRed_barrel3_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankSand_barrel1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankSand_barrel1_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankSand_barrel2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankSand_barrel2_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankSand_barrel3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tankSand_barrel3_outline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tank_bigRed.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tank_blue.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tank_dark.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tank_darkLarge.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tank_green.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tank_huge.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tank_red.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tank_sand.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_roadCornerLL.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_roadCornerLR.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_roadCornerUL.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_roadCornerUR.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_roadCrossing.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_roadCrossingRound.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_roadEast.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_roadNorth.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_roadSplitE.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_roadSplitN.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_roadSplitS.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_roadSplitW.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_roadTransitionE.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_roadTransitionE_dirt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_roadTransitionN.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_roadTransitionN_dirt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_roadTransitionS.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_roadTransitionS_dirt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_roadTransitionW.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_roadTransitionW_dirt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_transitionE.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_transitionN.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_transitionS.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileGrass_transitionW.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileSand1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileSand2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileSand_roadCornerLL.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileSand_roadCornerLR.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileSand_roadCornerUL.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileSand_roadCornerUR.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileSand_roadCrossing.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileSand_roadCrossingRound.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileSand_roadEast.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileSand_roadNorth.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileSand_roadSplitE.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileSand_roadSplitN.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileSand_roadSplitS.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tileSand_roadSplitW.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tracksDouble.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tracksLarge.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/tracksSmall.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/treeBrown_large.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/treeBrown_leaf.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/treeBrown_small.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/treeBrown_twigs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/treeGreen_large.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/treeGreen_leaf.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/treeGreen_small.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/treeGreen_twigs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff00.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff07.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff08.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff09.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff15.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff16.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff17.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff18.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff19.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff20.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff21.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff22.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff23.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/whitePuff24.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/wireCrooked.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/wireStraight.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/gui/gui.go" beforeDir="false" afterPath="$PROJECT_DIR$/gui/gui.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/towers.exe" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -31,8 +605,11 @@
       <file leaf-file-name="game.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/game/game.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-7">
-              <caret line="20" column="1" selection-start-line="20" selection-start-column="1" selection-end-line="20" selection-end-column="1" />
+            <state relative-caret-position="-3592">
+              <caret line="75" column="29" selection-start-line="75" selection-start-column="29" selection-end-line="75" selection-end-column="29" />
+              <folding>
+                <element signature="e#14#72#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -40,8 +617,11 @@
       <file leaf-file-name="gui.go" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/gui/gui.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-18">
-              <caret line="124" column="13" lean-forward="true" selection-start-line="124" selection-start-column="13" selection-end-line="124" selection-end-column="13" />
+            <state relative-caret-position="593">
+              <caret line="251" column="49" selection-start-line="251" selection-start-column="49" selection-end-line="251" selection-end-column="49" />
+              <folding>
+                <element signature="e#13#193#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -49,7 +629,7 @@
       <file leaf-file-name="main.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-7">
+            <state relative-caret-position="170">
               <caret line="13" selection-start-line="13" selection-end-line="13" />
             </state>
           </provider>
@@ -69,9 +649,13 @@
       <find>ui.renderer.clear</find>
       <find>ui.renderer.clear()</find>
       <find>ui.renderer</find>
+      <find>enemy</find>
     </findStrings>
+    <replaceStrings>
+      <replace>bullet</replace>
+    </replaceStrings>
   </component>
-  <component name="GOROOT" path="/usr/local/go" />
+  <component name="GOROOT" path="C:\Go" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -89,6 +673,7 @@
         <option value="$PROJECT_DIR$/game/player.go" />
         <option value="$PROJECT_DIR$/game/bullet.go" />
         <option value="$PROJECT_DIR$/game/enemy.go" />
+        <option value="$PROJECT_DIR$/../../../src/github.com/veandco/go-sdl2/ttf/sdl_ttf.go" />
         <option value="$PROJECT_DIR$/game/game.go" />
         <option value="$PROJECT_DIR$/gui/gui.go" />
       </list>
@@ -103,19 +688,20 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="1920" />
-    <option name="y" value="23" />
-    <option name="width" value="1920" />
-    <option name="height" value="2137" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="278" />
+    <option name="y" value="-19" />
+    <option name="width" value="1294" />
+    <option name="height" value="1407" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -139,10 +725,26 @@
               <item name="gui" type="462c0819:PsiDirectoryNode" />
               <item name="assets" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="towers" type="b2602c69:ProjectViewProjectNode" />
+              <item name="towers" type="462c0819:PsiDirectoryNode" />
+              <item name="gui" type="462c0819:PsiDirectoryNode" />
+              <item name="assets" type="462c0819:PsiDirectoryNode" />
+              <item name="images" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="towers" type="b2602c69:ProjectViewProjectNode" />
+              <item name="towers" type="462c0819:PsiDirectoryNode" />
+              <item name="gui" type="462c0819:PsiDirectoryNode" />
+              <item name="assets" type="462c0819:PsiDirectoryNode" />
+              <item name="images" type="462c0819:PsiDirectoryNode" />
+              <item name="UI" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -156,16 +758,21 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+    <property name="settings.editor.selected.configurable" value="go.autoimport" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets\images" />
-      <recent name="$PROJECT_DIR$/gui/assets" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets\sounds" />
       <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets\fonts" />
       <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets\images" />
+      <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets\sounds" />
+      <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets\images\Effects" />
+      <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets" />
+      <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets\images" />
+      <recent name="$PROJECT_DIR$/gui/assets" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -196,18 +803,18 @@
     </recent_temporary>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1920" y="23" width="1920" height="2137" extended-state="0" />
+    <frame x="-8" y="-8" width="2576" height="1416" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13897763" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.10890302" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5002633" side_tool="true" weight="0.3277144" />
       <window_info anchor="right" id="Database" order="3" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32969758" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.18244918" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3561753" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.4997367" weight="0.3277144" />
+      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.4997367" weight="0.3306773" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39967898" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -216,6 +823,7 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32969758" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -244,189 +852,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/main.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="8" column="26" selection-start-line="8" selection-start-column="26" selection-end-line="8" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/gui.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5715">
-          <caret line="389" column="1" selection-start-line="389" selection-start-column="1" selection-end-line="389" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/game/game.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="12" selection-start-column="12" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/gui.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/game/game.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="12" selection-start-column="12" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/gui.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="4" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../veandco/go-sdl2/sdl/render.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="212" column="24" selection-start-line="212" selection-start-column="24" selection-end-line="212" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../veandco/go-sdl2/sdl/rect.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="15" column="5" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/game/enemy.go" />
-    <entry file="file://$PROJECT_DIR$/main.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="26" selection-start-line="8" selection-start-column="26" selection-end-line="8" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/game/player.go" />
-    <entry file="file://$PROJECT_DIR$/game/bullet.go" />
-    <entry file="file://$PROJECT_DIR$/game/game.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1125">
-          <caret line="163" column="9" lean-forward="true" selection-start-line="163" selection-start-column="9" selection-end-line="163" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/gui.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="990">
-          <caret line="238" column="9" lean-forward="true" selection-start-line="238" selection-start-column="9" selection-end-line="238" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/game/game.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="12" selection-start-column="12" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/gui.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/game/game.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="12" selection-start-column="12" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/gui.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="4" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../veandco/go-sdl2/sdl/render.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="212" column="24" selection-start-line="212" selection-start-column="24" selection-end-line="212" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../veandco/go-sdl2/sdl/rect.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="15" column="5" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/game/enemy.go" />
-    <entry file="file://$PROJECT_DIR$/main.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="26" selection-start-line="8" selection-start-column="26" selection-end-line="8" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/game/player.go" />
-    <entry file="file://$PROJECT_DIR$/game/game.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1650">
-          <caret line="110" column="70" selection-start-line="110" selection-start-column="70" selection-end-line="110" selection-end-column="70" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/game/bullet.go" />
-    <entry file="file://$PROJECT_DIR$/gui/gui.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="961">
-          <caret line="238" column="72" selection-start-line="238" selection-start-column="72" selection-end-line="238" selection-end-column="72" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/game/game.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1926">
-          <caret line="110" column="70" selection-start-line="110" selection-start-column="70" selection-end-line="110" selection-end-column="70" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/game/bullet.go" />
-    <entry file="file://$PROJECT_DIR$/game/player.go" />
-    <entry file="file://$PROJECT_DIR$/main.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="8" column="26" selection-start-line="8" selection-start-column="26" selection-end-line="8" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/gui.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4140">
-          <caret line="238" column="9" lean-forward="true" selection-start-line="238" selection-start-column="9" selection-end-line="238" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/game/game.go">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -464,62 +889,157 @@
     </entry>
     <entry file="file://C:/Go/src/sync/pool.go" />
     <entry file="file://C:/Go/src/fmt/print.go" />
-    <entry file="file://$PROJECT_DIR$/../../veandco/go-sdl2/sdl/timer.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="25" column="5" selection-start-line="25" selection-start-column="5" selection-end-line="25" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/veandco/go-sdl2/sdl/timer.go" />
     <entry file="file://C:/Go/src/time/time.go" />
-    <entry file="file://$PROJECT_DIR$/../../veandco/go-sdl2/sdl/events.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2484">
-          <caret line="282" column="5" selection-start-line="282" selection-start-column="5" selection-end-line="282" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/veandco/go-sdl2/sdl/events.go" />
     <entry file="file://$PROJECT_DIR$/game/player.go" />
     <entry file="file://$PROJECT_DIR$/game/bullet.go" />
-    <entry file="file://$PROJECT_DIR$/../../veandco/go-sdl2/sdl/rect.go">
+    <entry file="file://$USER_HOME$/veandco/go-sdl2/sdl/rect.go" />
+    <entry file="file://$USER_HOME$/veandco/go-sdl2/sdl/render.go" />
+    <entry file="file:///usr/local/go/src/runtime/asm_amd64.s" />
+    <entry file="file://$PROJECT_DIR$/../../../src/github.com/veandco/go-sdl2/ttf/sdl_ttf.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="15" column="5" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
+        <state relative-caret-position="255">
+          <caret line="18" column="44" selection-start-line="18" selection-start-column="44" selection-end-line="18" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Effects/fire00.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Effects/fire02.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Effects/fire03.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Effects/fire06.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Effects/fire09.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Effects/fire13.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Effects/fire16.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Effects/shield2.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Effects/shield3.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Effects/speed.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Effects/star1.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Effects/star2.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Effects/fire04.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Lasers/laserBlue16.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Lasers/laserBlue01.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Lasers/laserGreen01.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Lasers/laserGreen02.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Lasers/laserGreen03.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Lasers/laserGreen05.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Lasers/laserBlue10.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/playerShip1_blue.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/playerShip1_green.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/playerShip2_blue.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/cursor.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/numeral9.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/playerLife1_blue.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Parts/beam0.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../veandco/go-sdl2/sdl/video.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="322">
+          <caret line="746" column="28" lean-forward="true" selection-start-line="746" selection-start-column="28" selection-end-line="746" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/buttonBlue.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../veandco/go-sdl2/sdl/events.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="596">
+          <caret line="161" column="4" selection-start-line="161" selection-start-column="4" selection-end-line="161" selection-end-column="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../../veandco/go-sdl2/sdl/render.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="559" column="26" selection-start-line="559" selection-start-column="26" selection-end-line="559" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/local/go/src/runtime/asm_amd64.s">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="395">
-          <caret line="2360" selection-start-line="2360" selection-end-line="2360" />
+        <state relative-caret-position="261">
+          <caret line="226" column="24" selection-start-line="226" selection-start-column="24" selection-end-line="226" selection-end-column="24" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-7">
+        <state relative-caret-position="170">
           <caret line="13" selection-start-line="13" selection-end-line="13" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/game/game.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-7">
-          <caret line="20" column="1" selection-start-line="20" selection-start-column="1" selection-end-line="20" selection-end-column="1" />
+        <state relative-caret-position="-3592">
+          <caret line="75" column="29" selection-start-line="75" selection-start-column="29" selection-end-line="75" selection-end-column="29" />
+          <folding>
+            <element signature="e#14#72#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../veandco/go-sdl2/mix/sdl_mixer.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="253">
+          <caret line="454" column="5" selection-start-line="454" selection-start-column="5" selection-end-line="454" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gui/gui.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-18">
-          <caret line="124" column="13" lean-forward="true" selection-start-line="124" selection-start-column="13" selection-end-line="124" selection-end-column="13" />
+        <state relative-caret-position="593">
+          <caret line="251" column="49" selection-start-line="251" selection-start-column="49" selection-end-line="251" selection-end-column="49" />
+          <folding>
+            <element signature="e#13#193#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
