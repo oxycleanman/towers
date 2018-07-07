@@ -17,7 +17,7 @@ func (enemy *Enemy) GetSelf() *Character {
 	return &enemy.Character
 }
 
-func (level *Level) InitEnemy() *Enemy {
+func (level *Level) InitEnemy(initX, initY int) *Enemy {
 	enemy := &Enemy{}
 	enemy.TextureName = "ufoGreen"
 	enemy.IsDestroyed = false
@@ -25,9 +25,9 @@ func (level *Level) InitEnemy() *Enemy {
 	enemy.Strength = 5
 	enemy.Speed = 1.0
 	enemy.FireRateTimer = 0
-	enemy.FireRateResetValue = 100
-	enemy.X = 300
-	enemy.Y = 300
+	enemy.FireRateResetValue = 150
+	enemy.X = initX
+	enemy.Y = initY
 	return enemy
 }
 
@@ -35,4 +35,14 @@ func (enemy *Enemy) Update(level *Level) {
 	if !enemy.IsDestroyed && enemy.FireRateTimer < enemy.FireRateResetValue {
 		enemy.FireRateTimer++
 	}
+}
+
+func (enemy *Enemy) Move(level *Level) {
+	player := level.Player
+	if player.X > enemy.X {
+		enemy.X += 1
+	} else {
+		enemy.X -= 1
+	}
+	enemy.Y += int(enemy.Speed)
 }

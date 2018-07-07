@@ -21,8 +21,9 @@ type Level struct {
 }
 
 type InputType int
+
 const (
-	None          InputType = iota
+	None InputType = iota
 	Up
 	Down
 	Left
@@ -72,11 +73,12 @@ type Character struct {
 	DestroyedAnimationTextureName string
 	DestroyedAnimationPlayed      bool
 	DestroyedAnimationCounter     int
-	DestroyedSoundPlayed bool
+	DestroyedSoundPlayed          bool
 	IsDestroyed                   bool
 	FireRateTimer                 int
 	FireRateResetValue            int
 	IsFiring                      bool
+	EngineFireAnimationCounter int
 }
 
 type Shooter interface {

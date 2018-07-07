@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/oxycleanman/towers/gui"
 	"github.com/oxycleanman/towers/game"
+	"github.com/oxycleanman/towers/gui"
 )
 
 func main() {

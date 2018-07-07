@@ -2,8 +2,8 @@ package game
 
 type Player struct {
 	Character
-	Currency                         int
-	AtTop, AtBottom, AtLeft, AtRight bool
+	Currency                                         int
+	AtTop, AtBottom, AtLeft, AtRight, IsAccelerating bool
 }
 
 // Implement Shooter Interface
@@ -32,6 +32,8 @@ func (level *Level) initPlayer() {
 	player.AtLeft = false
 	player.AtRight = false
 	player.AtTop = false
+	player.EngineFireAnimationCounter = 1
+	player.IsAccelerating = false
 	level.Player = player
 }
 
@@ -52,6 +54,11 @@ func (player *Player) Move(topBound, bottomBound, leftBound, rightBound int) {
 	}
 	if player.Yvel != 0 && newY < bottomBound && newY > topBound {
 		player.Y += player.Yvel
+		if player.Yvel < 0 {
+			player.IsAccelerating = true
+		} else {
+			player.IsAccelerating = false
+		}
 		player.AtBottom = false
 		player.AtTop = false
 	} else {

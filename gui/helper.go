@@ -2,8 +2,8 @@ package gui
 
 import (
 	"github.com/veandco/go-sdl2/sdl"
-	"os"
 	"image/png"
+	"os"
 )
 
 func imgFileToTexture(renderer *sdl.Renderer, filename string) *sdl.Texture {

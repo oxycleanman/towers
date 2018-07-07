@@ -29,8 +29,9 @@ func (ui *ui) pause() {
 }
 
 func (ui *ui) SpawnEnemies(level *game.Level) {
-	if level.EnemySpawnTimer >= 100 && len(level.Enemies) < 1 {
-		level.Enemies = append(level.Enemies, level.InitEnemy())
+	if level.EnemySpawnTimer >= 200 && len(level.Enemies) < 10 {
+		spawnX := ui.randNumGen.Intn(ui.WinWidth)
+		level.Enemies = append(level.Enemies, level.InitEnemy(spawnX, -100))
 		level.EnemySpawnTimer = 0
 	} else {
 		level.EnemySpawnTimer++
@@ -39,7 +40,15 @@ func (ui *ui) SpawnEnemies(level *game.Level) {
 
 func (ui *ui) UpdateEnemies(level *game.Level) {
 	for _, enemy := range level.Enemies {
-		ui.CheckFiring(level, enemy)
+		if !enemy.IsDestroyed {
+			if enemy.Y > ui.WinHeight {
+				//Enemy is outside of the screen bounds, destroy it
+				enemy.IsDestroyed = true
+				enemy.DestroyedAnimationPlayed = true
+			}
+			ui.CheckFiring(level, enemy)
+			enemy.Move(level)
+		}
 	}
 }
 
@@ -77,7 +86,7 @@ func (ui *ui) UpdatePlayer(level *game.Level) {
 	level.Player.Move(0, ui.WinHeight, 0, ui.WinWidth)
 }
 
-func (ui *ui) checkBulletOutOfBounds(x, y int, w, h int32) bool {
+func (ui *ui) checkOutOfBounds(x, y int, w, h int32) bool {
 	if x > ui.WinWidth+int(w) || x < int(0-w) || y > ui.WinHeight+int(h) || y < int(0-h) {
 		return true
 	}

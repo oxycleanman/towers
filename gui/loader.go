@@ -1,9 +1,9 @@
 package gui
 
 import (
-	"io/ioutil"
 	"github.com/veandco/go-sdl2/mix"
 	"github.com/veandco/go-sdl2/sdl"
+	"io/ioutil"
 )
 
 func (ui *ui) loadTextures(dirName string) {
@@ -92,5 +92,21 @@ func (ui *ui) loadUiElements() {
 		muteButton.textBoundBox = &sdl.Rect{int32(textX), int32(textY), tw, th}
 		muteButton.onClick = ui.mute
 		ui.uiElementMap["muteButton"] = muteButton
+	}
+
+	//Load speed lines
+	lineTexture := ui.textureMap["speedLine"]
+	_, _, w, h, err := lineTexture.Query()
+	if err != nil {
+		panic(err)
+	}
+	for i := 0; i < 5; i++ {
+		line := &uiElement{}
+		line.texture = lineTexture
+		line.W = int(w)
+		line.H = int(h) * 2
+		line.X = ui.randNumGen.Intn(ui.WinWidth)
+		line.Y = -ui.randNumGen.Intn(ui.WinHeight)
+		ui.uiSpeedLines = append(ui.uiSpeedLines, line)
 	}
 }

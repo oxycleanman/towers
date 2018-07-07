@@ -2,12 +2,12 @@ package gui
 
 import (
 	"github.com/oxycleanman/towers/game"
+	"github.com/veandco/go-sdl2/mix"
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/ttf"
+	"math/rand"
 	"strconv"
 	"time"
-	"math/rand"
-	"github.com/veandco/go-sdl2/mix"
 )
 
 type uiElement struct {
@@ -18,12 +18,12 @@ type uiElement struct {
 
 type uiButton struct {
 	uiElement
-	boundBox *sdl.Rect
+	boundBox     *sdl.Rect
 	textBoundBox *sdl.Rect
-	mouseOver bool
-	clicked bool
-	onClick func()
-	textTexture *sdl.Texture
+	mouseOver    bool
+	clicked      bool
+	onClick      func()
+	textTexture  *sdl.Texture
 }
 
 type cursor struct {
@@ -32,52 +32,55 @@ type cursor struct {
 
 type hud struct {
 	uiElement
-	insideTexture *sdl.Texture
+	insideTexture        *sdl.Texture
 	horzTiles, vertTiles int
 }
 
 type ui struct {
-	WinWidth       int
-	WinHeight      int
+	WinWidth             int
+	WinHeight            int
 	horzTiles, vertTiles int
-	backgroundTexture *sdl.Texture
-	cursor *cursor
-	hud *hud
-	renderer       *sdl.Renderer
-	window         *sdl.Window
-	font           *ttf.Font
-	textureMap     map[string]*sdl.Texture
-	keyboardState  []uint8
-	inputChan      chan *game.Input
-	levelChan      chan *game.Level
-	currentMouseX  int32
-	currentMouseY  int32
-	playerInit     bool
-	fontTextureMap map[string]*sdl.Texture
-	soundFileMap   map[string]*mix.Chunk
-	uiElementMap   map[string]*uiButton
-	mapMoveDelay   int
-	mapMoveTimer   int
-	muted bool
-	paused bool
-	randNumGen     *rand.Rand
+	backgroundTexture    *sdl.Texture
+	cursor               *cursor
+	hud                  *hud
+	renderer             *sdl.Renderer
+	window               *sdl.Window
+	font                 *ttf.Font
+	textureMap           map[string]*sdl.Texture
+	keyboardState        []uint8
+	inputChan            chan *game.Input
+	levelChan            chan *game.Level
+	currentMouseX        int32
+	currentMouseY        int32
+	playerInit           bool
+	fontTextureMap       map[string]*sdl.Texture
+	soundFileMap         map[string]*mix.Chunk
+	uiElementMap         map[string]*uiButton
+	uiSpeedLines	[]*uiElement
+	uiSpeedLineTimer int
+	mapMoveDelay         int
+	mapMoveTimer         int
+	muted                bool
+	paused               bool
+	randNumGen           *rand.Rand
 }
 
 const (
-	playerLaserTexture  = "laserBlue01"
-	enemyLaserTexture   = "laserGreen02"
-	explosionTexture    = "laserBlue10"
-	playerLaserSound    = "sfx_laser1"
-	enemyLaserSound     = "sfx_laser2"
-	impactSound         = "boom7"
-	cursorTexture = "cursor_pointer3D"
-	hudTexture = "metalPanel"
-	innerHudTexture = "metalPanel_plate"
-	backgroundTexture = "purple"
-	fontSize = 24
+	playerLaserTexture = "laserBlue01"
+	enemyLaserTexture  = "laserGreen02"
+	explosionTexture   = "laserBlue10"
+	playerLaserSound   = "sfx_laser1"
+	enemyLaserSound    = "sfx_laser2"
+	impactSound        = "boom7"
+	cursorTexture      = "cursor_pointer3D"
+	hudTexture         = "metalPanel"
+	innerHudTexture    = "metalPanel_plate"
+	backgroundTexture  = "purple"
+	fontSize           = 24
 )
 
-var fontColor = sdl.Color{0,0,0,1}
+var fontColor = sdl.Color{0, 0, 0, 1}
+var playerEngineFireTexture *sdl.Texture
 
 func init() {
 	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
@@ -108,6 +111,8 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 	ui.fontTextureMap = make(map[string]*sdl.Texture)
 	ui.soundFileMap = make(map[string]*mix.Chunk)
 	ui.uiElementMap = make(map[string]*uiButton)
+	//ui.uiSpeedLines = make([]*uiElement, 5)
+	ui.uiSpeedLineTimer = 0
 	ui.playerInit = false
 	ui.mapMoveTimer = 0
 	ui.mapMoveDelay = 5
@@ -149,16 +154,25 @@ func (ui *ui) DrawBackground(level *game.Level) {
 		if err != nil {
 			panic(err)
 		}
-		ui.horzTiles = ui.WinWidth/int(w)
-		ui.vertTiles = ui.WinHeight/int(h)
+		ui.horzTiles = ui.WinWidth / int(w)
+		ui.vertTiles = ui.WinHeight / int(h)
 	}
 	destRect := &sdl.Rect{0, 0, int32(ui.WinWidth), int32(ui.WinHeight)}
 	ui.renderer.Copy(ui.backgroundTexture, nil, destRect)
 }
 
-func (ui *ui) DrawSpeedLines(level *game.Level) {
+func (ui *ui) DrawSpeedLines() {
 	// TODO: Maybe the number of lines changes as the player moves towards the top of the screen/accelerates?
-
+	for _, line := range ui.uiSpeedLines {
+		if line.Y > ui.WinHeight {
+			spawnX := ui.randNumGen.Intn(ui.WinWidth)
+			spawnY := -ui.randNumGen.Intn(ui.WinHeight)
+			line.X = spawnX
+			line.Y = spawnY
+		}
+		line.Y += 5
+		ui.renderer.Copy(line.texture, nil, &sdl.Rect{int32(line.X), int32(line.Y), int32(line.W), int32(line.H)})
+	}
 }
 
 func (ui *ui) DrawCursor() {
@@ -193,22 +207,23 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 		if err != nil {
 			panic(err)
 		}
-		ui.hud.horzTiles = ui.WinWidth/int(w)
+		ui.hud.horzTiles = ui.WinWidth / int(w)
 		ui.hud.vertTiles = 4
 		ui.hud.W = int(w)
 		ui.hud.H = int(h)
 	}
 	for i := 0; i < ui.hud.horzTiles; i++ {
+		offset := (ui.WinWidth % ui.hud.W) / 2
 		var tex *sdl.Texture
 		if i == 0 {
-			tex = ui.textureMap["metalPanel_greenCorner_noBorder"]
-			ui.renderer.CopyEx(tex, nil, &sdl.Rect{int32(i * ui.hud.W), int32(ui.WinHeight - ui.hud.H), int32(ui.hud.W), int32(ui.hud.H)}, 0, nil, sdl.FLIP_HORIZONTAL)
-		} else if i == ui.hud.horzTiles - 1 {
-			tex = ui.textureMap["metalPanel_greenCorner_noBorder"]
-			ui.renderer.Copy(tex, nil, &sdl.Rect{int32(i * ui.hud.W), int32(ui.WinHeight - ui.hud.H), int32(ui.hud.W), int32(ui.hud.H)})
+			tex = ui.textureMap["metalPanel_blueCorner_noBorder"]
+			ui.renderer.CopyEx(tex, nil, &sdl.Rect{int32(i*ui.hud.W + offset), int32(ui.WinHeight - ui.hud.H), int32(ui.hud.W), int32(ui.hud.H)}, 0, nil, sdl.FLIP_HORIZONTAL)
+		} else if i == ui.hud.horzTiles-1 {
+			tex = ui.textureMap["metalPanel_blueCorner_noBorder"]
+			ui.renderer.Copy(tex, nil, &sdl.Rect{int32(i*ui.hud.W + offset), int32(ui.WinHeight - ui.hud.H), int32(ui.hud.W), int32(ui.hud.H)})
 		} else {
-			tex = ui.textureMap["metalPanel_green_noBorder"]
-			ui.renderer.Copy(tex, nil, &sdl.Rect{int32(i * ui.hud.W), int32(ui.WinHeight - ui.hud.H), int32(ui.hud.W), int32(ui.hud.H)})
+			tex = ui.textureMap["metalPanel_blue_noBorder"]
+			ui.renderer.Copy(tex, nil, &sdl.Rect{int32(i*ui.hud.W + offset), int32(ui.WinHeight - ui.hud.H), int32(ui.hud.W), int32(ui.hud.H)})
 		}
 	}
 
@@ -260,6 +275,23 @@ func (ui *ui) DrawPlayer(level *game.Level) {
 	//player.Direction = game.FindDegreeRotation(int32(player.Y+player.H/2), int32(player.X+player.W/2), ui.currentMouseY, ui.currentMouseX) - 90
 	ui.renderer.Copy(tex, nil, &sdl.Rect{int32(player.X), int32(player.Y), int32(player.W), int32(player.H)})
 
+	// Engine Fire Animation
+	if player.EngineFireAnimationCounter > 5 {
+		playerEngineFireTexture = ui.textureMap["fire0"+strconv.Itoa(ui.randNumGen.Intn(3) + 1)]
+		player.EngineFireAnimationCounter = 1
+	} else {
+		if playerEngineFireTexture == nil {
+			playerEngineFireTexture = ui.textureMap["fire0"+strconv.Itoa(ui.randNumGen.Intn(3) + 1)]
+		}
+		player.EngineFireAnimationCounter++
+	}
+	_, _, w, h, err := playerEngineFireTexture.Query()
+	if err != nil {
+		panic(err)
+	}
+	if player.IsAccelerating {
+		ui.renderer.Copy(playerEngineFireTexture, nil, &sdl.Rect{int32(player.X+player.W/2) - w/2, int32(player.Y + player.H + 5), w, h})
+	}
 }
 
 func (ui *ui) DrawEnemy(level *game.Level) {
@@ -382,7 +414,7 @@ func (ui *ui) DrawBullet(level *game.Level) {
 			ui.renderer.Copy(tex, nil, &sdl.Rect{int32(bullet.X), int32(bullet.Y), int32(bullet.W), int32(bullet.H)})
 		}
 		// Keep bullets in the slice that aren't out of bounds (drop the bullets that go off screen so they aren't redrawn)
-		if !ui.checkBulletOutOfBounds(bullet.X, bullet.Y, int32(bullet.W), int32(bullet.H)) && !bullet.DestroyAnimationPlayed {
+		if !ui.checkOutOfBounds(bullet.X, bullet.Y, int32(bullet.W), int32(bullet.H)) && !bullet.DestroyAnimationPlayed {
 			if index != i {
 				level.Bullets[index] = bullet
 			}
@@ -496,6 +528,7 @@ func (ui *ui) Draw(level *game.Level) {
 	ui.DrawPlayer(level)
 	ui.DrawEnemy(level)
 	ui.DrawExplosions(level)
+	ui.DrawSpeedLines()
 	ui.DrawUiElements(level)
 	ui.DrawCursor()
 	ui.renderer.Present()
