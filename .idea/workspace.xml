@@ -2,6 +2,97 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="aa15563f-51fd-49f7-9a92-a4a96db69d25" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/game/bullet.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/game/enemy.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/game/player.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/Effects/speedLine.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barHorizontal_blue_left.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barHorizontal_blue_mid.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barHorizontal_blue_right.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barHorizontal_green_left.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barHorizontal_green_mid.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barHorizontal_green_right.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barHorizontal_red_left.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barHorizontal_red_mid.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barHorizontal_red_right.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barHorizontal_shadow_left.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barHorizontal_shadow_mid.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barHorizontal_shadow_right.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barHorizontal_white_left.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barHorizontal_white_mid.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barHorizontal_white_right.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barHorizontal_yellow_left.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barHorizontal_yellow_mid.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barHorizontal_yellow_right.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barVertical_blue_bottom.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barVertical_blue_mid.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barVertical_blue_top.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barVertical_green_bottom.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barVertical_green_mid.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barVertical_green_top.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barVertical_red_bottom.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barVertical_red_mid.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barVertical_red_top.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barVertical_shadow_bottom.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barVertical_shadow_mid.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barVertical_shadow_top.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barVertical_white_bottom.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barVertical_white_mid.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barVertical_white_top.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barVertical_yellow_bottom.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barVertical_yellow_mid.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/barVertical_yellow_top.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/crossair_black.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/crossair_blackOutline.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/crossair_blue.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/crossair_blueOutline.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/crossair_red.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/crossair_redOutline.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/crossair_white.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/crossair_whiteOutline.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/cursor_hand.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/cursor_pointer3D.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/cursor_pointer3D_shadow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/cursor_pointerFlat.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/cursor_pointerFlat_shadow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/dotBlue.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/dotGreen.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/dotRed.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/dotWhite.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/dotYellow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/dot_shadow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/glassPanel.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/glassPanel_cornerBL.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/glassPanel_cornerBR.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/glassPanel_cornerTL.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/glassPanel_cornerTR.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/glassPanel_corners.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/glassPanel_projection.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/glassPanel_tab.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/metalPanel.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/metalPanel_blue.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/metalPanel_blueCorner.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/metalPanel_green.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/metalPanel_greenCorner.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/metalPanel_greenCorner_noBorder.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/metalPanel_green_noBorder.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/metalPanel_plate.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/metalPanel_red.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/metalPanel_redCorner.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/metalPanel_yellow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/metalPanel_yellowCorner.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/squareBlue.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/squareGreen.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/squareRed.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/squareWhite.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/squareYellow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/square_shadow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/assets/images/shield.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/helper.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/loader.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/logic.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/game.go" beforeDir="false" afterPath="$PROJECT_DIR$/game/game.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gui/gui.go" beforeDir="false" afterPath="$PROJECT_DIR$/gui/gui.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -26,41 +117,106 @@
     <select />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="game.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/game/game.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3592">
-              <caret line="75" column="29" selection-start-line="75" selection-start-column="29" selection-end-line="75" selection-end-column="29" />
-              <folding>
-                <element signature="e#14#72#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="gui.go" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/gui/gui.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-7366">
-              <caret line="269" column="90" selection-start-line="269" selection-start-column="90" selection-end-line="269" selection-end-column="90" />
-              <folding>
-                <element signature="e#13#193#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="main.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="13" selection-start-line="13" selection-end-line="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="horizontal" split-proportion="0.5">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file leaf-file-name="game.go" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/game/game.go">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="407">
+                  <caret line="46" column="8" selection-start-line="46" selection-start-column="8" selection-end-line="46" selection-end-column="8" />
+                  <folding>
+                    <element signature="e#14#72#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="gui.go" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/gui/gui.go">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="561">
+                  <caret line="209" column="49" selection-start-line="209" selection-start-column="49" selection-end-line="209" selection-end-column="49" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="logic.go" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/gui/logic.go">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="1853">
+                  <caret line="113" column="21" lean-forward="true" selection-start-line="113" selection-start-column="21" selection-end-line="113" selection-end-column="21" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="loader.go" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/gui/loader.go">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="204">
+                  <caret line="12" column="5" selection-start-line="12" selection-start-column="5" selection-end-line="12" selection-end-column="5" />
+                  <folding>
+                    <element signature="e#13#123#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="helper.go" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/gui/helper.go">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="883">
+                  <caret line="63" column="1" selection-start-line="63" selection-start-column="1" selection-end-line="63" selection-end-column="1" />
+                  <folding>
+                    <element signature="e#13#76#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="main.go" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/main.go">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="170">
+                  <caret line="13" selection-start-line="13" selection-end-line="13" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file leaf-file-name="player.go" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/game/player.go">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="883">
+                  <caret line="64" column="1" selection-start-line="64" selection-start-column="1" selection-end-line="64" selection-end-column="1" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="enemy.go" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/game/enemy.go">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="646">
+                  <caret line="38" selection-start-line="38" selection-end-line="38" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="bullet.go" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/game/bullet.go">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="697">
+                  <caret line="41" column="1" selection-start-line="41" selection-start-column="1" selection-end-line="41" selection-end-column="1" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -95,11 +251,15 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/main.go" />
-        <option value="$PROJECT_DIR$/game/player.go" />
-        <option value="$PROJECT_DIR$/game/bullet.go" />
-        <option value="$PROJECT_DIR$/game/enemy.go" />
         <option value="$PROJECT_DIR$/../../../src/github.com/veandco/go-sdl2/ttf/sdl_ttf.go" />
+        <option value="$PROJECT_DIR$/gui/loadAssets.go" />
+        <option value="$PROJECT_DIR$/gui/loader.go" />
+        <option value="$PROJECT_DIR$/gui/helper.go" />
+        <option value="$PROJECT_DIR$/game/player.go" />
+        <option value="$PROJECT_DIR$/game/enemy.go" />
+        <option value="$PROJECT_DIR$/game/bullet.go" />
         <option value="$PROJECT_DIR$/game/game.go" />
+        <option value="$PROJECT_DIR$/gui/logic.go" />
         <option value="$PROJECT_DIR$/gui/gui.go" />
       </list>
     </option>
@@ -127,6 +287,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -150,11 +311,25 @@
               <item name="gui" type="462c0819:PsiDirectoryNode" />
               <item name="assets" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="towers" type="b2602c69:ProjectViewProjectNode" />
+              <item name="towers" type="462c0819:PsiDirectoryNode" />
+              <item name="gui" type="462c0819:PsiDirectoryNode" />
+              <item name="assets" type="462c0819:PsiDirectoryNode" />
+              <item name="images" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="towers" type="b2602c69:ProjectViewProjectNode" />
+              <item name="towers" type="462c0819:PsiDirectoryNode" />
+              <item name="gui" type="462c0819:PsiDirectoryNode" />
+              <item name="assets" type="462c0819:PsiDirectoryNode" />
+              <item name="images" type="462c0819:PsiDirectoryNode" />
+              <item name="UI" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -171,18 +346,19 @@
     <property name="settings.editor.selected.configurable" value="go.autoimport" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets\images\UI" />
+      <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets\images" />
+      <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets\images\Effects" />
+      <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets\sounds" />
+      <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets\images\UI" />
       <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets\sounds" />
       <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets\fonts" />
       <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets\images" />
       <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets\sounds" />
-      <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets\images\Effects" />
-      <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets" />
-      <recent name="C:\Users\mailc\go\src\github.com\oxycleanman\towers\gui\assets\images" />
-      <recent name="$PROJECT_DIR$/gui/assets" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -216,15 +392,16 @@
     <frame x="-8" y="-8" width="2576" height="1416" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.10890302" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.10969793" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5002633" side_tool="true" weight="0.3277144" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5007949" side_tool="true" weight="0.3306773" />
       <window_info anchor="right" id="Database" order="3" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32908365" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3561753" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49960256" visible="true" weight="0.17689243" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.4997367" weight="0.3306773" />
+      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49920508" weight="0.3306773" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39967898" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -233,8 +410,27 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32969758" />
     </layout>
+    <layout-to-restore>
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49960256" visible="true" weight="0.3561753" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.10969793" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32969758" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39967898" />
+      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49920508" weight="0.3306773" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5007949" side_tool="true" weight="0.3306773" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="right" id="Database" order="3" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -262,67 +458,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/game/game.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="12" selection-start-column="12" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/gui.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/game/game.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="12" selection-start-column="12" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/gui.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="4" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Go/src/sync/pool.go" />
-    <entry file="file://C:/Go/src/fmt/print.go" />
-    <entry file="file://$USER_HOME$/veandco/go-sdl2/sdl/timer.go" />
-    <entry file="file://C:/Go/src/time/time.go" />
-    <entry file="file://$USER_HOME$/veandco/go-sdl2/sdl/events.go" />
-    <entry file="file://$PROJECT_DIR$/game/player.go" />
-    <entry file="file://$PROJECT_DIR$/game/bullet.go" />
-    <entry file="file://$USER_HOME$/veandco/go-sdl2/sdl/rect.go" />
-    <entry file="file://$USER_HOME$/veandco/go-sdl2/sdl/render.go" />
-    <entry file="file:///usr/local/go/src/runtime/asm_amd64.s" />
-    <entry file="file://$PROJECT_DIR$/../../../src/github.com/veandco/go-sdl2/ttf/sdl_ttf.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="18" column="44" selection-start-line="18" selection-start-column="44" selection-end-line="18" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/assets/images/Effects/fire00.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/assets/images/Effects/fire02.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/assets/images/Effects/fire03.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/gui/assets/images/Effects/fire06.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
@@ -419,23 +554,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="13" selection-start-line="13" selection-end-line="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/game/game.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3592">
-          <caret line="75" column="29" selection-start-line="75" selection-start-column="29" selection-end-line="75" selection-end-column="29" />
-          <folding>
-            <element signature="e#14#72#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../veandco/go-sdl2/mix/sdl_mixer.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="253">
@@ -443,13 +561,114 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/gui/loader.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="5" selection-start-line="12" selection-start-column="5" selection-end-line="12" selection-end-column="5" />
+          <folding>
+            <element signature="e#13#123#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="13" selection-start-line="13" selection-end-line="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/bullet.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="697">
+          <caret line="41" column="1" selection-start-line="41" selection-start-column="1" selection-end-line="41" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/enemy.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="646">
+          <caret line="38" selection-start-line="38" selection-end-line="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/player.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="883">
+          <caret line="64" column="1" selection-start-line="64" selection-start-column="1" selection-end-line="64" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/glassPanel_corners.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/glassPanel_cornerBR.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/glassPanel_cornerBL.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/metalPanel_blue.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/metalPanel.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Backgrounds/purple.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/helper.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="883">
+          <caret line="63" column="1" selection-start-line="63" selection-start-column="1" selection-end-line="63" selection-end-column="1" />
+          <folding>
+            <element signature="e#13#76#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/metalPanel_plate.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/glassPanel.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/glassPanel_projection.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/metalPanel_yellowCorner.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/metalPanel_yellow.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/metalPanel_redCorner.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/metalPanel_blueCorner.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/game.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="407">
+          <caret line="46" column="8" selection-start-line="46" selection-start-column="8" selection-end-line="46" selection-end-column="8" />
+          <folding>
+            <element signature="e#14#72#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/logic.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1853">
+          <caret line="113" column="21" lean-forward="true" selection-start-line="113" selection-start-column="21" selection-end-line="113" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/gui/gui.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-7366">
-          <caret line="269" column="90" selection-start-line="269" selection-start-column="90" selection-end-line="269" selection-end-column="90" />
-          <folding>
-            <element signature="e#13#193#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="561">
+          <caret line="209" column="49" selection-start-line="209" selection-start-column="49" selection-end-line="209" selection-end-column="49" />
         </state>
       </provider>
     </entry>
