@@ -44,6 +44,7 @@ type ui struct {
 	mapMoveDelay   int
 	mapMoveTimer   int
 	muted bool
+	paused bool
 	randNumGen     *rand.Rand
 }
 
@@ -56,6 +57,8 @@ const (
 	impactSound         = "boom7"
 	cursor              = "cursor"
 )
+
+var fontColor = sdl.Color{0,0,0,1}
 
 func init() {
 	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
@@ -140,13 +143,18 @@ func (ui *ui) loadSounds(dirName string) {
 		panic(err)
 	}
 	for _, file := range files {
-		filename := file.Name()[:len(file.Name())-4]
-		filepath := dirName + "/" + file.Name()
-		sound, err := mix.LoadWAV(filepath)
-		if err != nil {
-			panic(err)
+		if file.IsDir() {
+			newFilepath := dirName + "/" + file.Name() + "/"
+			ui.loadSounds(newFilepath)
+		} else {
+			filename := file.Name()[:len(file.Name())-4]
+			filepath := dirName + "/" + file.Name()
+			sound, err := mix.LoadWAV(filepath)
+			if err != nil {
+				panic(err)
+			}
+			ui.soundFileMap[filename] = sound
 		}
-		ui.soundFileMap[filename] = sound
 	}
 }
 
@@ -194,29 +202,30 @@ func imgFileToTexture(renderer *sdl.Renderer, filename string) *sdl.Texture {
 
 func (ui *ui) loadUiElements() {
 	{
-		testButton := &uiElement{}
-		testButton.texture = ui.textureMap["buttonBlue"]
-		_, _, w, h, err := testButton.texture.Query()
+		pauseButton := &uiElement{}
+		pauseButton.texture = ui.textureMap["buttonBlue"]
+		_, _, w, h, err := pauseButton.texture.Query()
 		if err != nil {
 			panic(err)
 		}
-		testButton.X = 20
-		testButton.Y = ui.WinHeight - int(h) - 20
-		testButton.W = int(w)
-		testButton.H = int(h)
-		testButton.boundBox = &sdl.Rect{int32(testButton.X), int32(testButton.Y), int32(testButton.W), int32(testButton.H)}
-		testButton.textTexture = ui.stringToTexture("button 1", sdl.Color{0, 0, 0, 1})
-		_, _, tw, th, err := testButton.textTexture.Query()
+		pauseButton.X = 20
+		pauseButton.Y = ui.WinHeight - int(h) - 20
+		pauseButton.W = int(w)
+		pauseButton.H = int(h)
+		pauseButton.boundBox = &sdl.Rect{int32(pauseButton.X), int32(pauseButton.Y), int32(pauseButton.W), int32(pauseButton.H)}
+		pauseButton.textTexture = ui.stringToTexture("pause", fontColor)
+		_, _, tw, th, err := pauseButton.textTexture.Query()
 		if err != nil {
 			panic(err)
 		}
-		textX := (testButton.X + testButton.W/2) - int(tw/2)
-		textY := (testButton.Y + testButton.H/2) - int(th/2)
-		testButton.textBoundBox = &sdl.Rect{int32(textX), int32(textY), tw, th}
-		ui.uiElementMap["button1"] = testButton
+		textX := (pauseButton.X + pauseButton.W/2) - int(tw/2)
+		textY := (pauseButton.Y + pauseButton.H/2) - int(th/2)
+		pauseButton.textBoundBox = &sdl.Rect{int32(textX), int32(textY), tw, th}
+		pauseButton.onClick = ui.pause
+		ui.uiElementMap["pauseButton"] = pauseButton
 	}
 	{
-		testButton := ui.uiElementMap["button1"]
+		testButton := ui.uiElementMap["pauseButton"]
 		muteButton := &uiElement{}
 		muteButton.texture = ui.textureMap["buttonRed"]
 		_, _, w, h, err := muteButton.texture.Query()
@@ -228,7 +237,7 @@ func (ui *ui) loadUiElements() {
 		muteButton.W = int(w)
 		muteButton.H = int(h)
 		muteButton.boundBox = &sdl.Rect{int32(muteButton.X), int32(muteButton.Y), int32(muteButton.W), int32(muteButton.H)}
-		muteButton.textTexture = ui.stringToTexture("mute", sdl.Color{0,0,0,1})
+		muteButton.textTexture = ui.stringToTexture("mute", fontColor)
 		_, _, tw, th, err := testButton.textTexture.Query()
 		if err != nil {
 			panic(err)
@@ -245,11 +254,21 @@ func (ui *ui) mute() {
 	if mix.Volume(-1, -1) > 0 {
 		mix.Volume(-1, 0)
 		ui.muted = true
-		ui.uiElementMap["muteButton"].textTexture = ui.stringToTexture("unmute", sdl.Color{0,0,0,1})
+		ui.uiElementMap["muteButton"].textTexture = ui.stringToTexture("unmute", fontColor)
 	} else {
 		mix.Volume(-1, 128)
 		ui.muted = false
-		ui.uiElementMap["muteButton"].textTexture = ui.stringToTexture("mute", sdl.Color{0,0,0,1})
+		ui.uiElementMap["muteButton"].textTexture = ui.stringToTexture("mute", fontColor)
+	}
+}
+
+func (ui *ui) pause() {
+	if !ui.paused {
+		ui.paused = true
+		ui.uiElementMap["pauseButton"].textTexture = ui.stringToTexture("unpause", fontColor)
+	} else {
+		ui.paused = false
+		ui.uiElementMap["pauseButton"].textTexture = ui.stringToTexture("pause", fontColor)
 	}
 }
 
@@ -654,19 +673,31 @@ func (ui *ui) checkMouseHover(event *sdl.MouseMotionEvent) {
 
 // Remember to always draw from the ground up
 func (ui *ui) Draw(level *game.Level) {
-	ui.renderer.Clear()
-	ui.checkCollisions(level)
-	ui.DrawBackground(level)
-	ui.DrawBullet(level)
-	ui.DrawPlayer(level)
-	ui.SpawnEnemies(level)
-	ui.DrawEnemy(level)
-	ui.CheckFiring(level, level.Player)
-	//level.CheckBulletCollisions()
-	ui.DrawExplosions(level)
-	ui.DrawUiElements(level)
-	ui.DrawCursor()
-	ui.renderer.Present()
+	if !ui.paused {
+		ui.renderer.Clear()
+		ui.checkCollisions(level)
+		ui.DrawBackground(level)
+		ui.DrawBullet(level)
+		ui.DrawPlayer(level)
+		ui.SpawnEnemies(level)
+		ui.DrawEnemy(level)
+		ui.CheckFiring(level, level.Player)
+		//level.CheckBulletCollisions()
+		ui.DrawExplosions(level)
+		ui.DrawUiElements(level)
+		ui.DrawCursor()
+		ui.renderer.Present()
+	} else {
+		// TODO: Need to be able to call the draw functions for player, bullet, etc. without extra logic running
+		ui.renderer.Clear()
+		ui.DrawBackground(level)
+		//ui.DrawBullet(level)
+		//ui.DrawPlayer(level)
+		//ui.DrawEnemy(level)
+		ui.DrawUiElements(level)
+		ui.DrawCursor()
+		ui.renderer.Present()
+	}
 }
 
 func (ui *ui) Run() {
