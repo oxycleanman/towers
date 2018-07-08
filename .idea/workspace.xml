@@ -2,20 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="aa15563f-51fd-49f7-9a92-a4a96db69d25" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/metalPanel_blueCorner_noBorder.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gui/assets/images/UI/metalPanel_blue_noBorder.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gui/input.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game/bullet.go" beforeDir="false" afterPath="$PROJECT_DIR$/game/bullet.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game/enemy.go" beforeDir="false" afterPath="$PROJECT_DIR$/game/enemy.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game/game.go" beforeDir="false" afterPath="$PROJECT_DIR$/game/game.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game/player.go" beforeDir="false" afterPath="$PROJECT_DIR$/game/player.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gui/assets/images/Effects/fire04.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire04.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gui/assets/images/Effects/fire05.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire05.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gui/assets/images/Effects/fire06.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire06.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gui/assets/images/Effects/fire07.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Effects/fire07.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gui/gui.go" beforeDir="false" afterPath="$PROJECT_DIR$/gui/gui.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gui/helper.go" beforeDir="false" afterPath="$PROJECT_DIR$/gui/helper.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gui/loader.go" beforeDir="false" afterPath="$PROJECT_DIR$/gui/loader.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gui/logic.go" beforeDir="false" afterPath="$PROJECT_DIR$/gui/logic.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
     </list>
@@ -44,11 +36,23 @@
     <splitter split-orientation="horizontal" split-proportion="0.5">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="gui.go" pinned="false" current-in-tab="true">
+          <file leaf-file-name="gui.go" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/gui/gui.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="869">
-                  <caret line="294" column="1" selection-start-line="294" selection-start-column="1" selection-end-line="294" selection-end-column="1" />
+                <state relative-caret-position="2358">
+                  <caret line="385" column="27" selection-start-line="385" selection-start-column="27" selection-end-line="385" selection-end-column="27" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="input.go" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/gui/input.go">
+              <provider selected="true" editor-type-id="text-editor">
+                <state>
+                  <caret column="11" lean-forward="true" selection-start-column="11" selection-end-column="11" />
+                  <folding>
+                    <element signature="e#13#95#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -56,8 +60,8 @@
           <file leaf-file-name="logic.go" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/gui/logic.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="323">
-                  <caret line="32" column="49" selection-start-line="32" selection-start-column="49" selection-end-line="32" selection-end-column="49" />
+                <state relative-caret-position="391">
+                  <caret line="57" column="26" lean-forward="true" selection-start-line="57" selection-start-column="26" selection-end-line="57" selection-end-column="26" />
                 </state>
               </provider>
             </entry>
@@ -67,9 +71,6 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="781">
                   <caret line="106" column="27" selection-start-line="106" selection-start-column="27" selection-end-line="106" selection-end-column="27" />
-                  <folding>
-                    <element signature="e#13#123#0" expanded="true" />
-                  </folding>
                 </state>
               </provider>
             </entry>
@@ -77,7 +78,7 @@
           <file leaf-file-name="helper.go" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/gui/helper.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="458">
+                <state relative-caret-position="391">
                   <caret line="27" column="45" lean-forward="true" selection-start-line="27" selection-start-column="45" selection-end-line="27" selection-end-column="45" />
                   <folding>
                     <element signature="e#13#76#0" expanded="true" />
@@ -86,11 +87,14 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="main.go" pinned="false" current-in-tab="false">
+          <file leaf-file-name="main.go" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/main.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="170">
-                  <caret line="13" selection-start-line="13" selection-end-line="13" />
+                <state relative-caret-position="289">
+                  <caret line="17" column="63" selection-start-line="17" selection-start-column="63" selection-end-line="17" selection-end-column="63" />
+                  <folding>
+                    <element signature="e#14#123#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -98,12 +102,12 @@
         </leaf>
       </split-first>
       <split-second>
-        <leaf>
-          <file leaf-file-name="player.go" pinned="false" current-in-tab="true">
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file leaf-file-name="player.go" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/game/player.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="85">
-                  <caret line="5" column="39" selection-start-line="5" selection-start-column="39" selection-end-line="5" selection-end-column="39" />
+                <state relative-caret-position="-1">
+                  <caret line="23" column="23" lean-forward="true" selection-start-line="23" selection-start-column="23" selection-end-line="23" selection-end-column="23" />
                 </state>
               </provider>
             </entry>
@@ -111,8 +115,8 @@
           <file leaf-file-name="enemy.go" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/game/enemy.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="17">
-                  <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
+                <state relative-caret-position="816">
+                  <caret line="48" column="36" selection-start-line="48" selection-start-column="36" selection-end-line="48" selection-end-column="36" />
                 </state>
               </provider>
             </entry>
@@ -126,11 +130,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="game.go" pinned="false" current-in-tab="false">
+          <file leaf-file-name="game.go" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/game/game.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="629">
-                  <caret line="79" column="38" selection-start-line="79" selection-start-column="38" selection-end-line="79" selection-end-column="38" />
+                <state relative-caret-position="2481">
+                  <caret line="229" column="50" selection-start-line="229" selection-start-column="50" selection-end-line="229" selection-end-column="50" />
                   <folding>
                     <element signature="e#14#72#0" expanded="true" />
                   </folding>
@@ -174,17 +178,18 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/main.go" />
         <option value="$PROJECT_DIR$/../../../src/github.com/veandco/go-sdl2/ttf/sdl_ttf.go" />
         <option value="$PROJECT_DIR$/gui/loadAssets.go" />
         <option value="$PROJECT_DIR$/gui/helper.go" />
         <option value="$PROJECT_DIR$/game/bullet.go" />
         <option value="$PROJECT_DIR$/gui/loader.go" />
+        <option value="$PROJECT_DIR$/gui/input.go" />
+        <option value="$PROJECT_DIR$/game/player.go" />
         <option value="$PROJECT_DIR$/game/enemy.go" />
         <option value="$PROJECT_DIR$/game/game.go" />
-        <option value="$PROJECT_DIR$/gui/logic.go" />
-        <option value="$PROJECT_DIR$/game/player.go" />
         <option value="$PROJECT_DIR$/gui/gui.go" />
+        <option value="$PROJECT_DIR$/gui/logic.go" />
+        <option value="$PROJECT_DIR$/main.go" />
       </list>
     </option>
   </component>
@@ -211,7 +216,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -235,10 +239,26 @@
               <item name="gui" type="462c0819:PsiDirectoryNode" />
               <item name="assets" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="towers" type="b2602c69:ProjectViewProjectNode" />
+              <item name="towers" type="462c0819:PsiDirectoryNode" />
+              <item name="gui" type="462c0819:PsiDirectoryNode" />
+              <item name="assets" type="462c0819:PsiDirectoryNode" />
+              <item name="images" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="towers" type="b2602c69:ProjectViewProjectNode" />
+              <item name="towers" type="462c0819:PsiDirectoryNode" />
+              <item name="gui" type="462c0819:PsiDirectoryNode" />
+              <item name="assets" type="462c0819:PsiDirectoryNode" />
+              <item name="images" type="462c0819:PsiDirectoryNode" />
+              <item name="Enemies" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -299,18 +319,16 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="2576" height="1416" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.10969793" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49951598" visible="true" weight="0.11049285" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5007949" side_tool="true" weight="0.3306773" />
       <window_info anchor="right" id="Database" order="3" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32908365" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49960256" visible="true" weight="0.17689243" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49920508" weight="0.3306773" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49960256" weight="0.35856575" />
+      <window_info id="Structure" order="1" sideWeight="0.50048405" side_tool="true" weight="0.11049285" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" sideWeight="0.49920508" visible="true" weight="0.3306773" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39920318" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -319,25 +337,26 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32908365" />
     </layout>
     <layout-to-restore>
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49960256" visible="true" weight="0.3561753" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.10969793" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32969758" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49960256" visible="true" weight="0.3561753" />
+      <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39967898" />
+      <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49920508" weight="0.3306773" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5007949" side_tool="true" weight="0.3306773" />
-      <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="right" id="Database" order="3" />
+      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32969758" />
       <window_info id="Favorites" order="2" side_tool="true" />
     </layout-to-restore>
   </component>
@@ -367,74 +386,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/gui/assets/images/playerShip1_blue.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/assets/images/playerShip1_green.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/assets/images/playerShip2_blue.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/cursor.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/numeral9.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/playerLife1_blue.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/assets/images/Parts/beam0.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../veandco/go-sdl2/sdl/video.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="322">
-          <caret line="746" column="28" lean-forward="true" selection-start-line="746" selection-start-column="28" selection-end-line="746" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/buttonBlue.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../veandco/go-sdl2/sdl/events.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="596">
-          <caret line="161" column="4" selection-start-line="161" selection-start-column="4" selection-end-line="161" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../veandco/go-sdl2/sdl/render.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="261">
-          <caret line="226" column="24" selection-start-line="226" selection-start-column="24" selection-end-line="226" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../veandco/go-sdl2/mix/sdl_mixer.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="454" column="5" selection-start-line="454" selection-start-column="5" selection-end-line="454" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="13" selection-start-line="13" selection-end-line="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/glassPanel_corners.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/glassPanel_cornerBR.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/glassPanel_cornerBL.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/metalPanel_blue.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
@@ -465,13 +416,6 @@
     <entry file="file://$PROJECT_DIR$/gui/assets/images/UI/metalPanel_blueCorner.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/game/bullet.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="24" selection-start-line="17" selection-start-column="24" selection-end-line="17" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/Go/src/runtime/asm_amd64.s">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="243">
@@ -491,13 +435,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/gui/assets/images/Effects/fire00.png">
       <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/game/enemy.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gui/assets/images/Effects/fire16.png">
       <provider selected="true" editor-type-id="images" />
@@ -538,22 +475,99 @@
     <entry file="file://$PROJECT_DIR$/gui/assets/images/Effects/fire06.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/gui/helper.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="27" column="45" lean-forward="true" selection-start-line="27" selection-start-column="45" selection-end-line="27" selection-end-column="45" />
+          <folding>
+            <element signature="e#13#76#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/playerShip1_blue.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/shield.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Power-ups/bold_silver.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Power-ups/pill_blue.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Power-ups/powerupBlue.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Power-ups/powerupBlue_shield.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Power-ups/powerupBlue_star.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Power-ups/shield_gold.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Power-ups/shield_silver.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Power-ups/things_bronze.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Power-ups/things_gold.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/bullet.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="24" selection-start-line="17" selection-start-column="24" selection-end-line="17" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Enemies/enemyBlack1.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Enemies/enemyBlue4.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/player.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1">
+          <caret line="23" column="23" lean-forward="true" selection-start-line="23" selection-start-column="23" selection-end-line="23" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/enemy.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="816">
+          <caret line="48" column="36" selection-start-line="48" selection-start-column="36" selection-end-line="48" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/game/game.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="629">
-          <caret line="79" column="38" selection-start-line="79" selection-start-column="38" selection-end-line="79" selection-end-column="38" />
+        <state relative-caret-position="2481">
+          <caret line="229" column="50" selection-start-line="229" selection-start-column="50" selection-end-line="229" selection-end-column="50" />
           <folding>
             <element signature="e#14#72#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gui/helper.go">
+    <entry file="file://C:/Go/src/runtime/mstats.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="458">
-          <caret line="27" column="45" lean-forward="true" selection-start-line="27" selection-start-column="45" selection-end-line="27" selection-end-column="45" />
+        <state relative-caret-position="7684">
+          <caret line="456" column="5" selection-start-line="456" selection-start-column="5" selection-end-line="456" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/input.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="11" lean-forward="true" selection-start-column="11" selection-end-column="11" />
           <folding>
-            <element signature="e#13#76#0" expanded="true" />
+            <element signature="e#13#95#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -562,30 +576,30 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="781">
           <caret line="106" column="27" selection-start-line="106" selection-start-column="27" selection-end-line="106" selection-end-column="27" />
-          <folding>
-            <element signature="e#13#123#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui/logic.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="32" column="49" selection-start-line="32" selection-start-column="49" selection-end-line="32" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/game/player.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="39" selection-start-line="5" selection-start-column="39" selection-end-line="5" selection-end-column="39" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gui/gui.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="869">
-          <caret line="294" column="1" selection-start-line="294" selection-start-column="1" selection-end-line="294" selection-end-column="1" />
+        <state relative-caret-position="2358">
+          <caret line="385" column="27" selection-start-line="385" selection-start-column="27" selection-end-line="385" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui/logic.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="57" column="26" lean-forward="true" selection-start-line="57" selection-start-column="26" selection-end-line="57" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="63" selection-start-line="17" selection-start-column="63" selection-end-line="17" selection-end-column="63" />
+          <folding>
+            <element signature="e#14#123#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

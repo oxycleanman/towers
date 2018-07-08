@@ -8,6 +8,8 @@ import (
 	"math/rand"
 	"strconv"
 	"time"
+	"runtime"
+	"fmt"
 )
 
 type uiElement struct {
@@ -63,6 +65,9 @@ type ui struct {
 	muted                bool
 	paused               bool
 	randNumGen           *rand.Rand
+	levelComplete bool
+	levelCompleteMessageTimer int
+	levelCompleteMessageShowTime int
 }
 
 const (
@@ -111,12 +116,12 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 	ui.fontTextureMap = make(map[string]*sdl.Texture)
 	ui.soundFileMap = make(map[string]*mix.Chunk)
 	ui.uiElementMap = make(map[string]*uiButton)
-	//ui.uiSpeedLines = make([]*uiElement, 5)
 	ui.uiSpeedLineTimer = 0
 	ui.playerInit = false
 	ui.mapMoveTimer = 0
 	ui.mapMoveDelay = 5
 	ui.muted = false
+	ui.levelCompleteMessageShowTime = 200
 
 	var err error
 	ui.window, err = sdl.CreateWindow("Some Shitty Space Game", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED, int32(ui.WinWidth), int32(ui.WinHeight), sdl.WINDOW_SHOWN)
@@ -157,8 +162,8 @@ func (ui *ui) DrawBackground(level *game.Level) {
 		ui.horzTiles = ui.WinWidth / int(w)
 		ui.vertTiles = ui.WinHeight / int(h)
 	}
-	destRect := &sdl.Rect{0, 0, int32(ui.WinWidth), int32(ui.WinHeight)}
-	ui.renderer.Copy(ui.backgroundTexture, nil, destRect)
+	//destRect := &sdl.Rect{0, 0, int32(ui.WinWidth), int32(ui.WinHeight)}
+	//ui.renderer.Copy(ui.backgroundTexture, nil, destRect)
 }
 
 func (ui *ui) DrawSpeedLines() {
@@ -192,8 +197,18 @@ func (ui *ui) DrawCursor() {
 func (ui *ui) DrawUiElements(level *game.Level) {
 	//Draw Player Hitpoints, eventually the entire HUD
 	p := level.Player
-	tex := ui.stringToTexture(strconv.Itoa(p.Hitpoints)+" HP", sdl.Color{255, 255, 255, 1})
-	_, _, w, h, err := tex.Query()
+	hpTex := ui.stringToTexture(strconv.Itoa(p.Hitpoints)+" HP", sdl.Color{255, 255, 255, 1})
+	_, _, hpW, hpH, err := hpTex.Query()
+	if err != nil {
+		panic(err)
+	}
+	pTex := ui.stringToTexture(strconv.Itoa(p.Points), sdl.Color{255, 255, 255, 1})
+	_, _, pW, pH, err := pTex.Query()
+	if err != nil {
+		panic(err)
+	}
+	levTex := ui.stringToTexture("Level " + strconv.Itoa(level.LevelNumber), sdl.Color{255, 255, 255, 1})
+	_, _, levW, levH, err := levTex.Query()
 	if err != nil {
 		panic(err)
 	}
@@ -207,7 +222,7 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 		if err != nil {
 			panic(err)
 		}
-		ui.hud.horzTiles = ui.WinWidth / int(w)
+		ui.hud.horzTiles = (ui.WinWidth/2) / int(w)
 		ui.hud.vertTiles = 4
 		ui.hud.W = int(w)
 		ui.hud.H = int(h)
@@ -244,8 +259,10 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 		ui.renderer.Copy(element.textTexture, nil, element.textBoundBox)
 	}
 
-	//Copy all elements to the renderer
-	ui.renderer.Copy(tex, nil, &sdl.Rect{0, 0, w, h})
+	//Copy HP and Point elements to the renderer
+	ui.renderer.Copy(hpTex, nil, &sdl.Rect{0, 0, hpW, hpH})
+	ui.renderer.Copy(pTex, nil, &sdl.Rect{hpW + 20, 0, pW, pH})
+	ui.renderer.Copy(levTex, nil, &sdl.Rect{int32(ui.WinWidth - 20) - levW, 0, levW, levH})
 }
 
 func (ui *ui) DrawPlayer(level *game.Level) {
@@ -272,7 +289,24 @@ func (ui *ui) DrawPlayer(level *game.Level) {
 		// TODO: Lose Scenario... Some kind of modal? Loss of life?
 	}
 	tex := player.Texture
-	//player.Direction = game.FindDegreeRotation(int32(player.Y+player.H/2), int32(player.X+player.W/2), ui.currentMouseY, ui.currentMouseX) - 90
+
+	// Draw Player Shield
+	shieldTex := ui.textureMap["shield"]
+	_, _, sw, sh, err := shieldTex.Query()
+	if err != nil {
+		panic(err)
+	}
+	if player.ShieldHitpoints > 0 {
+		if player.ShieldHitpoints > 25 && player.ShieldHitpoints < 75 {
+			shieldTex.SetColorMod(255, 255, 0)
+		} else if player.ShieldHitpoints <= 25 {
+			shieldTex.SetColorMod(255, 0, 0)
+		} else {
+			shieldTex.SetColorMod(255, 255, 255)
+		}
+		// Subtract 10 from Y pos to move shield further forward from player
+		ui.renderer.Copy(shieldTex, nil, &sdl.Rect{int32(player.X + player.W/2) - sw/2, int32(player.Y + player.H/2) - sh/2 - 10, sw, sh})
+	}
 	ui.renderer.Copy(tex, nil, &sdl.Rect{int32(player.X), int32(player.Y), int32(player.W), int32(player.H)})
 
 	// Engine Fire Animation
@@ -348,6 +382,8 @@ func (ui *ui) DrawExplosions(level *game.Level) {
 			if !enemy.IsDestroyed && !enemy.DestroyedAnimationPlayed {
 				level.Enemies[index] = enemy
 				index++
+			} else {
+				enemy = nil
 			}
 		}
 	}
@@ -419,102 +455,22 @@ func (ui *ui) DrawBullet(level *game.Level) {
 				level.Bullets[index] = bullet
 			}
 			index++
+		} else {
+			bullet = nil
 		}
 	}
 	level.Bullets = level.Bullets[:index]
 }
 
-func determineInputType(event *sdl.KeyboardEvent) *game.Input {
-	input := &game.Input{}
-	switch event.Type {
-	case sdl.KEYDOWN:
-		input.Pressed = true
-		switch event.Keysym.Scancode {
-		case sdl.SCANCODE_W:
-			input.Type = game.Up
-		case sdl.SCANCODE_S:
-			input.Type = game.Down
-		case sdl.SCANCODE_A:
-			input.Type = game.Left
-		case sdl.SCANCODE_D:
-			input.Type = game.Right
-		case sdl.SCANCODE_TAB:
-			input.Type = game.Pause
-		}
-	case sdl.KEYUP:
-		input.Pressed = false
-		switch event.Keysym.Scancode {
-		case sdl.SCANCODE_W:
-			input.Type = game.Up
-		case sdl.SCANCODE_S:
-			input.Type = game.Down
-		case sdl.SCANCODE_A:
-			input.Type = game.Left
-		case sdl.SCANCODE_D:
-			input.Type = game.Right
-		case sdl.SCANCODE_TAB:
-			input.Type = game.Pause
-		}
+func (ui *ui) DrawLevelComplete(level *game.Level) {
+	level.Enemies = nil
+	level.Bullets = nil
+	tex := ui.stringToTexture("Level " + strconv.Itoa(level.LevelNumber) + " Complete", sdl.Color{255, 255, 255, 1})
+	_, _, w, h, err := tex.Query()
+	if err != nil {
+		panic(err)
 	}
-	return input
-}
-
-func (ui *ui) determineMouseButtonInput(event *sdl.MouseButtonEvent) *game.Input {
-	input := &game.Input{}
-	switch event.Type {
-	case sdl.MOUSEBUTTONDOWN:
-		switch event.Button {
-		case sdl.BUTTON_LEFT:
-			for _, element := range ui.uiElementMap {
-				if element.boundBox.HasIntersection(&sdl.Rect{event.X, event.Y, 1, 1}) {
-					element.clicked = true
-					element.onClick()
-					input.Type = game.None
-					input.Pressed = true
-				} else {
-					input.Type = game.FirePrimary
-					input.Pressed = true
-				}
-			}
-			break
-		case sdl.BUTTON_RIGHT:
-			input.Type = game.FireSecondary
-			input.Pressed = true
-			break
-		default:
-			input.Type = game.None
-			input.Pressed = false
-		}
-	case sdl.MOUSEBUTTONUP:
-		switch event.Button {
-		case sdl.BUTTON_LEFT:
-			for _, element := range ui.uiElementMap {
-				element.clicked = false
-			}
-			input.Type = game.FirePrimary
-			input.Pressed = false
-			break
-		case sdl.BUTTON_RIGHT:
-			input.Type = game.FireSecondary
-			input.Pressed = false
-			break
-		default:
-			input.Type = game.None
-			input.Pressed = false
-		}
-	default:
-	}
-	return input
-}
-
-func (ui *ui) checkMouseHover(event *sdl.MouseMotionEvent) {
-	for _, element := range ui.uiElementMap {
-		if element.boundBox.HasIntersection(&sdl.Rect{event.X, event.Y, 1, 1}) {
-			element.mouseOver = true
-		} else if element.mouseOver {
-			element.mouseOver = false
-		}
-	}
+	ui.renderer.Copy(tex, nil, &sdl.Rect{int32(ui.WinWidth/2) - w/2, int32(ui.WinHeight/2) - h/2, w, h})
 }
 
 // Remember to always draw from the ground up
@@ -530,6 +486,10 @@ func (ui *ui) Draw(level *game.Level) {
 	ui.DrawExplosions(level)
 	ui.DrawSpeedLines()
 	ui.DrawUiElements(level)
+	if level.Complete {
+		ui.DrawLevelComplete(level)
+		ui.levelCompleteMessageTimer++
+	}
 	ui.DrawCursor()
 	ui.renderer.Present()
 }
@@ -547,9 +507,13 @@ func (ui *ui) Run() {
 		select {
 		case newLevel := <-ui.levelChan:
 			level = newLevel
+			ui.levelCompleteMessageTimer = 0
 			ui.Draw(level)
 			break
 		default:
+			if level.Complete && ui.levelCompleteMessageTimer >= ui.levelCompleteMessageShowTime {
+				ui.inputChan <- &game.Input{Type: game.LevelComplete}
+			}
 			ui.Draw(level)
 		}
 
@@ -578,5 +542,9 @@ func (ui *ui) Run() {
 			sdl.Delay(uint32(targetFrameTime - elapsedTime))
 			elapsedTime = time.Since(frameStart).Seconds()
 		}
+
+		m := &runtime.MemStats{}
+		runtime.ReadMemStats(m)
+		fmt.Println(m.HeapObjects, m.HeapInuse, m.HeapReleased, m.HeapSys)
 	}
 }

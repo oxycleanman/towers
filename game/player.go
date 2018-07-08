@@ -3,6 +3,7 @@ package game
 type Player struct {
 	Character
 	Currency                                         int
+	Points	int
 	AtTop, AtBottom, AtLeft, AtRight, IsAccelerating bool
 }
 
@@ -24,6 +25,8 @@ func (level *Level) initPlayer() {
 	player.TextureName = "playerShip1_blue"
 	player.IsDestroyed = false
 	player.Hitpoints = 100
+	player.ShieldHitpoints = 100
+	player.Points = 0
 	player.Strength = 10
 	player.Speed = 1.0
 	player.FireRateTimer = 0

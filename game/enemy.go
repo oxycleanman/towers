@@ -21,9 +21,10 @@ func (level *Level) InitEnemy(initX, initY int) *Enemy {
 	enemy := &Enemy{}
 	enemy.TextureName = "ufoGreen"
 	enemy.IsDestroyed = false
-	enemy.Hitpoints = 50
-	enemy.Strength = 5
-	enemy.Speed = 1.0
+	enemy.Hitpoints = int(50 * level.EnemyDifficultyMultiplier)
+	enemy.PointValue = 25
+	enemy.Strength = int(10 * level.EnemyDifficultyMultiplier)
+	enemy.Speed = float64(2.0 * level.EnemyDifficultyMultiplier)
 	enemy.FireRateTimer = 0
 	enemy.FireRateResetValue = 150
 	enemy.X = initX
@@ -37,12 +38,13 @@ func (enemy *Enemy) Update(level *Level) {
 	}
 }
 
+// TODO: This logic should be better to make enemies more difficult
 func (enemy *Enemy) Move(level *Level) {
 	player := level.Player
 	if player.X > enemy.X {
-		enemy.X += 1
+		enemy.X += int(enemy.Speed)
 	} else {
-		enemy.X -= 1
+		enemy.X -= int(enemy.Speed)
 	}
-	enemy.Y += int(enemy.Speed)
+	enemy.Y += int(enemy.Speed * 1.5)
 }

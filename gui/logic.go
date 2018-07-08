@@ -29,7 +29,7 @@ func (ui *ui) pause() {
 }
 
 func (ui *ui) SpawnEnemies(level *game.Level) {
-	if level.EnemySpawnTimer >= 200 && len(level.Enemies) < 10 {
+	if level.EnemySpawnTimer >= level.EnemySpawnFrequency && len(level.Enemies) < 10 {
 		spawnX := ui.randNumGen.Intn(ui.WinWidth)
 		level.Enemies = append(level.Enemies, level.InitEnemy(spawnX, -100))
 		level.EnemySpawnTimer = 0
@@ -56,13 +56,13 @@ func (ui *ui) CheckFiring(level *game.Level, entity game.Shooter) {
 	timer, reset, isPlayer := entity.GetFireSettings()
 	if timer >= reset {
 		var texName string
-		var laserFireSound *mix.Chunk
+		//var laserFireSound *mix.Chunk
 		if isPlayer {
 			texName = playerLaserTexture
-			laserFireSound = ui.soundFileMap[playerLaserSound]
+			//laserFireSound = ui.soundFileMap[playerLaserSound]
 		} else {
 			texName = enemyLaserTexture
-			laserFireSound = ui.soundFileMap[enemyLaserSound]
+			//laserFireSound = ui.soundFileMap[enemyLaserSound]
 		}
 		bullet := level.InitBullet(texName)
 		bullet.FiredByEnemy = !isPlayer
@@ -70,7 +70,7 @@ func (ui *ui) CheckFiring(level *game.Level, entity game.Shooter) {
 		bullet.Damage = bullet.FiredBy.Strength
 		level.Bullets = append(level.Bullets, bullet)
 		entity.SetFireTimer(0)
-		laserFireSound.Play(-1, 0)
+		//laserFireSound.Play(-1, 0)
 	} else if !isPlayer {
 		entity.SetFireTimer(timer + 1)
 	}
@@ -94,6 +94,7 @@ func (ui *ui) checkOutOfBounds(x, y int, w, h int32) bool {
 }
 
 func (ui *ui) checkCollisions(level *game.Level) {
+	// Bullet Collisions
 	for _, bullet := range level.Bullets {
 		if !bullet.IsColliding {
 			bulletRect := &sdl.Rect{int32(bullet.X), int32(bullet.Y), int32(bullet.W), int32(bullet.H)}
@@ -106,10 +107,14 @@ func (ui *ui) checkCollisions(level *game.Level) {
 							enemy.Hitpoints -= bullet.Damage
 							if enemy.Hitpoints <= 0 {
 								enemy.IsDestroyed = true
+								level.Player.Points += enemy.PointValue
+								if level.Player.Points >= level.PointsToComplete {
+									level.Complete = true
+								}
 							}
-							bulletImpactSound := ui.soundFileMap[impactSound]
-							bulletImpactSound.Volume(45)
-							bulletImpactSound.Play(-1, 0)
+							//bulletImpactSound := ui.soundFileMap[impactSound]
+							//bulletImpactSound.Volume(45)
+							//bulletImpactSound.Play(-1, 0)
 						}
 					}
 				}
@@ -117,7 +122,11 @@ func (ui *ui) checkCollisions(level *game.Level) {
 				playerRect := &sdl.Rect{int32(level.Player.X), int32(level.Player.Y), int32(level.Player.W), int32(level.Player.H)}
 				if playerRect.HasIntersection(bulletRect) {
 					bullet.IsColliding = true
-					level.Player.Hitpoints -= bullet.Damage
+					if level.Player.ShieldHitpoints > 0 {
+						level.Player.ShieldHitpoints -= bullet.Damage
+					} else {
+						level.Player.Hitpoints -= bullet.Damage
+					}
 					if level.Player.Hitpoints <= 0 {
 						level.Player.IsDestroyed = true
 					}
@@ -125,13 +134,22 @@ func (ui *ui) checkCollisions(level *game.Level) {
 			}
 		}
 	}
+
+	// Enemy Collisions
+	//for _, enemy := range level.Enemies {
+	//	if !enemy.IsDestroyed {
+	//
+	//	}
+	//}
 }
 
 func (ui *ui) Update(level *game.Level) {
-	ui.UpdateBullets(level)
 	ui.UpdatePlayer(level)
-	ui.UpdateEnemies(level)
-	ui.checkCollisions(level)
-	ui.SpawnEnemies(level)
-	ui.CheckFiring(level, level.Player)
+	if !level.Complete {
+		ui.UpdateBullets(level)
+		ui.UpdateEnemies(level)
+		ui.checkCollisions(level)
+		ui.SpawnEnemies(level)
+		ui.CheckFiring(level, level.Player)
+	}
 }

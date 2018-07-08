@@ -10,20 +10,28 @@ type Game struct {
 	InputChan chan *Input
 	LevelChan chan *Level
 	Level     *Level
+	Levels    []*Level
 }
 
 type Level struct {
-	Player             *Player
-	Enemies            []*Enemy
-	Bullets            []*Bullet
-	PrimaryFirePressed bool
-	EnemySpawnTimer    int
+	Player                    *Player
+	Enemies                   []*Enemy
+	Bullets                   []*Bullet
+	PrimaryFirePressed        bool
+	EnemySpawnTimer           int
+	EnemySpawnFrequency       int
+	MaxNumberEnemies          int
+	EnemyDifficultyMultiplier float32
+	PointsToComplete          int
+	HasBoss                   bool
+	LevelNumber               int
+	Complete bool
 }
 
 type InputType int
 
 const (
-	None InputType = iota
+	None          InputType = iota
 	Up
 	Down
 	Left
@@ -32,6 +40,8 @@ const (
 	FirePrimary
 	FireSecondary
 	Pause
+	LevelComplete
+	PlayerDeath
 )
 
 type Input struct {
@@ -66,8 +76,7 @@ type Entity struct {
 type Character struct {
 	Entity
 	Velocity
-	Cost                          int
-	Level                         int
+	PointValue int
 	Hitpoints                     int
 	Strength                      int
 	DestroyedAnimationTextureName string
@@ -78,7 +87,8 @@ type Character struct {
 	FireRateTimer                 int
 	FireRateResetValue            int
 	IsFiring                      bool
-	EngineFireAnimationCounter int
+	ShieldHitpoints               int
+	EngineFireAnimationCounter    int
 }
 
 type Shooter interface {
@@ -93,13 +103,51 @@ func NewGame() *Game {
 	game.InputChan = make(chan *Input, 2)
 	game.LevelChan = make(chan *Level, 2)
 
-	game.Level = &Level{}
+	game.initLevels()
+
+	game.Level = game.Levels[0]
 	game.Level.initPlayer()
-	game.Level.EnemySpawnTimer = 0
 
 	return game
 }
 
+func (game *Game) initLevels() {
+	// Level 1
+	lev1 := &Level{}
+	lev1.EnemyDifficultyMultiplier = 0.5
+	// Lower this number to increase spawn frequency
+	lev1.EnemySpawnFrequency = 250
+	lev1.MaxNumberEnemies = 5
+	lev1.PointsToComplete = 100
+	lev1.LevelNumber = 1
+	lev1.EnemySpawnTimer = 0
+	lev1.Complete = false
+	game.Levels = append(game.Levels, lev1)
+
+	// Level 2
+	lev2 := &Level{}
+	lev2.EnemyDifficultyMultiplier = 0.7
+	lev2.EnemySpawnFrequency = 200
+	lev2.MaxNumberEnemies = 10
+	lev2.PointsToComplete = 250
+	lev2.LevelNumber = 2
+	lev2.EnemySpawnTimer = 0
+	lev2.Complete = false
+	game.Levels = append(game.Levels, lev2)
+
+	// Level 3
+	lev3 := &Level{}
+	lev3.EnemyDifficultyMultiplier = 0.85
+	lev3.EnemySpawnFrequency = 150
+	lev3.MaxNumberEnemies = 10
+	lev3.PointsToComplete = 500
+	lev3.LevelNumber = 3
+	lev3.EnemySpawnTimer = 0
+	lev3.Complete = false
+	game.Levels = append(game.Levels, lev3)
+}
+
+// TODO: Fix this so that multiple key presses work 100%
 func (game *Game) handleInput(input *Input) {
 	if input.Pressed {
 		switch input.Type {
@@ -176,6 +224,17 @@ func (game *Game) Run() {
 			close(game.LevelChan)
 			close(game.InputChan)
 			os.Exit(0)
+		}
+		if input.Type == LevelComplete {
+			// Move to the next level
+			currentLevel := game.Level.LevelNumber
+			currentPlayer := game.Level.Player
+			if !(currentLevel >= len(game.Levels)) {
+				game.Level = game.Levels[currentLevel]
+				game.Level.Player = currentPlayer
+			} else {
+				// TODO: Need some end game, or just generate levels and track points?
+			}
 		}
 		game.handleInput(input)
 
