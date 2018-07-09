@@ -41,6 +41,10 @@ type statusBar struct {
 	maxTiles int
 }
 
+type menu struct {
+	// TODO: Set up Menu
+}
+
 type hud struct {
 	uiElement
 	hudElement
@@ -53,33 +57,34 @@ type ui struct {
 	WinWidth             int
 	WinHeight            int
 	horzTiles, vertTiles int
-	backgroundTexture    *sdl.Texture
-	cursor               *cursor
-	hud                  *hud
-	renderer             *sdl.Renderer
-	window               *sdl.Window
-	font                 *ttf.Font
-	textureMap           map[string]*sdl.Texture
-	keyboardState        []uint8
-	inputChan            chan *game.Input
-	levelChan            chan *game.Level
-	currentMouseX        int32
-	currentMouseY        int32
-	playerInit           bool
-	fontTextureMap       map[string]*sdl.Texture
-	soundFileMap         map[string]*mix.Chunk
-	uiElementMap         map[string]*uiButton
-	uiSpeedLines	[]*uiElement
-	uiSpeedLineTimer int
-	meteorTextureNames []string
-	enemyTextureNames []string
-	mapMoveDelay         int
-	mapMoveTimer         int
-	muted                bool
-	paused               bool
-	randNumGen           *rand.Rand
-	levelComplete bool
-	levelCompleteMessageTimer int
+	backgroundTexture            *sdl.Texture
+	cursor                       *cursor
+	hud                          *hud
+	renderer                     *sdl.Renderer
+	window                       *sdl.Window
+	font                         *ttf.Font
+	textureMap                   map[string]*sdl.Texture
+	keyboardState                []uint8
+	inputChan                    chan *game.Input
+	levelChan                    chan *game.Level
+	currentMouseX                int32
+	currentMouseY                int32
+	playerInit                   bool
+	fontTextureMap               map[string]*sdl.Texture
+	soundFileMap                 map[string]*mix.Chunk
+	clickableElementMap          map[string]*uiButton
+	uiSpeedLines                 []*uiElement
+	uiSpeedLineTimer             int
+	meteorTextureNames           []string
+	enemyTextureNames            []string
+	mapMoveDelay                 int
+	mapMoveTimer                 int
+	muted                        bool
+	paused                       bool
+	menuOpen bool
+	randNumGen                   *rand.Rand
+	levelComplete                bool
+	levelCompleteMessageTimer    int
 	levelCompleteMessageShowTime int
 }
 
@@ -128,7 +133,7 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 	ui.textureMap = make(map[string]*sdl.Texture)
 	ui.fontTextureMap = make(map[string]*sdl.Texture)
 	ui.soundFileMap = make(map[string]*mix.Chunk)
-	ui.uiElementMap = make(map[string]*uiButton)
+	ui.clickableElementMap = make(map[string]*uiButton)
 	ui.uiSpeedLineTimer = 0
 	ui.playerInit = false
 	ui.mapMoveTimer = 0
@@ -159,13 +164,10 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 
 	ui.loadTextures("gui/assets/images/")
 	ui.loadSounds("gui/assets/sounds/")
-	ui.loadUiElements()
 	return ui
 }
 
 // TODO: Add draw func and logic to add Power-Ups
-
-// TODO: Add draw func and logic to add non-enemy objects like meteors
 
 func (ui *ui) DrawBackground(level *game.Level) {
 	// TODO: Draw better background to create illusion of motion
@@ -210,6 +212,20 @@ func (ui *ui) DrawCursor() {
 		ui.cursor.H = int(h)
 	}
 	ui.renderer.Copy(ui.cursor.texture, nil, &sdl.Rect{ui.currentMouseX, ui.currentMouseY, int32(ui.cursor.W), int32(ui.cursor.H)})
+}
+
+func (ui *ui) DrawMenu() {
+	if ui.menuOpen {
+		// glassPanel_cornerBR
+		menuBackground := ui.textureMap["glassPanel_cornerBR"]
+		_, _, w, h, err := menuBackground.Query()
+		if err != nil {
+			panic(err)
+		}
+		xPos := ui.WinWidth/2 - int(w * 2)
+		yPos := ui.WinHeight/2 - int(h * 2)
+		ui.renderer.Copy(menuBackground, nil, &sdl.Rect{int32(xPos), int32(yPos), w * 4, h * 4})
+	}
 }
 
 func (ui *ui) DrawUiElements(level *game.Level) {
@@ -261,6 +277,11 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 		ui.hud.healthBar.W = 16
 		ui.hud.shieldBar.W = 16
 	}
+
+	if len(ui.clickableElementMap) == 0 {
+		ui.loadUiElements()
+	}
+
 	for i := 0; i < ui.hud.horzTiles; i++ {
 		var tex *sdl.Texture
 		if i == 0 {
@@ -340,8 +361,8 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 		}
 	}
 
-	// Draw Other UI elements
-	for _, element := range ui.uiElementMap {
+	// Draw Clickable Elements
+	for _, element := range ui.clickableElementMap {
 		if element.mouseOver && !element.clicked {
 			element.texture.SetBlendMode(sdl.BLENDMODE_ADD)
 			ui.renderer.Copy(element.texture, nil, element.boundBox)
@@ -430,6 +451,7 @@ func (ui *ui) DrawPlayer(level *game.Level) {
 }
 
 func (ui *ui) DrawEnemies(level *game.Level) {
+	// TODO: Have large meteors break up into smaller ones
 	for _, enemy := range level.Enemies {
 		if enemy.Texture == nil {
 			enemy.Texture = ui.textureMap[enemy.TextureName]
@@ -601,6 +623,7 @@ func (ui *ui) Draw(level *game.Level) {
 	ui.DrawEnemies(level)
 	ui.DrawExplosions(level)
 	ui.DrawUiElements(level)
+	ui.DrawMenu()
 	if level.Complete {
 		ui.DrawLevelComplete(level)
 	}

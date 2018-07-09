@@ -10,21 +10,31 @@ func (ui *ui) mute() {
 	if mix.Volume(-1, -1) > 0 {
 		mix.Volume(-1, 0)
 		ui.muted = true
-		ui.uiElementMap["muteButton"].textTexture = ui.stringToTexture("unmute", fontColor)
+		ui.clickableElementMap["muteButton"].textTexture = ui.stringToTexture("unmute", fontColor)
 	} else {
 		mix.Volume(-1, 128)
 		ui.muted = false
-		ui.uiElementMap["muteButton"].textTexture = ui.stringToTexture("mute", fontColor)
+		ui.clickableElementMap["muteButton"].textTexture = ui.stringToTexture("mute", fontColor)
 	}
 }
 
 func (ui *ui) pause() {
 	if !ui.paused {
 		ui.paused = true
-		ui.uiElementMap["pauseButton"].textTexture = ui.stringToTexture("unpause", fontColor)
+		ui.clickableElementMap["pauseButton"].textTexture = ui.stringToTexture("unpause", fontColor)
 	} else {
 		ui.paused = false
-		ui.uiElementMap["pauseButton"].textTexture = ui.stringToTexture("pause", fontColor)
+		ui.clickableElementMap["pauseButton"].textTexture = ui.stringToTexture("pause", fontColor)
+	}
+}
+
+func (ui *ui) menu() {
+	if ui.menuOpen {
+		ui.menuOpen = false
+		ui.paused = false
+	} else {
+		ui.menuOpen = true
+		ui.paused = true
 	}
 }
 
