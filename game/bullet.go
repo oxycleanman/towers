@@ -1,7 +1,5 @@
 package game
 
-import "math"
-
 type Bullet struct {
 	Entity
 	Velocity
@@ -35,14 +33,8 @@ func (bullet *Bullet) Update() {
 		} else {
 			bulletDirRad = DegreeToRad(bullet.Direction - 90)
 		}
-		nextX, nextY := findNextPointInTravel(bullet.Speed, bulletDirRad)
+		nextX, nextY := FindNextPointInTravel(bullet.Speed, bulletDirRad)
 		bullet.X += nextX
 		bullet.Y += nextY
 	}
-}
-
-func findNextPointInTravel(dist, rotationRad float64) (int, int) {
-	nextX := dist * math.Cos(rotationRad)
-	nextY := dist * math.Sin(rotationRad)
-	return int(math.Round(nextX)), int(math.Round(nextY))
 }

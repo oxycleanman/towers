@@ -4,6 +4,7 @@ import (
 	"github.com/veandco/go-sdl2/mix"
 	"github.com/veandco/go-sdl2/sdl"
 	"io/ioutil"
+	"strings"
 )
 
 func (ui *ui) loadTextures(dirName string) {
@@ -17,6 +18,12 @@ func (ui *ui) loadTextures(dirName string) {
 			ui.loadTextures(newFilepath)
 		} else {
 			filename := file.Name()[:len(file.Name())-4]
+			if strings.Contains(filename, "meteor") {
+				ui.meteorTextureNames = append(ui.meteorTextureNames, filename)
+			}
+			if strings.Contains(filename, "enemy") || strings.Contains(filename, "ufo") {
+				ui.enemyTextureNames = append(ui.enemyTextureNames, filename)
+			}
 			filepath := dirName + "/" + file.Name()
 			tex := imgFileToTexture(ui.renderer, filepath)
 			ui.textureMap[filename] = tex
@@ -46,6 +53,7 @@ func (ui *ui) loadSounds(dirName string) {
 }
 
 func (ui *ui) loadUiElements() {
+	// Load Buttons
 	{
 		pauseButton := &uiButton{}
 		pauseButton.texture = ui.textureMap["buttonBlue"]
@@ -94,7 +102,7 @@ func (ui *ui) loadUiElements() {
 		ui.uiElementMap["muteButton"] = muteButton
 	}
 
-	//Load speed lines
+	// Load speed lines
 	lineTexture := ui.textureMap["speedLine"]
 	_, _, w, h, err := lineTexture.Query()
 	if err != nil {

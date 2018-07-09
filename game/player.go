@@ -3,6 +3,7 @@ package game
 type Player struct {
 	Character
 	Currency                                         int
+	Lives int
 	Points	int
 	AtTop, AtBottom, AtLeft, AtRight, IsAccelerating bool
 }

@@ -60,5 +60,6 @@ func (ui *ui) stringToTexture(s string, color sdl.Color) *sdl.Texture {
 	if err != nil {
 		panic(err)
 	}
-	return tex
+	ui.fontTextureMap[s] = tex
+	return ui.fontTextureMap[s]
 }

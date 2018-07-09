@@ -29,9 +29,16 @@ func (ui *ui) pause() {
 }
 
 func (ui *ui) SpawnEnemies(level *game.Level) {
-	if level.EnemySpawnTimer >= level.EnemySpawnFrequency && len(level.Enemies) < 10 {
+	if level.EnemySpawnTimer >= level.EnemySpawnFrequency && len(level.Enemies) < level.MaxNumberEnemies {
 		spawnX := ui.randNumGen.Intn(ui.WinWidth)
-		level.Enemies = append(level.Enemies, level.InitEnemy(spawnX, -100))
+		enemyOrMeteor := ui.randNumGen.Intn(2)
+		var texName string
+		if enemyOrMeteor == 1 {
+			texName = ui.enemyTextureNames[ui.randNumGen.Intn(len(ui.enemyTextureNames))]
+		} else {
+			texName = ui.meteorTextureNames[ui.randNumGen.Intn(len(ui.meteorTextureNames))]
+		}
+		level.Enemies = append(level.Enemies, level.InitEnemy(spawnX, -100, enemyOrMeteor, texName))
 		level.EnemySpawnTimer = 0
 	} else {
 		level.EnemySpawnTimer++
@@ -46,23 +53,26 @@ func (ui *ui) UpdateEnemies(level *game.Level) {
 				enemy.IsDestroyed = true
 				enemy.DestroyedAnimationPlayed = true
 			}
-			ui.CheckFiring(level, enemy)
+			if enemy.CanFire {
+				ui.CheckFiring(level, enemy)
+			}
 			enemy.Move(level)
 		}
 	}
 }
 
+// TODO: Make it so that clicking fires as slow as holding down the mouse button (Fire Speed will be an upgrade)
 func (ui *ui) CheckFiring(level *game.Level, entity game.Shooter) {
 	timer, reset, isPlayer := entity.GetFireSettings()
 	if timer >= reset {
 		var texName string
-		//var laserFireSound *mix.Chunk
+		var laserFireSound *mix.Chunk
 		if isPlayer {
 			texName = playerLaserTexture
-			//laserFireSound = ui.soundFileMap[playerLaserSound]
+			laserFireSound = ui.soundFileMap[playerLaserSound]
 		} else {
 			texName = enemyLaserTexture
-			//laserFireSound = ui.soundFileMap[enemyLaserSound]
+			laserFireSound = ui.soundFileMap[enemyLaserSound]
 		}
 		bullet := level.InitBullet(texName)
 		bullet.FiredByEnemy = !isPlayer
@@ -70,7 +80,7 @@ func (ui *ui) CheckFiring(level *game.Level, entity game.Shooter) {
 		bullet.Damage = bullet.FiredBy.Strength
 		level.Bullets = append(level.Bullets, bullet)
 		entity.SetFireTimer(0)
-		//laserFireSound.Play(-1, 0)
+		laserFireSound.Play(-1, 0)
 	} else if !isPlayer {
 		entity.SetFireTimer(timer + 1)
 	}
@@ -112,9 +122,9 @@ func (ui *ui) checkCollisions(level *game.Level) {
 									level.Complete = true
 								}
 							}
-							//bulletImpactSound := ui.soundFileMap[impactSound]
-							//bulletImpactSound.Volume(45)
-							//bulletImpactSound.Play(-1, 0)
+							bulletImpactSound := ui.soundFileMap[impactSound]
+							bulletImpactSound.Volume(45)
+							bulletImpactSound.Play(-1, 0)
 						}
 					}
 				}
@@ -124,8 +134,10 @@ func (ui *ui) checkCollisions(level *game.Level) {
 					bullet.IsColliding = true
 					if level.Player.ShieldHitpoints > 0 {
 						level.Player.ShieldHitpoints -= bullet.Damage
+						ui.hud.shieldBar.horzTiles = level.Player.ShieldHitpoints/5
 					} else {
 						level.Player.Hitpoints -= bullet.Damage
+						ui.hud.healthBar.horzTiles = level.Player.Hitpoints/5
 					}
 					if level.Player.Hitpoints <= 0 {
 						level.Player.IsDestroyed = true
@@ -135,12 +147,34 @@ func (ui *ui) checkCollisions(level *game.Level) {
 		}
 	}
 
-	// Enemy Collisions
-	//for _, enemy := range level.Enemies {
-	//	if !enemy.IsDestroyed {
-	//
-	//	}
-	//}
+	// Enemy Collisions With Player
+	for _, enemy := range level.Enemies {
+		if !enemy.IsDestroyed {
+			enemyRect := &sdl.Rect{int32(enemy.X), int32(enemy.Y), int32(enemy.W), int32(enemy.H)}
+			playerRect := &sdl.Rect{int32(level.Player.X), int32(level.Player.Y), int32(level.Player.W), int32(level.Player.H)}
+			if enemyRect.HasIntersection(playerRect) {
+				if !enemy.IsBoss {
+					enemy.Hitpoints = 0
+					enemy.IsDestroyed = true
+					if level.Player.ShieldHitpoints > 0 {
+						level.Player.ShieldHitpoints -= enemy.Strength * 2
+						ui.hud.shieldBar.horzTiles = level.Player.ShieldHitpoints / 5
+					} else {
+						level.Player.Hitpoints -= enemy.Strength * 2
+						ui.hud.healthBar.horzTiles = level.Player.Hitpoints / 5
+					}
+					if level.Player.Hitpoints <= 0 {
+						level.Player.IsDestroyed = true
+					}
+				} else {
+					level.Player.Hitpoints = 0
+					level.Player.IsDestroyed = true
+				}
+			}
+		}
+	}
+
+	// Player collisions with power-ups
 }
 
 func (ui *ui) Update(level *game.Level) {

@@ -25,7 +25,7 @@ type Level struct {
 	PointsToComplete          int
 	HasBoss                   bool
 	LevelNumber               int
-	Complete bool
+	Complete                  bool
 }
 
 type InputType int
@@ -76,7 +76,7 @@ type Entity struct {
 type Character struct {
 	Entity
 	Velocity
-	PointValue int
+	PointValue                    int
 	Hitpoints                     int
 	Strength                      int
 	DestroyedAnimationTextureName string
@@ -98,6 +98,8 @@ type Shooter interface {
 	GetSelf() *Character
 }
 
+// TODO: Which structs can have logic consolidated using interfaces like Shooter? AI interface for enemy/meteor?
+
 func NewGame() *Game {
 	game := &Game{}
 	game.InputChan = make(chan *Input, 2)
@@ -116,34 +118,34 @@ func (game *Game) initLevels() {
 	lev1 := &Level{}
 	lev1.EnemyDifficultyMultiplier = 0.5
 	// Lower this number to increase spawn frequency
-	lev1.EnemySpawnFrequency = 250
-	lev1.MaxNumberEnemies = 5
+	lev1.EnemySpawnFrequency = 150
+	lev1.MaxNumberEnemies = 10
 	lev1.PointsToComplete = 100
 	lev1.LevelNumber = 1
-	lev1.EnemySpawnTimer = 0
 	lev1.Complete = false
+	lev1.PrimaryFirePressed = false
 	game.Levels = append(game.Levels, lev1)
 
 	// Level 2
 	lev2 := &Level{}
 	lev2.EnemyDifficultyMultiplier = 0.7
-	lev2.EnemySpawnFrequency = 200
-	lev2.MaxNumberEnemies = 10
+	lev2.EnemySpawnFrequency = 125
+	lev2.MaxNumberEnemies = 15
 	lev2.PointsToComplete = 250
 	lev2.LevelNumber = 2
-	lev2.EnemySpawnTimer = 0
 	lev2.Complete = false
+	lev2.PrimaryFirePressed = false
 	game.Levels = append(game.Levels, lev2)
 
 	// Level 3
 	lev3 := &Level{}
 	lev3.EnemyDifficultyMultiplier = 0.85
-	lev3.EnemySpawnFrequency = 150
-	lev3.MaxNumberEnemies = 10
+	lev3.EnemySpawnFrequency = 110
+	lev3.MaxNumberEnemies = 18
 	lev3.PointsToComplete = 500
 	lev3.LevelNumber = 3
-	lev3.EnemySpawnTimer = 0
 	lev3.Complete = false
+	lev3.PrimaryFirePressed = false
 	game.Levels = append(game.Levels, lev3)
 }
 
@@ -209,8 +211,18 @@ func (game *Game) handleInput(input *Input) {
 	}
 }
 
+func FindNextPointInTravel(dist, rotationRad float64) (int, int) {
+	nextX := dist * math.Cos(rotationRad)
+	nextY := dist * math.Sin(rotationRad)
+	return int(math.Round(nextX)), int(math.Round(nextY))
+}
+
 func DegreeToRad(degree float64) float64 {
 	return degree * (math.Pi / 180)
+}
+
+func FindDegreeRotation(originY, originX, pointY, pointX int32) float64 {
+	return math.Atan2(float64(pointY-originY), float64(pointX-originX)) * (180.0 / math.Pi)
 }
 
 func (game *Game) Run() {
