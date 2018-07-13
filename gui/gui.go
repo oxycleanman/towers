@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"time"
 	"fmt"
+	"strings"
 )
 
 type uiElement struct {
@@ -236,7 +237,8 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 	if err != nil {
 		panic(err)
 	}
-	pTex := ui.stringToTexture(strconv.Itoa(p.Points), sdl.Color{255, 255, 255, 1})
+	//pTex := ui.stringToTexture(strconv.Itoa(p.Points), sdl.Color{255, 255, 255, 1})
+	pTex := ui.stringToTexture(strconv.Itoa(p.Xvel), sdl.Color{255, 255, 255, 1})
 	_, _, pW, pH, err := pTex.Query()
 	if err != nil {
 		panic(err)
@@ -389,25 +391,79 @@ func (ui *ui) DrawPlayer(level *game.Level) {
 		level.Player.FireRateTimer++
 	}
 	if level.Player.Texture == nil {
+		fmt.Println(level.Player.TextureName)
 		tex := ui.textureMap[level.Player.TextureName]
 		level.Player.Texture = tex
 		_, _, w, h, err := tex.Query()
 		if err != nil {
 			panic(err)
 		}
-		level.Player.W = int(w)
-		level.Player.H = int(h)
+		level.Player.W = int(w/2)
+		level.Player.H = int(h/2)
 		level.Player.X = ui.WinWidth/2 - level.Player.W/2
 		level.Player.Y = ui.WinHeight/2 - level.Player.H/2
 		level.Player.FireOffsetX = 0
 		//player.Direction = game.FindDegreeRotation(int32(player.Y+player.H/2), int32(player.X+player.W/2), ui.currentMouseY, ui.currentMouseX) - 90
 		// Arbitrary number 5 here to slightly move fire point forward of texture
-		level.Player.FireOffsetY = int(h/2) + 5
+		level.Player.FireOffsetY = level.Player.H/2 + 5
 	}
 	player := level.Player
 	if player.IsDestroyed {
 		// TODO: Lose Scenario... Some kind of modal? Loss of life?
 	}
+	if player.Xvel > 0 {
+		if !strings.Contains(player.TextureName, "left") {
+			if player.AnimationCounter <= player.TurnAnimationCount && !player.TurnAnimationPlayed {
+				player.TextureName = "turn_right" + strconv.Itoa(player.AnimationCounter)
+				player.AnimationCounter++
+			} else {
+				player.AnimationCounter = 0
+				player.TurnAnimationPlayed = true
+			}
+		}
+	} else {
+		if !(player.TextureName == "player") && !strings.Contains(player.TextureName, "left") {
+			n, err := strconv.Atoi(strings.Replace(player.TextureName, "turn_right", "", 1))
+			if err != nil {
+				panic(err)
+			}
+			if n > 0 {
+				n--
+				player.TextureName = "turn_right" + strconv.Itoa(n)
+			} else {
+				player.TextureName = "player"
+				player.TurnAnimationPlayed = false
+				player.AnimationCounter = 0
+			}
+		}
+	}
+	if player.Xvel < 0 {
+		if !strings.Contains(player.TextureName, "right") {
+			if player.AnimationCounter <= player.TurnAnimationCount && !player.TurnAnimationPlayed {
+				player.TextureName = "turn_left" + strconv.Itoa(player.AnimationCounter)
+				player.AnimationCounter++
+			} else {
+				player.AnimationCounter = 0
+				player.TurnAnimationPlayed = true
+			}
+		}
+	} else {
+		if !(player.TextureName == "player") && !strings.Contains(player.TextureName, "right") {
+			n, err := strconv.Atoi(strings.Replace(player.TextureName, "turn_left", "", 1))
+			if err != nil {
+				panic(err)
+			}
+			if n > 0 {
+				n--
+				player.TextureName = "turn_left" + strconv.Itoa(n)
+			} else {
+				player.TextureName = "player"
+				player.TurnAnimationPlayed = false
+				player.AnimationCounter = 0
+			}
+		}
+	}
+	player.Texture = ui.textureMap[player.TextureName]
 	tex := player.Texture
 
 	// Draw Player Shield

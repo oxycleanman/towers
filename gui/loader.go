@@ -16,7 +16,7 @@ func (ui *ui) loadTextures(dirName string) {
 		if file.IsDir() {
 			newFilepath := dirName + "/" + file.Name() + "/"
 			ui.loadTextures(newFilepath)
-		} else {
+		} else if !strings.HasPrefix(file.Name(), ".") {
 			filename := file.Name()[:len(file.Name())-4]
 			if strings.Contains(filename, "meteor") {
 				ui.meteorTextureNames = append(ui.meteorTextureNames, filename)

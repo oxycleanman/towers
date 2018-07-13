@@ -3,9 +3,12 @@ package game
 type Player struct {
 	Character
 	Currency                                         int
-	Lives int
-	Points	int
+	Lives                                            int
+	Points                                           int
 	AtTop, AtBottom, AtLeft, AtRight, IsAccelerating bool
+	AnimationCounter                                 int
+	TurnAnimationCount                               int
+	TurnAnimationPlayed                              bool
 }
 
 // Implement Shooter Interface
@@ -23,7 +26,7 @@ func (player *Player) GetSelf() *Character {
 
 func (level *Level) initPlayer() {
 	player := &Player{}
-	player.TextureName = "playerShip1_blue"
+	player.TextureName = "player"
 	player.IsDestroyed = false
 	player.Hitpoints = 100
 	player.ShieldHitpoints = 100
@@ -37,6 +40,7 @@ func (level *Level) initPlayer() {
 	player.AtRight = false
 	player.AtTop = false
 	player.EngineFireAnimationCounter = 1
+	player.TurnAnimationCount = 20
 	player.IsAccelerating = false
 	level.Player = player
 }
