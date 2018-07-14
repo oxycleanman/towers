@@ -1,12 +1,14 @@
 package game
 
+import "github.com/veandco/go-sdl2/sdl"
+
 type Player struct {
 	Character
 	Currency                                         int
 	Lives                                            int
-	Points                                           int
+	Points                                           int32
 	AtTop, AtBottom, AtLeft, AtRight, IsAccelerating bool
-	AnimationCounter                                 int
+	AnimationCounter                                 float64
 	TurnAnimationCount                               int
 	TurnAnimationPlayed                              bool
 }
@@ -32,7 +34,7 @@ func (level *Level) initPlayer() {
 	player.ShieldHitpoints = 100
 	player.Points = 0
 	player.Strength = 10
-	player.Speed = 1.0
+	player.Speed = 100.0
 	player.FireRateTimer = 0
 	player.FireRateResetValue = 50
 	player.AtBottom = false
@@ -42,14 +44,16 @@ func (level *Level) initPlayer() {
 	player.EngineFireAnimationCounter = 1
 	player.TurnAnimationCount = 20
 	player.IsAccelerating = false
+	player.BoundBox = &sdl.Rect{}
 	level.Player = player
 }
 
-func (player *Player) Move(topBound, bottomBound, leftBound, rightBound int) {
-	newX := player.X + player.W/2 + player.Xvel
-	newY := player.Y + player.H/2 + player.Yvel
+func (player *Player) Move(topBound, bottomBound, leftBound, rightBound int32, deltaTime uint32) {
+	deltaTimeS := float64(deltaTime)/1000
+	newX := int32(player.X + player.Xvel * deltaTimeS + float64(player.BoundBox.W/2))
+	newY := int32(player.Y + player.Yvel * deltaTimeS + float64(player.BoundBox.H/2))
 	if player.Xvel != 0 && newX <= rightBound && newX >= leftBound {
-		player.X += player.Xvel
+		player.X += player.Xvel * deltaTimeS
 		player.AtRight = false
 		player.AtLeft = false
 	} else {
@@ -61,7 +65,7 @@ func (player *Player) Move(topBound, bottomBound, leftBound, rightBound int) {
 		}
 	}
 	if player.Yvel != 0 && newY < bottomBound && newY > topBound {
-		player.Y += player.Yvel
+		player.Y += player.Yvel * deltaTimeS
 		if player.Yvel < 0 {
 			player.IsAccelerating = true
 		} else {

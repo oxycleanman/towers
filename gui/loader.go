@@ -62,17 +62,15 @@ func (ui *ui) loadUiElements() {
 			panic(err)
 		}
 		pauseButton.X = 20
-		pauseButton.Y = ui.WinHeight - int(h) - 20
-		pauseButton.W = int(w)
-		pauseButton.H = int(h)
-		pauseButton.boundBox = &sdl.Rect{int32(pauseButton.X), int32(pauseButton.Y), int32(pauseButton.W), int32(pauseButton.H)}
+		pauseButton.Y = float64(ui.WinHeight - h - 20)
+		pauseButton.BoundBox = &sdl.Rect{int32(pauseButton.X), int32(pauseButton.Y), w, h}
 		pauseButton.textTexture = ui.stringToTexture("pause", fontColor)
 		_, _, tw, th, err := pauseButton.textTexture.Query()
 		if err != nil {
 			panic(err)
 		}
-		textX := (pauseButton.X + pauseButton.W/2) - int(tw/2)
-		textY := (pauseButton.Y + pauseButton.H/2) - int(th/2)
+		textX := pauseButton.BoundBox.X + pauseButton.BoundBox.W/2 - tw/2
+		textY := pauseButton.BoundBox.Y + pauseButton.BoundBox.H/2 - th/2
 		pauseButton.textBoundBox = &sdl.Rect{int32(textX), int32(textY), tw, th}
 		pauseButton.onClick = ui.pause
 		ui.clickableElementMap["pauseButton"] = pauseButton
@@ -85,41 +83,37 @@ func (ui *ui) loadUiElements() {
 			panic(err)
 		}
 		menuButton.X = ui.hud.horzOffset + 20
-		menuButton.Y = ui.WinHeight - ui.hud.H/2 - 10
-		menuButton.W = int(w)
-		menuButton.H = int(h)
-		menuButton.boundBox = &sdl.Rect{int32(menuButton.X), int32(menuButton.Y), int32(menuButton.W), int32(menuButton.H)}
+		menuButton.Y = float64(int32(ui.WinHeight) - ui.hud.BoundBox.H/2 - 10)
+		menuButton.BoundBox = &sdl.Rect{int32(menuButton.X), int32(menuButton.Y), w, h}
 		menuButton.textTexture = ui.stringToTexture("menu", fontColor)
 		_, _, tw, th, err := menuButton.textTexture.Query()
 		if err != nil {
 			panic(err)
 		}
-		textX := (menuButton.X + menuButton.W/2) - int(tw/2)
-		textY := (menuButton.Y + menuButton.H/2) - int(th/2)
+		textX := menuButton.BoundBox.X + menuButton.BoundBox.W/2 - tw/2
+		textY := menuButton.BoundBox.Y + menuButton.BoundBox.H/2 - th/2
 		menuButton.textBoundBox = &sdl.Rect{int32(textX), int32(textY), tw, th}
 		menuButton.onClick = ui.openCloseMenu
 		ui.clickableElementMap["menuButton"] = menuButton
 	}
 	{
-		testButton := ui.clickableElementMap["pauseButton"]
+		pauseButton := ui.clickableElementMap["pauseButton"]
 		muteButton := &uiButton{}
 		muteButton.texture = ui.textureMap["buttonRed"]
 		_, _, w, h, err := muteButton.texture.Query()
 		if err != nil {
 			panic(err)
 		}
-		muteButton.X = testButton.X + testButton.W + 20
-		muteButton.Y = ui.WinHeight - int(h) - 20
-		muteButton.W = int(w)
-		muteButton.H = int(h)
-		muteButton.boundBox = &sdl.Rect{int32(muteButton.X), int32(muteButton.Y), int32(muteButton.W), int32(muteButton.H)}
+		muteButton.X = pauseButton.X + float64(pauseButton.BoundBox.W + 20)
+		muteButton.Y = float64(ui.WinHeight - h - 20)
+		muteButton.BoundBox = &sdl.Rect{int32(muteButton.X), int32(muteButton.Y), w, h}
 		muteButton.textTexture = ui.stringToTexture("mute", fontColor)
-		_, _, tw, th, err := testButton.textTexture.Query()
+		_, _, tw, th, err := pauseButton.textTexture.Query()
 		if err != nil {
 			panic(err)
 		}
-		textX := (muteButton.X + muteButton.W/2) - int(tw/2)
-		textY := (muteButton.Y + muteButton.H/2) - int(th/2)
+		textX := muteButton.BoundBox.X + muteButton.BoundBox.W/2 - tw/2
+		textY := muteButton.BoundBox.Y + muteButton.BoundBox.H/2 - th/2
 		muteButton.textBoundBox = &sdl.Rect{int32(textX), int32(textY), tw, th}
 		muteButton.onClick = ui.mute
 		ui.clickableElementMap["muteButton"] = muteButton
@@ -134,10 +128,13 @@ func (ui *ui) loadUiElements() {
 	for i := 0; i < 5; i++ {
 		line := &uiElement{}
 		line.texture = lineTexture
-		line.W = int(w)
-		line.H = int(h) * 2
-		line.X = ui.randNumGen.Intn(ui.WinWidth)
-		line.Y = -ui.randNumGen.Intn(ui.WinHeight)
+		line.X = float64(ui.randNumGen.Intn(int(ui.WinWidth)))
+		line.Y = -float64(ui.randNumGen.Intn(int(ui.WinHeight)))
+		line.BoundBox = &sdl.Rect{}
+		line.BoundBox.W = w
+		line.BoundBox.H = h
+		line.BoundBox.X = int32(line.X)
+		line.BoundBox.Y = int32(line.Y)
 		ui.uiSpeedLines = append(ui.uiSpeedLines, line)
 	}
 }

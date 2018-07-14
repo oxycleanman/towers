@@ -3,7 +3,6 @@ package gui
 import (
 	"github.com/oxycleanman/towers/game"
 	"github.com/veandco/go-sdl2/mix"
-	"github.com/veandco/go-sdl2/sdl"
 )
 
 func (ui *ui) mute() {
@@ -40,7 +39,7 @@ func (ui *ui) openCloseMenu() {
 
 func (ui *ui) SpawnEnemies(level *game.Level) {
 	if level.EnemySpawnTimer >= level.EnemySpawnFrequency && len(level.Enemies) < level.MaxNumberEnemies {
-		spawnX := ui.randNumGen.Intn(ui.WinWidth)
+		spawnX := float64(ui.randNumGen.Intn(int(ui.WinWidth)))
 		enemyOrMeteor := ui.randNumGen.Intn(2)
 		var texName string
 		if enemyOrMeteor == 1 {
@@ -56,10 +55,10 @@ func (ui *ui) SpawnEnemies(level *game.Level) {
 	}
 }
 
-func (ui *ui) UpdateEnemies(level *game.Level) {
+func (ui *ui) UpdateEnemies(level *game.Level, deltaTime uint32) {
 	for _, enemy := range level.Enemies {
 		if !enemy.IsDestroyed {
-			if enemy.Y > ui.WinHeight {
+			if int32(enemy.Y) > ui.WinHeight {
 				//Enemy is outside of the screen bounds, destroy it
 				enemy.IsDestroyed = true
 				enemy.DestroyedAnimationPlayed = true
@@ -67,7 +66,7 @@ func (ui *ui) UpdateEnemies(level *game.Level) {
 			if enemy.CanFire {
 				ui.CheckFiring(level, enemy)
 			}
-			enemy.Move(level)
+			enemy.Move(level, deltaTime)
 		}
 	}
 }
@@ -97,18 +96,18 @@ func (ui *ui) CheckFiring(level *game.Level, entity game.Shooter) {
 	}
 }
 
-func (ui *ui) UpdateBullets(level *game.Level) {
+func (ui *ui) UpdateBullets(level *game.Level, deltaTime uint32) {
 	for _, bullet := range level.Bullets {
-		bullet.Update()
+		bullet.Update(deltaTime)
 	}
 }
 
-func (ui *ui) UpdatePlayer(level *game.Level) {
-	level.Player.Move(0, ui.WinHeight, 0, ui.WinWidth)
+func (ui *ui) UpdatePlayer(level *game.Level, deltaTime uint32) {
+	level.Player.Move(0, ui.WinHeight, 0, ui.WinWidth, deltaTime)
 }
 
-func (ui *ui) checkOutOfBounds(x, y int, w, h int32) bool {
-	if x > ui.WinWidth+int(w) || x < int(0-w) || y > ui.WinHeight+int(h) || y < int(0-h) {
+func (ui *ui) checkOutOfBounds(x, y float64, w, h int32) bool {
+	if int32(x) > ui.WinWidth + w || int32(x) < 0 - w || int32(y) > ui.WinHeight + h || int32(y) < 0 - h {
 		return true
 	}
 	return false
@@ -118,12 +117,10 @@ func (ui *ui) checkCollisions(level *game.Level) {
 	// Bullet Collisions
 	for _, bullet := range level.Bullets {
 		if !bullet.IsColliding {
-			bulletRect := &sdl.Rect{int32(bullet.X), int32(bullet.Y), int32(bullet.W), int32(bullet.H)}
 			if !bullet.FiredByEnemy {
 				for _, enemy := range level.Enemies {
 					if !enemy.IsDestroyed {
-						enemyRect := &sdl.Rect{int32(enemy.X), int32(enemy.Y), int32(enemy.W), int32(enemy.H)}
-						if enemyRect.HasIntersection(bulletRect) {
+						if enemy.BoundBox.HasIntersection(bullet.BoundBox) {
 							bullet.IsColliding = true
 							enemy.Hitpoints -= bullet.Damage
 							if enemy.Hitpoints <= 0 {
@@ -140,8 +137,7 @@ func (ui *ui) checkCollisions(level *game.Level) {
 					}
 				}
 			} else {
-				playerRect := &sdl.Rect{int32(level.Player.X), int32(level.Player.Y), int32(level.Player.W), int32(level.Player.H)}
-				if playerRect.HasIntersection(bulletRect) {
+				if level.Player.BoundBox.HasIntersection(bullet.BoundBox) {
 					bullet.IsColliding = true
 					if level.Player.ShieldHitpoints > 0 {
 						level.Player.ShieldHitpoints -= bullet.Damage
@@ -161,9 +157,7 @@ func (ui *ui) checkCollisions(level *game.Level) {
 	// Enemy Collisions With Player
 	for _, enemy := range level.Enemies {
 		if !enemy.IsDestroyed {
-			enemyRect := &sdl.Rect{int32(enemy.X), int32(enemy.Y), int32(enemy.W), int32(enemy.H)}
-			playerRect := &sdl.Rect{int32(level.Player.X), int32(level.Player.Y), int32(level.Player.W), int32(level.Player.H)}
-			if enemyRect.HasIntersection(playerRect) {
+			if enemy.BoundBox.HasIntersection(level.Player.BoundBox) {
 				if !enemy.IsBoss {
 					enemy.Hitpoints = 0
 					enemy.IsDestroyed = true
@@ -188,11 +182,11 @@ func (ui *ui) checkCollisions(level *game.Level) {
 	// Player collisions with power-ups
 }
 
-func (ui *ui) Update(level *game.Level) {
-	ui.UpdatePlayer(level)
+func (ui *ui) Update(level *game.Level, deltaTime uint32) {
+	ui.UpdatePlayer(level, deltaTime)
 	if !level.Complete {
-		ui.UpdateBullets(level)
-		ui.UpdateEnemies(level)
+		ui.UpdateBullets(level, deltaTime)
+		ui.UpdateEnemies(level, deltaTime)
 		ui.checkCollisions(level)
 		ui.SpawnEnemies(level)
 		ui.CheckFiring(level, level.Player)

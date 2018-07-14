@@ -8,19 +8,17 @@ import (
 	"math/rand"
 	"strconv"
 	"time"
-	"fmt"
 	"strings"
+	"fmt"
 )
 
 type uiElement struct {
 	game.Pos
-	game.Size
 	texture *sdl.Texture
 }
 
 type uiButton struct {
 	uiElement
-	boundBox     *sdl.Rect
 	textBoundBox *sdl.Rect
 	mouseOver    bool
 	clicked      bool
@@ -33,18 +31,18 @@ type cursor struct {
 }
 
 type hudElement struct {
-	horzTiles, vertTiles, totalWidth, horzOffset, vertOffset int
+	horzTiles, vertTiles, totalWidth int32
+	horzOffset, vertOffset float64
 }
 
 type statusBar struct {
 	uiElement
 	hudElement
-	maxTiles int
+	maxTiles int32
 }
 
 type menu struct {
 	uiElement
-	boundBox     *sdl.Rect
 }
 
 type hud struct {
@@ -56,8 +54,8 @@ type hud struct {
 }
 
 type ui struct {
-	WinWidth             int
-	WinHeight            int
+	WinWidth             int32
+	WinHeight            int32
 	horzTiles, vertTiles int
 	backgroundTexture            *sdl.Texture
 	cursor                       *cursor
@@ -89,6 +87,9 @@ type ui struct {
 	levelComplete                bool
 	levelCompleteMessageTimer    int
 	levelCompleteMessageShowTime int
+	AnimationSpeed int
+	shouldClampFramerate bool
+	FramerateClamp int
 }
 
 const (
@@ -143,6 +144,7 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 	ui.mapMoveDelay = 5
 	ui.muted = false
 	ui.levelCompleteMessageShowTime = 150
+	ui.AnimationSpeed = 500
 
 	var err error
 	ui.window, err = sdl.CreateWindow("Some Shitty Space Game", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED, int32(ui.WinWidth), int32(ui.WinHeight), sdl.WINDOW_SHOWN)
@@ -174,17 +176,17 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 
 func (ui *ui) DrawBackground(level *game.Level) {
 	// TODO: Draw better background to create illusion of motion
-	if ui.backgroundTexture == nil {
-		ui.backgroundTexture = ui.textureMap[backgroundTexture]
-	}
-	if ui.horzTiles == 0 && ui.vertTiles == 0 {
-		_, _, w, h, err := ui.backgroundTexture.Query()
-		if err != nil {
-			panic(err)
-		}
-		ui.horzTiles = ui.WinWidth / int(w)
-		ui.vertTiles = ui.WinHeight / int(h)
-	}
+	//if ui.backgroundTexture == nil {
+	//	ui.backgroundTexture = ui.textureMap[backgroundTexture]
+	//}
+	//if ui.horzTiles == 0 && ui.vertTiles == 0 {
+	//	_, _, w, h, err := ui.backgroundTexture.Query()
+	//	if err != nil {
+	//		panic(err)
+	//	}
+	//	ui.horzTiles = ui.WinWidth / int(w)
+	//	ui.vertTiles = ui.WinHeight / int(h)
+	//}
 	//destRect := &sdl.Rect{0, 0, int32(ui.WinWidth), int32(ui.WinHeight)}
 	//ui.renderer.Copy(ui.backgroundTexture, nil, destRect)
 }
@@ -192,14 +194,17 @@ func (ui *ui) DrawBackground(level *game.Level) {
 func (ui *ui) DrawSpeedLines() {
 	// TODO: Maybe the number of lines changes as the player moves towards the top of the screen/accelerates?
 	for _, line := range ui.uiSpeedLines {
-		if line.Y > ui.WinHeight {
-			spawnX := ui.randNumGen.Intn(ui.WinWidth)
-			spawnY := -ui.randNumGen.Intn(ui.WinHeight)
+		if line.BoundBox.Y > ui.WinHeight {
+			spawnX := float64(ui.randNumGen.Intn(int(ui.WinWidth)))
+			spawnY := -float64(ui.randNumGen.Intn(int(ui.WinHeight)))
 			line.X = spawnX
 			line.Y = spawnY
 		}
+		//This should be in Logic, not GUI (movement)
 		line.Y += 5
-		ui.renderer.Copy(line.texture, nil, &sdl.Rect{int32(line.X), int32(line.Y), int32(line.W), int32(line.H)})
+		line.BoundBox.X = int32(line.X)
+		line.BoundBox.Y = int32(line.Y)
+		ui.renderer.Copy(line.texture, nil, line.BoundBox)
 	}
 }
 
@@ -211,10 +216,13 @@ func (ui *ui) DrawCursor() {
 		if err != nil {
 			panic(err)
 		}
-		ui.cursor.W = int(w)
-		ui.cursor.H = int(h)
+		ui.cursor.BoundBox = &sdl.Rect{}
+		ui.cursor.BoundBox.W = w
+		ui.cursor.BoundBox.H = h
 	}
-	ui.renderer.Copy(ui.cursor.texture, nil, &sdl.Rect{ui.currentMouseX, ui.currentMouseY, int32(ui.cursor.W), int32(ui.cursor.H)})
+	ui.cursor.BoundBox.X = ui.currentMouseX
+	ui.cursor.BoundBox.Y = ui.currentMouseY
+	ui.renderer.Copy(ui.cursor.texture, nil, ui.cursor.BoundBox)
 }
 
 func (ui *ui) DrawMenu() {
@@ -225,25 +233,24 @@ func (ui *ui) DrawMenu() {
 		if err != nil {
 			panic(err)
 		}
-		xPos := ui.WinWidth/2 - int(w * 2)
-		yPos := ui.WinHeight/2 - int(h * 2)
-		ui.menu.boundBox = &sdl.Rect{int32(xPos), int32(yPos), w * 4, h * 4}
+		xPos := ui.WinWidth/2 - w * 2
+		yPos := ui.WinHeight/2 - h * 2
+		ui.menu.BoundBox = &sdl.Rect{int32(xPos), int32(yPos), w * 4, h * 4}
 	}
 	if ui.menuOpen {
-		ui.renderer.Copy(ui.menu.texture, nil, ui.menu.boundBox)
+		ui.renderer.Copy(ui.menu.texture, nil, ui.menu.BoundBox)
 	}
 }
 
 func (ui *ui) DrawUiElements(level *game.Level) {
 	// Draw Player Hitpoints, eventually the entire HUD
 	p := level.Player
-	hpTex := ui.stringToTexture(strconv.Itoa(p.Hitpoints)+" HP", sdl.Color{255, 255, 255, 1})
+	hpTex := ui.stringToTexture(strconv.Itoa(int(p.Hitpoints)) + " HP", sdl.Color{255, 255, 255, 1})
 	_, _, hpW, hpH, err := hpTex.Query()
 	if err != nil {
 		panic(err)
 	}
-	//pTex := ui.stringToTexture(strconv.Itoa(p.Points), sdl.Color{255, 255, 255, 1})
-	pTex := ui.stringToTexture(strconv.Itoa(p.Xvel), sdl.Color{255, 255, 255, 1})
+	pTex := ui.stringToTexture(strconv.Itoa(int(p.Points)), sdl.Color{255, 255, 255, 1})
 	_, _, pW, pH, err := pTex.Query()
 	if err != nil {
 		panic(err)
@@ -263,58 +270,73 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 		if err != nil {
 			panic(err)
 		}
-		ui.hud.horzTiles = (ui.WinWidth/2) / int(w)
+		ui.hud.horzTiles = int32(ui.WinWidth/2) / w
 		ui.hud.vertTiles = 4
-		ui.hud.W = int(w)
-		ui.hud.H = int(h)
-		ui.hud.totalWidth = ui.hud.W * ui.hud.horzTiles
-		ui.hud.horzOffset = (ui.WinWidth - ui.hud.totalWidth) / 2
+		ui.hud.BoundBox = &sdl.Rect{}
+		ui.hud.BoundBox.W = w
+		ui.hud.BoundBox.H = h
+		ui.hud.totalWidth = ui.hud.BoundBox.W * ui.hud.horzTiles
+		ui.hud.horzOffset = float64((ui.WinWidth - ui.hud.totalWidth) / 2)
 		ui.hud.healthBar = &statusBar{}
+		ui.hud.healthBar.BoundBox = &sdl.Rect{}
 		ui.hud.shieldBar = &statusBar{}
+		ui.hud.shieldBar.BoundBox = &sdl.Rect{}
 		ui.hud.healthBar.maxTiles = 20
 		ui.hud.healthBar.horzTiles = ui.hud.healthBar.maxTiles
 		ui.hud.healthBar.vertTiles = 1
-		ui.hud.healthBar.horzOffset = ui.hud.horzOffset + ui.hud.totalWidth - 316
-		ui.hud.healthBar.vertOffset = ui.WinHeight - ui.hud.H + 35
+		ui.hud.healthBar.horzOffset = ui.hud.horzOffset + float64(ui.hud.totalWidth - 316)
+		ui.hud.healthBar.vertOffset = float64(ui.WinHeight - ui.hud.BoundBox.H + 35)
 		ui.hud.shieldBar.maxTiles = 20
 		ui.hud.shieldBar.horzTiles = ui.hud.shieldBar.maxTiles
 		ui.hud.shieldBar.vertTiles = 1
-		ui.hud.shieldBar.horzOffset = ui.hud.horzOffset + ui.hud.totalWidth - 316
-		ui.hud.shieldBar.vertOffset = ui.WinHeight - ui.hud.H + 66
-		ui.hud.healthBar.W = 16
-		ui.hud.shieldBar.W = 16
+		ui.hud.shieldBar.horzOffset = ui.hud.horzOffset + float64(ui.hud.totalWidth - 316)
+		ui.hud.shieldBar.vertOffset = float64(ui.WinHeight - ui.hud.BoundBox.H + 66)
+		ui.hud.healthBar.BoundBox.W = 16
+		ui.hud.shieldBar.BoundBox.W = 16
 	}
 
 	if len(ui.clickableElementMap) == 0 {
 		ui.loadUiElements()
 	}
 
-	for i := 0; i < ui.hud.horzTiles; i++ {
+	for i := 0; i < int(ui.hud.horzTiles); i++ {
 		var tex *sdl.Texture
+		ui.hud.BoundBox.X = int32(i) * ui.hud.BoundBox.W + int32(ui.hud.horzOffset)
+		ui.hud.BoundBox.Y = ui.WinHeight - ui.hud.BoundBox.H
 		if i == 0 {
 			tex = ui.textureMap["metalPanel_blueCorner_noBorder"]
-			ui.renderer.CopyEx(tex, nil, &sdl.Rect{int32(i*ui.hud.W + ui.hud.horzOffset), int32(ui.WinHeight - ui.hud.H), int32(ui.hud.W), int32(ui.hud.H)}, 0, nil, sdl.FLIP_HORIZONTAL)
-		} else if i == ui.hud.horzTiles-1 {
+			ui.renderer.CopyEx(tex, nil, ui.hud.BoundBox, 0, nil, sdl.FLIP_HORIZONTAL)
+		} else if i == int(ui.hud.horzTiles) - 1 {
 			tex = ui.textureMap["metalPanel_blueCorner_noBorder"]
-			ui.renderer.Copy(tex, nil, &sdl.Rect{int32(i*ui.hud.W + ui.hud.horzOffset), int32(ui.WinHeight - ui.hud.H), int32(ui.hud.W), int32(ui.hud.H)})
+			ui.renderer.Copy(tex, nil, ui.hud.BoundBox)
 		} else {
 			tex = ui.textureMap["metalPanel_blue_noBorder"]
-			ui.renderer.Copy(tex, nil, &sdl.Rect{int32(i*ui.hud.W + ui.hud.horzOffset), int32(ui.WinHeight - ui.hud.H), int32(ui.hud.W), int32(ui.hud.H)})
+			ui.renderer.Copy(tex, nil, ui.hud.BoundBox)
 		}
 	}
 
 	// Draw Health Bar Container and Badge
-	for i := 0; i < ui.hud.healthBar.maxTiles; i++ {
+	for i := 0; i < int(ui.hud.healthBar.maxTiles); i++ {
 		var tex *sdl.Texture
+		ui.hud.healthBar.BoundBox.X = int32(i) * ui.hud.healthBar.BoundBox.W + int32(ui.hud.healthBar.horzOffset)
+		ui.hud.healthBar.BoundBox.Y = int32(ui.hud.healthBar.vertOffset)
 		if i == 0 {
 			tex = ui.textureMap["barHorizontal_shadow_left"]
-			ui.renderer.Copy(tex, nil, &sdl.Rect{int32(i*ui.hud.healthBar.W + ui.hud.healthBar.horzOffset), int32(ui.hud.healthBar.vertOffset), 6, 26})
-		} else if i == ui.hud.healthBar.maxTiles - 1 {
+			ui.hud.healthBar.BoundBox.W = 6
+			ui.hud.healthBar.BoundBox.H = 26
+			ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
+		} else if i == int(ui.hud.healthBar.maxTiles) - 1 {
 			tex = ui.textureMap["barHorizontal_shadow_right"]
-			ui.renderer.Copy(tex, nil, &sdl.Rect{int32(i*ui.hud.healthBar.W + ui.hud.healthBar.horzOffset - 10), int32(ui.hud.healthBar.vertOffset), 6, 26})
+			ui.hud.healthBar.BoundBox.W = 6
+			ui.hud.healthBar.BoundBox.H = 26
+			ui.hud.healthBar.BoundBox.X -= 10
+			ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
 		} else {
 			tex = ui.textureMap["barHorizontal_shadow_mid"]
-			ui.renderer.Copy(tex, nil, &sdl.Rect{int32(i*ui.hud.healthBar.W + ui.hud.healthBar.horzOffset - 10), int32(ui.hud.healthBar.vertOffset), 16, 26})
+			ui.hud.healthBar.BoundBox.W = 16
+			ui.hud.healthBar.BoundBox.H = 26
+			ui.hud.healthBar.BoundBox.X -= 10
+			ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
 		}
 		tex = ui.textureMap["pill_green"]
 		ui.renderer.Copy(tex, nil, &sdl.Rect{int32(ui.hud.healthBar.horzOffset - 32), int32(ui.hud.healthBar.vertOffset), 22, 22})
@@ -322,49 +344,79 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 
 
 	//Draw Shield Bar Container and Badge
-	for i := 0; i < ui.hud.shieldBar.maxTiles; i++ {
+	for i := 0; i < int(ui.hud.shieldBar.maxTiles); i++ {
 		var tex *sdl.Texture
+		ui.hud.shieldBar.BoundBox.X = int32(i) * ui.hud.shieldBar.BoundBox.W + int32(ui.hud.shieldBar.horzOffset)
+		ui.hud.shieldBar.BoundBox.Y = int32(ui.hud.shieldBar.vertOffset)
 		if i == 0 {
 			tex = ui.textureMap["barHorizontal_shadow_left"]
-			ui.renderer.Copy(tex, nil, &sdl.Rect{int32(i * ui.hud.shieldBar.W + ui.hud.shieldBar.horzOffset), int32(ui.hud.shieldBar.vertOffset), 6, 26})
-		} else if i == ui.hud.shieldBar.maxTiles - 1 {
+			ui.hud.shieldBar.BoundBox.W = 6
+			ui.hud.shieldBar.BoundBox.H = 26
+			ui.renderer.Copy(tex, nil, ui.hud.shieldBar.BoundBox)
+		} else if i == int(ui.hud.shieldBar.maxTiles) - 1 {
 			tex = ui.textureMap["barHorizontal_shadow_right"]
-			ui.renderer.Copy(tex, nil, &sdl.Rect{int32(i * ui.hud.shieldBar.W + ui.hud.shieldBar.horzOffset - 10), int32(ui.hud.shieldBar.vertOffset), 6, 26})
+			ui.hud.shieldBar.BoundBox.W = 6
+			ui.hud.shieldBar.BoundBox.H = 26
+			ui.hud.shieldBar.BoundBox.X -= 10
+			ui.renderer.Copy(tex, nil, ui.hud.shieldBar.BoundBox)
 		} else {
 			tex = ui.textureMap["barHorizontal_shadow_mid"]
-			ui.renderer.Copy(tex, nil, &sdl.Rect{int32(i * ui.hud.shieldBar.W + ui.hud.shieldBar.horzOffset - 10), int32(ui.hud.shieldBar.vertOffset), 16, 26})
+			ui.hud.shieldBar.BoundBox.W = 16
+			ui.hud.shieldBar.BoundBox.H = 26
+			ui.hud.shieldBar.BoundBox.X -= 10
+			ui.renderer.Copy(tex, nil, ui.hud.shieldBar.BoundBox)
 		}
 		tex = ui.textureMap["shield_gold"]
 		ui.renderer.Copy(tex, nil, &sdl.Rect{int32(ui.hud.shieldBar.horzOffset - 32), int32(ui.hud.shieldBar.vertOffset), 22, 22})
 	}
 
 	// Draw Health Bar
-	for i := 0; i < ui.hud.healthBar.horzTiles; i++ {
+	for i := 0; i < int(ui.hud.healthBar.horzTiles); i++ {
 		var tex *sdl.Texture
+		ui.hud.healthBar.BoundBox.X = int32(i) * ui.hud.healthBar.BoundBox.W + int32(ui.hud.healthBar.horzOffset)
+		ui.hud.healthBar.BoundBox.Y = int32(ui.hud.healthBar.vertOffset)
 		if i == 0 {
 			tex = ui.textureMap["barHorizontal_green_left"]
-			ui.renderer.Copy(tex, nil, &sdl.Rect{int32(i * ui.hud.healthBar.W + ui.hud.healthBar.horzOffset), int32(ui.hud.healthBar.vertOffset), 6, 26})
-		} else if i == ui.hud.healthBar.horzTiles - 1 {
+			ui.hud.healthBar.BoundBox.W = 6
+			ui.hud.healthBar.BoundBox.H = 26
+			ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
+		} else if i == int(ui.hud.healthBar.maxTiles) - 1 {
 			tex = ui.textureMap["barHorizontal_green_right"]
-			ui.renderer.Copy(tex, nil, &sdl.Rect{int32(i * ui.hud.healthBar.W + ui.hud.healthBar.horzOffset - 10), int32(ui.hud.healthBar.vertOffset), 6, 26})
+			ui.hud.healthBar.BoundBox.W = 6
+			ui.hud.healthBar.BoundBox.H = 26
+			ui.hud.healthBar.BoundBox.X -= 10
+			ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
 		} else {
 			tex = ui.textureMap["barHorizontal_green_mid"]
-			ui.renderer.Copy(tex, nil, &sdl.Rect{int32(i * ui.hud.healthBar.W + ui.hud.healthBar.horzOffset - 10), int32(ui.hud.healthBar.vertOffset), 16, 26})
+			ui.hud.healthBar.BoundBox.W = 16
+			ui.hud.healthBar.BoundBox.H = 26
+			ui.hud.healthBar.BoundBox.X -= 10
+			ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
 		}
 	}
 
 	//Draw Shield Bar
-	for i := 0; i < ui.hud.shieldBar.horzTiles; i++ {
+	for i := 0; i < int(ui.hud.shieldBar.horzTiles); i++ {
 		var tex *sdl.Texture
+		ui.hud.shieldBar.BoundBox.X = int32(i) * ui.hud.shieldBar.BoundBox.W + int32(ui.hud.shieldBar.horzOffset)
+		ui.hud.shieldBar.BoundBox.Y = int32(ui.hud.shieldBar.vertOffset)
 		if i == 0 {
 			tex = ui.textureMap["barHorizontal_yellow_left"]
-			ui.renderer.Copy(tex, nil, &sdl.Rect{int32(i * ui.hud.shieldBar.W + ui.hud.shieldBar.horzOffset), int32(ui.hud.shieldBar.vertOffset), 6, 26})
-		} else if i == ui.hud.shieldBar.horzTiles - 1 {
+			ui.hud.shieldBar.BoundBox.W = 6
+			ui.hud.shieldBar.BoundBox.H = 26
+			ui.renderer.Copy(tex, nil, ui.hud.shieldBar.BoundBox)
+		} else if i == int(ui.hud.shieldBar.maxTiles) - 1 {
 			tex = ui.textureMap["barHorizontal_yellow_right"]
-			ui.renderer.Copy(tex, nil, &sdl.Rect{int32(i * ui.hud.shieldBar.W + ui.hud.shieldBar.horzOffset - 10), int32(ui.hud.shieldBar.vertOffset), 6, 26})
+			ui.hud.shieldBar.BoundBox.W = 6
+			ui.hud.shieldBar.BoundBox.H = 26
+			ui.hud.shieldBar.BoundBox.X -= 10
+			ui.renderer.Copy(tex, nil, ui.hud.shieldBar.BoundBox)
 		} else {
 			tex = ui.textureMap["barHorizontal_yellow_mid"]
-			ui.renderer.Copy(tex, nil, &sdl.Rect{int32(i * ui.hud.shieldBar.W + ui.hud.shieldBar.horzOffset - 10), int32(ui.hud.shieldBar.vertOffset), 16, 26})
+			ui.hud.shieldBar.BoundBox.W = 16
+			ui.hud.shieldBar.BoundBox.H = 26
+			ui.hud.shieldBar.BoundBox.X -= 10
+			ui.renderer.Copy(tex, nil, ui.hud.shieldBar.BoundBox)
 		}
 	}
 
@@ -372,15 +424,15 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 	for _, element := range ui.clickableElementMap {
 		if element.mouseOver && !element.clicked {
 			element.texture.SetBlendMode(sdl.BLENDMODE_ADD)
-			ui.renderer.Copy(element.texture, nil, element.boundBox)
+			ui.renderer.Copy(element.texture, nil, element.BoundBox)
 		} else if element.clicked {
 			element.texture.SetBlendMode(sdl.BLENDMODE_BLEND)
 			element.texture.SetColorMod(220, 220, 220)
-			ui.renderer.CopyEx(element.texture, nil, element.boundBox, 0, nil, sdl.FLIP_VERTICAL)
+			ui.renderer.CopyEx(element.texture, nil, element.BoundBox, 0, nil, sdl.FLIP_VERTICAL)
 		} else {
 			element.texture.SetColorMod(255, 255, 255)
 			element.texture.SetBlendMode(sdl.BLENDMODE_BLEND)
-			ui.renderer.Copy(element.texture, nil, element.boundBox)
+			ui.renderer.Copy(element.texture, nil, element.BoundBox)
 		}
 		ui.renderer.Copy(element.textTexture, nil, element.textBoundBox)
 	}
@@ -391,36 +443,38 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 	ui.renderer.Copy(levTex, nil, &sdl.Rect{int32(ui.WinWidth - 20) - levW, 0, levW, levH})
 }
 
-func (ui *ui) DrawPlayer(level *game.Level) {
+func (ui *ui) DrawPlayer(level *game.Level, deltaTime uint32) {
+	deltaTimeS := float64(deltaTime)/1000
 	if level.Player.IsFiring {
 		level.Player.FireRateTimer++
 	}
 	if level.Player.Texture == nil {
-		fmt.Println(level.Player.TextureName)
 		tex := ui.textureMap[level.Player.TextureName]
 		level.Player.Texture = tex
 		_, _, w, h, err := tex.Query()
 		if err != nil {
 			panic(err)
 		}
-		level.Player.W = int(w/2)
-		level.Player.H = int(h/2)
-		level.Player.X = ui.WinWidth/2 - level.Player.W/2
-		level.Player.Y = ui.WinHeight/2 - level.Player.H/2
+		level.Player.BoundBox.W = w
+		level.Player.BoundBox.H = h
+		level.Player.X = float64(ui.WinWidth/2 - level.Player.BoundBox.W/2)
+		level.Player.Y = float64(ui.WinHeight/2 - level.Player.BoundBox.H/2)
 		level.Player.FireOffsetX = 0
 		//player.Direction = game.FindDegreeRotation(int32(player.Y+player.H/2), int32(player.X+player.W/2), ui.currentMouseY, ui.currentMouseX) - 90
 		// Arbitrary number 5 here to slightly move fire point forward of texture
-		level.Player.FireOffsetY = level.Player.H/2 + 5
+		level.Player.FireOffsetY = float64(level.Player.BoundBox.H/2 + 5)
 	}
 	player := level.Player
+	player.BoundBox.X = int32(player.X)
+	player.BoundBox.Y = int32(player.Y)
 	if player.IsDestroyed {
 		// TODO: Lose Scenario... Some kind of modal? Loss of life?
 	}
 	if player.Xvel > 0 {
 		if !strings.Contains(player.TextureName, "left") {
-			if player.AnimationCounter <= player.TurnAnimationCount && !player.TurnAnimationPlayed {
-				player.TextureName = "turn_right" + strconv.Itoa(player.AnimationCounter)
-				player.AnimationCounter++
+			if int(player.AnimationCounter) <= player.TurnAnimationCount && !player.TurnAnimationPlayed {
+				player.TextureName = "turn_right" + strconv.Itoa(int(player.AnimationCounter))
+				player.AnimationCounter += 100 * deltaTimeS
 			} else {
 				player.AnimationCounter = 0
 				player.TurnAnimationPlayed = true
@@ -432,21 +486,24 @@ func (ui *ui) DrawPlayer(level *game.Level) {
 			if err != nil {
 				panic(err)
 			}
-			if n > 0 {
-				n--
-				player.TextureName = "turn_right" + strconv.Itoa(n)
+			if int(player.AnimationCounter) >= player.TurnAnimationCount {
+				if n < 0 {
+					player.TextureName = "player"
+				} else {
+					player.TextureName = "turn_right" + strconv.Itoa(int(player.AnimationCounter))
+				}
+				player.AnimationCounter -= 100 * deltaTimeS
 			} else {
-				player.TextureName = "player"
-				player.TurnAnimationPlayed = false
 				player.AnimationCounter = 0
+				player.TurnAnimationPlayed = false
 			}
 		}
 	}
 	if player.Xvel < 0 {
 		if !strings.Contains(player.TextureName, "right") {
-			if player.AnimationCounter <= player.TurnAnimationCount && !player.TurnAnimationPlayed {
-				player.TextureName = "turn_left" + strconv.Itoa(player.AnimationCounter)
-				player.AnimationCounter++
+			if int(player.AnimationCounter) <= player.TurnAnimationCount && !player.TurnAnimationPlayed {
+				player.TextureName = "turn_left" + strconv.Itoa(int(player.AnimationCounter))
+				player.AnimationCounter += 1 * deltaTimeS
 			} else {
 				player.AnimationCounter = 0
 				player.TurnAnimationPlayed = true
@@ -471,24 +528,25 @@ func (ui *ui) DrawPlayer(level *game.Level) {
 	player.Texture = ui.textureMap[player.TextureName]
 	tex := player.Texture
 
+	// TODO: Rework shield so it looks correct with new ship texture
 	// Draw Player Shield
-	shieldTex := ui.textureMap["shield"]
-	_, _, sw, sh, err := shieldTex.Query()
-	if err != nil {
-		panic(err)
-	}
-	if player.ShieldHitpoints > 0 {
-		if player.ShieldHitpoints > 25 && player.ShieldHitpoints < 75 {
-			shieldTex.SetColorMod(255, 255, 0)
-		} else if player.ShieldHitpoints <= 25 {
-			shieldTex.SetColorMod(255, 0, 0)
-		} else {
-			shieldTex.SetColorMod(255, 255, 255)
-		}
-		// Subtract 10 from Y pos to move shield further forward from player
-		ui.renderer.Copy(shieldTex, nil, &sdl.Rect{int32(player.X + player.W/2) - sw/2, int32(player.Y + player.H/2) - sh/2 - 10, sw, sh})
-	}
-	ui.renderer.Copy(tex, nil, &sdl.Rect{int32(player.X), int32(player.Y), int32(player.W), int32(player.H)})
+	//shieldTex := ui.textureMap["shield"]
+	//_, _, sw, sh, err := shieldTex.Query()
+	//if err != nil {
+	//	panic(err)
+	//}
+	//if player.ShieldHitpoints > 0 {
+	//	if player.ShieldHitpoints > 25 && player.ShieldHitpoints < 75 {
+	//		shieldTex.SetColorMod(255, 255, 0)
+	//	} else if player.ShieldHitpoints <= 25 {
+	//		shieldTex.SetColorMod(255, 0, 0)
+	//	} else {
+	//		shieldTex.SetColorMod(255, 255, 255)
+	//	}
+	//	// Subtract 10 from Y pos to move shield further forward from player
+	//	ui.renderer.Copy(shieldTex, nil, &sdl.Rect{int32(player.X + player.W/2) - sw/2, int32(player.Y + player.H/2) - sh/2 - 10, sw, sh})
+	//}
+	ui.renderer.Copy(tex, nil, player.BoundBox)
 
 	// TODO: Need to add draw logic here to account for player upgrades (better guns, better shield, etc)
 
@@ -507,12 +565,13 @@ func (ui *ui) DrawPlayer(level *game.Level) {
 		panic(err)
 	}
 	if player.IsAccelerating {
-		ui.renderer.Copy(playerEngineFireTexture, nil, &sdl.Rect{int32(player.X+player.W/2) - w/2, int32(player.Y + player.H + 5), w, h})
+		ui.renderer.Copy(playerEngineFireTexture, nil, &sdl.Rect{player.BoundBox.X + player.BoundBox.W/2 - w/2, player.BoundBox.X + player.BoundBox.H + 5, w, h})
 	}
 }
 
-func (ui *ui) DrawEnemies(level *game.Level) {
+func (ui *ui) DrawEnemies(level *game.Level, deltaTime uint32) {
 	// TODO: Have large meteors break up into smaller ones
+	deltaTimeS := float64(deltaTime)/10
 	for _, enemy := range level.Enemies {
 		if enemy.Texture == nil {
 			enemy.Texture = ui.textureMap[enemy.TextureName]
@@ -520,26 +579,28 @@ func (ui *ui) DrawEnemies(level *game.Level) {
 			if err != nil {
 				panic(err)
 			}
-			enemy.W = int(w)
-			enemy.H = int(h)
+			enemy.BoundBox.W = w
+			enemy.BoundBox.H = h
 			enemy.FireOffsetX = 0
 			// Arbitrary number 5 here to slightly move fire point forward of texture
-			enemy.FireOffsetY = int(h/2) + 5
+			enemy.FireOffsetY = float64(h/2 + 5)
 		}
+		enemy.BoundBox.X = int32(enemy.X)
+		enemy.BoundBox.Y = int32(enemy.Y)
 		if !enemy.IsDestroyed {
 			if enemy.ShouldSpin {
-				ui.renderer.CopyEx(enemy.Texture, nil, &sdl.Rect{int32(enemy.X), int32(enemy.Y), int32(enemy.W), int32(enemy.H)}, enemy.SpinAngle * enemy.SpinSpeed, nil, sdl.FLIP_NONE)
-				if enemy.SpinTimer == 3 {
-					enemy.SpinAngle++
+				ui.renderer.CopyEx(enemy.Texture, nil, enemy.BoundBox, enemy.SpinAngle * (enemy.SpinSpeed * deltaTimeS), nil, sdl.FLIP_NONE)
+				if enemy.SpinTimer == 3 * deltaTimeS {
+					enemy.SpinAngle += deltaTimeS
 					if enemy.SpinAngle > 360 {
 						enemy.SpinAngle = 0
 					}
 					enemy.SpinTimer = 0
 				} else {
-					enemy.SpinTimer++
+					enemy.SpinTimer += deltaTimeS
 				}
 			} else {
-				ui.renderer.Copy(enemy.Texture, nil, &sdl.Rect{int32(enemy.X), int32(enemy.Y), int32(enemy.W), int32(enemy.H)})
+				ui.renderer.Copy(enemy.Texture, nil, enemy.BoundBox)
 			}
 		}
 	}
@@ -564,7 +625,7 @@ func (ui *ui) DrawExplosions(level *game.Level) {
 			}
 			tex := ui.textureMap[enemy.DestroyedAnimationTextureName]
 			srcRect := &sdl.Rect{int32(colNumber * 256), int32(rowNumber * 256), 256, 256}
-			ui.renderer.Copy(tex, srcRect, &sdl.Rect{int32(enemy.X - enemy.W/2), int32(enemy.Y - enemy.H/2), int32(enemy.W * 2), int32(enemy.H * 2)})
+			ui.renderer.Copy(tex, srcRect, &sdl.Rect{enemy.BoundBox.X - enemy.BoundBox.W/2, enemy.BoundBox.Y - enemy.BoundBox.H/2, enemy.BoundBox.W * 2, enemy.BoundBox.H * 2})
 			enemy.DestroyedAnimationCounter++
 			if enemy.DestroyedAnimationCounter == 64 {
 				enemy.DestroyedAnimationPlayed = true
@@ -596,14 +657,17 @@ func (ui *ui) DrawBullet(level *game.Level) {
 			if err != nil {
 				panic(err)
 			}
-			bullet.W = int(w)
-			bullet.H = int(h)
+			bullet.BoundBox.W = w
+			bullet.BoundBox.H = h
+			bullet.X = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2 - bullet.BoundBox.W/2)
+			bullet.Y = bullet.FiredBy.Y + float64(bullet.FiredBy.BoundBox.H/2 - bullet.BoundBox.H/2)
+			//bullet.BoundBox.X = int32(bullet.X)
+			//bullet.BoundBox.Y = int32(bullet.Y)
 			bullet.Direction = bullet.FiredBy.Direction
-			bullet.X = (bullet.FiredBy.X + bullet.FiredBy.W/2) - bullet.W/2
-			bullet.Y = (bullet.FiredBy.Y + bullet.FiredBy.H/2) - bullet.H/2
 		}
 		tex := bullet.Texture
-
+		bullet.BoundBox.X = int32(bullet.X)
+		bullet.BoundBox.Y = int32(bullet.Y)
 		// Fire Animation
 		if bullet.FlashCounter < 5 && !bullet.FireAnimationPlayed {
 			fireTex := ui.textureMap[explosionTexture]
@@ -611,13 +675,13 @@ func (ui *ui) DrawBullet(level *game.Level) {
 			if err != nil {
 				panic(err)
 			}
-			var posX, posY int
+			var posX, posY float64
 			if bullet.FiredByEnemy {
-				posX = (bullet.FiredBy.X + bullet.FiredBy.W/2) - int(w/4)
-				posY = (bullet.FiredBy.Y + bullet.FiredBy.H/2) - int(h/4) + bullet.FiredBy.FireOffsetY
+				posX = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2 - w/4)
+				posY = bullet.FiredBy.Y + float64(bullet.FiredBy.BoundBox.H/2 - h/4) + bullet.FiredBy.FireOffsetY
 			} else {
-				posX = (bullet.FiredBy.X + bullet.FiredBy.W/2) - int(w/4)
-				posY = (bullet.FiredBy.Y + bullet.FiredBy.H/2) - int(h/4) - bullet.FiredBy.FireOffsetY
+				posX = (bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2)) - float64(w/4)
+				posY = (bullet.FiredBy.Y + float64(bullet.FiredBy.BoundBox.H/2)) - float64(h/4) - bullet.FiredBy.FireOffsetY
 			}
 			ui.renderer.Copy(fireTex, nil, &sdl.Rect{int32(posX), int32(posY), w / 2, h / 2})
 			bullet.FlashCounter++
@@ -637,7 +701,7 @@ func (ui *ui) DrawBullet(level *game.Level) {
 			bullet.Xvel = 0
 			bullet.Yvel = 0
 			if bullet.FiredByEnemy {
-				ui.renderer.Copy(fireTex, nil, &sdl.Rect{int32(bullet.X), int32(bullet.Y + bullet.H), w / 2, h / 2})
+				ui.renderer.Copy(fireTex, nil, &sdl.Rect{int32(bullet.X), int32(bullet.Y) + bullet.BoundBox.H, w / 2, h / 2})
 			} else {
 				ui.renderer.Copy(fireTex, nil, &sdl.Rect{int32(bullet.X), int32(bullet.Y), w / 2, h / 2})
 			}
@@ -647,10 +711,10 @@ func (ui *ui) DrawBullet(level *game.Level) {
 				bullet.DestroyAnimationPlayed = true
 				bullet.ExplodeCounter = 0
 			}
-			ui.renderer.Copy(tex, nil, &sdl.Rect{int32(bullet.X), int32(bullet.Y), int32(bullet.W), int32(bullet.H)})
+			ui.renderer.Copy(tex, nil, bullet.BoundBox)
 		}
 		// Keep bullets in the slice that aren't out of bounds (drop the bullets that go off screen so they aren't redrawn)
-		if !ui.checkOutOfBounds(bullet.X, bullet.Y, int32(bullet.W), int32(bullet.H)) && !bullet.DestroyAnimationPlayed {
+		if !ui.checkOutOfBounds(bullet.X, bullet.Y, bullet.BoundBox.W, bullet.BoundBox.H) && !bullet.DestroyAnimationPlayed {
 			if index != i {
 				level.Bullets[index] = bullet
 			}
@@ -663,7 +727,6 @@ func (ui *ui) DrawBullet(level *game.Level) {
 }
 
 func (ui *ui) DrawLevelComplete(level *game.Level) {
-	fmt.Println(ui.levelCompleteMessageTimer)
 	for _, enemy := range level.Enemies {
 		if !enemy.IsDestroyed {
 			enemy.Hitpoints = 0
@@ -681,16 +744,16 @@ func (ui *ui) DrawLevelComplete(level *game.Level) {
 }
 
 // Remember to always draw from the ground up
-func (ui *ui) Draw(level *game.Level) {
+func (ui *ui) Draw(level *game.Level, deltaTime uint32) {
 	ui.renderer.Clear()
 	if !ui.paused {
-		ui.Update(level)
+		ui.Update(level, deltaTime)
 	}
 	ui.DrawBackground(level)
 	ui.DrawSpeedLines()
 	ui.DrawBullet(level)
-	ui.DrawPlayer(level)
-	ui.DrawEnemies(level)
+	ui.DrawPlayer(level, deltaTime)
+	ui.DrawEnemies(level, deltaTime)
 	ui.DrawExplosions(level)
 	ui.DrawUiElements(level)
 	ui.DrawMenu()
@@ -702,17 +765,26 @@ func (ui *ui) Draw(level *game.Level) {
 }
 
 func (ui *ui) Run() {
-	// Aiming for 120 FPS
-	var targetFrameTime = 1.0 / 120.0 * 1000
-	var frameStart time.Time
-	var elapsedTime float64
+	var deltaTime uint32 = 0
+	var frameStart uint32 = 0
+	var frameEnd uint32 = 0
+	var targetFrameRate uint32 = 30
+	var targetFrameTime = 1000 / targetFrameRate
 	var level *game.Level
 
 	for {
-		frameStart = time.Now()
+		// Enforce at least a 1ms delay between frames
+		if deltaTime < targetFrameTime {
+			frameStart = sdl.GetTicks()
+			sdl.Delay(targetFrameTime - deltaTime)
+			frameEnd = sdl.GetTicks()
+			deltaTime = frameEnd - frameStart
+		}
+		frameStart = sdl.GetTicks()
 
 		select {
 		case newLevel := <-ui.levelChan:
+			fmt.Println("Got New Level")
 			if level != nil && newLevel.LevelNumber > level.LevelNumber {
 				ui.levelCompleteMessageTimer = 0
 			}
@@ -723,16 +795,17 @@ func (ui *ui) Run() {
 				}
 				ui.levelCompleteMessageTimer++
 			}
-			ui.Draw(level)
+			ui.Draw(level, deltaTime)
 			break
 		default:
 			if level.Complete {
 				if ui.levelCompleteMessageTimer >= ui.levelCompleteMessageShowTime {
+					fmt.Println("Put LC Input on input channel, size", len(ui.inputChan))
 					ui.inputChan <- &game.Input{Type: game.LevelComplete}
 				}
 				ui.levelCompleteMessageTimer++
 			}
-			ui.Draw(level)
+			ui.Draw(level, deltaTime)
 		}
 
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
@@ -742,30 +815,29 @@ func (ui *ui) Run() {
 			case *sdl.KeyboardEvent:
 				input := determineInputType(e)
 				if !ui.paused {
+					fmt.Println("Put Key Input on input channel, size", len(ui.inputChan))
 					ui.inputChan <- input
 				}
+				break
 			case *sdl.MouseButtonEvent:
 				input := ui.determineMouseButtonInput(e)
 				if input.Type != game.None && !level.Complete {
+					fmt.Println("Put MB Input on input channel, size", len(ui.inputChan))
 					ui.inputChan <- input
 				}
+				break
 			case *sdl.MouseMotionEvent:
 				ui.checkMouseHover(e)
 				ui.currentMouseX = e.X
 				ui.currentMouseY = e.Y
+				break
 			default:
+				fmt.Println("Put None Input on input channel, size", len(ui.inputChan))
 				ui.inputChan <- &game.Input{Type: game.None}
 			}
 		}
 
-		elapsedTime = time.Since(frameStart).Seconds() * 1000
-		if elapsedTime < targetFrameTime {
-			sdl.Delay(uint32(targetFrameTime - elapsedTime))
-			elapsedTime = time.Since(frameStart).Seconds()
-		}
-
-		//m := &runtime.MemStats{}
-		//runtime.ReadMemStats(m)
-		//fmt.Println(m.HeapObjects, m.HeapInuse, m.HeapReleased, m.HeapSys)
+		frameEnd = sdl.GetTicks()
+		deltaTime = frameEnd - frameStart
 	}
 }

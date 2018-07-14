@@ -47,7 +47,7 @@ func (ui *ui) determineMouseButtonInput(event *sdl.MouseButtonEvent) *game.Input
 		switch event.Button {
 		case sdl.BUTTON_LEFT:
 			for _, element := range ui.clickableElementMap {
-				if element.boundBox.HasIntersection(&sdl.Rect{event.X, event.Y, 1, 1}) {
+				if element.BoundBox.HasIntersection(&sdl.Rect{event.X, event.Y, 1, 1}) {
 					element.clicked = true
 					element.onClick()
 					input.Type = game.None
@@ -90,7 +90,7 @@ func (ui *ui) determineMouseButtonInput(event *sdl.MouseButtonEvent) *game.Input
 
 func (ui *ui) checkMouseHover(event *sdl.MouseMotionEvent) {
 	for _, element := range ui.clickableElementMap {
-		if element.boundBox.HasIntersection(&sdl.Rect{event.X, event.Y, 1, 1}) {
+		if element.BoundBox.HasIntersection(&sdl.Rect{event.X, event.Y, 1, 1}) {
 			element.mouseOver = true
 		} else if element.mouseOver {
 			element.mouseOver = false

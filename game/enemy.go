@@ -1,12 +1,15 @@
 package game
 
-import "strings"
+import (
+	"strings"
+	"github.com/veandco/go-sdl2/sdl"
+)
 
 type Enemy struct {
 	Character
 	CanFire bool
 	ConstantMotion bool
-	SpinTimer int
+	SpinTimer float64
 	ShouldSpin bool
 	SpinSpeed float64
 	SpinAngle float64
@@ -27,21 +30,21 @@ func (enemy *Enemy) GetSelf() *Character {
 }
 
 // TODO: Need an enemy factory of some kind here to generate different enemy types
-func (level *Level) InitEnemy(initX, initY int, enemyOrMeteor int, texName string) *Enemy {
+func (level *Level) InitEnemy(initX, initY float64, enemyOrMeteor int, texName string) *Enemy {
 	enemy := &Enemy{}
 	// 0 = meteor, 1 = enemy
 	if enemyOrMeteor == 1 {
 		enemy.TextureName = texName
-		enemy.Hitpoints = int(50 * level.EnemyDifficultyMultiplier)
+		enemy.Hitpoints = int32(50 * level.EnemyDifficultyMultiplier)
 		enemy.PointValue = 25
-		enemy.Strength = int(10 * level.EnemyDifficultyMultiplier)
-		enemy.Speed = float64(2.0 * level.EnemyDifficultyMultiplier)
+		enemy.Strength = int32(10 * level.EnemyDifficultyMultiplier)
+		enemy.Speed = 150 * level.EnemyDifficultyMultiplier
 		enemy.ConstantMotion = false
 		if strings.Contains(enemy.TextureName, "ufo") {
 			enemy.ShouldSpin = true
 		}
 		enemy.SpinAngle = 0
-		enemy.SpinSpeed = 3.0
+		enemy.SpinSpeed = 5
 		enemy.CanFire = true
 		enemy.IsBoss = false
 	} else {
@@ -54,11 +57,11 @@ func (level *Level) InitEnemy(initX, initY int, enemyOrMeteor int, texName strin
 			enemy.PointValue = 15
 			enemy.Strength = 15
 		}
-		enemy.Speed = 2.0
+		enemy.Speed = 150
 		enemy.ConstantMotion = true
 		enemy.ShouldSpin = true
 		enemy.SpinAngle = 0
-		enemy.SpinSpeed = 0.8
+		enemy.SpinSpeed = 1
 		enemy.CanFire = false
 	}
 	enemy.IsDestroyed = false
@@ -66,6 +69,7 @@ func (level *Level) InitEnemy(initX, initY int, enemyOrMeteor int, texName strin
 	enemy.FireRateResetValue = 150
 	enemy.X = initX
 	enemy.Y = initY
+	enemy.BoundBox = &sdl.Rect{X:int32(enemy.X), Y:int32(enemy.Y)}
 	return enemy
 }
 
@@ -76,16 +80,18 @@ func (enemy *Enemy) Update(level *Level) {
 }
 
 // TODO: This logic should be better to make enemies more difficult
-func (enemy *Enemy) Move(level *Level) {
+func (enemy *Enemy) Move(level *Level, deltaTime uint32) {
+	deltaTimeS := float64(deltaTime)/1000
 	if enemy.ConstantMotion {
-		enemy.Y += int(enemy.Speed)
+		enemy.Y += enemy.Speed * deltaTimeS
 	} else {
 		player := level.Player
 		if player.X > enemy.X {
-			enemy.X += int(enemy.Speed)
+			enemy.X += enemy.Speed * deltaTimeS
 		} else {
-			enemy.X -= int(enemy.Speed)
+			enemy.X -= enemy.Speed * deltaTimeS
 		}
-		enemy.Y += int(enemy.Speed * 1.5)
+		// Should they move faster on Y than X?
+		enemy.Y += enemy.Speed * deltaTimeS * 1.5
 	}
 }

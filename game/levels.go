@@ -8,8 +8,8 @@ type Level struct {
 	EnemySpawnTimer           int
 	EnemySpawnFrequency       int
 	MaxNumberEnemies          int
-	EnemyDifficultyMultiplier float32
-	PointsToComplete          int
+	EnemyDifficultyMultiplier float64
+	PointsToComplete          int32
 	HasBoss                   bool
 	LevelNumber               int
 	Complete                  bool
