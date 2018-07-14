@@ -6,6 +6,7 @@ type Enemy struct {
 	Character
 	CanFire bool
 	ConstantMotion bool
+	SpinTimer int
 	ShouldSpin bool
 	SpinSpeed float64
 	SpinAngle float64

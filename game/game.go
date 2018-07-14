@@ -102,25 +102,30 @@ func NewGame() *Game {
 func (game *Game) handleInput(input *Input) {
 	if input.Pressed {
 		switch input.Type {
+		// Enforcing a minimum movement speed of 5 in any direction (start at 4 + player speed)
 		case Up:
-			if game.Level.Player.Yvel >= -5 {
-				game.Level.Player.Yvel -= 5
+			if game.Level.Player.Yvel >= 0 {
+				game.Level.Player.Yvel = -4
 			}
+			game.Level.Player.Yvel -= int(game.Level.Player.Speed)
 			break
 		case Down:
-			if game.Level.Player.Yvel <= 5 {
-				game.Level.Player.Yvel += 5
+			if game.Level.Player.Yvel <= 0 {
+				game.Level.Player.Yvel = 4
 			}
+			game.Level.Player.Yvel += int(game.Level.Player.Speed)
 			break
 		case Left:
-			if game.Level.Player.Xvel >= -5 {
-				game.Level.Player.Xvel -= 5
+			if game.Level.Player.Xvel >= 0 {
+				game.Level.Player.Xvel = -4
 			}
+			game.Level.Player.Xvel -= int(game.Level.Player.Speed)
 			break
 		case Right:
-			if game.Level.Player.Xvel <= 5 {
-				game.Level.Player.Xvel += 5
+			if game.Level.Player.Xvel <= 0 {
+				game.Level.Player.Xvel = 4
 			}
+			game.Level.Player.Xvel += int(game.Level.Player.Speed)
 			break
 		case FirePrimary:
 			game.Level.Player.IsFiring = true

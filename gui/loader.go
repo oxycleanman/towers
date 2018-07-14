@@ -97,7 +97,7 @@ func (ui *ui) loadUiElements() {
 		textX := (menuButton.X + menuButton.W/2) - int(tw/2)
 		textY := (menuButton.Y + menuButton.H/2) - int(th/2)
 		menuButton.textBoundBox = &sdl.Rect{int32(textX), int32(textY), tw, th}
-		menuButton.onClick = ui.menu
+		menuButton.onClick = ui.openCloseMenu
 		ui.clickableElementMap["menuButton"] = menuButton
 	}
 	{

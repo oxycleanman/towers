@@ -43,7 +43,8 @@ type statusBar struct {
 }
 
 type menu struct {
-	// TODO: Set up Menu
+	uiElement
+	boundBox     *sdl.Rect
 }
 
 type hud struct {
@@ -61,6 +62,7 @@ type ui struct {
 	backgroundTexture            *sdl.Texture
 	cursor                       *cursor
 	hud                          *hud
+	menu	*menu
 	renderer                     *sdl.Renderer
 	window                       *sdl.Window
 	font                         *ttf.Font
@@ -216,16 +218,19 @@ func (ui *ui) DrawCursor() {
 }
 
 func (ui *ui) DrawMenu() {
-	if ui.menuOpen {
-		// glassPanel_cornerBR
-		menuBackground := ui.textureMap["glassPanel_cornerBR"]
-		_, _, w, h, err := menuBackground.Query()
+	if ui.menu == nil {
+		ui.menu = &menu{}
+		ui.menu.texture = ui.textureMap["glassPanel_cornerBR"]
+		_, _, w, h, err := ui.menu.texture.Query()
 		if err != nil {
 			panic(err)
 		}
 		xPos := ui.WinWidth/2 - int(w * 2)
 		yPos := ui.WinHeight/2 - int(h * 2)
-		ui.renderer.Copy(menuBackground, nil, &sdl.Rect{int32(xPos), int32(yPos), w * 4, h * 4})
+		ui.menu.boundBox = &sdl.Rect{int32(xPos), int32(yPos), w * 4, h * 4}
+	}
+	if ui.menuOpen {
+		ui.renderer.Copy(ui.menu.texture, nil, ui.menu.boundBox)
 	}
 }
 
@@ -524,9 +529,14 @@ func (ui *ui) DrawEnemies(level *game.Level) {
 		if !enemy.IsDestroyed {
 			if enemy.ShouldSpin {
 				ui.renderer.CopyEx(enemy.Texture, nil, &sdl.Rect{int32(enemy.X), int32(enemy.Y), int32(enemy.W), int32(enemy.H)}, enemy.SpinAngle * enemy.SpinSpeed, nil, sdl.FLIP_NONE)
-				enemy.SpinAngle++
-				if enemy.SpinAngle > 360 {
-					enemy.SpinAngle = 0
+				if enemy.SpinTimer == 3 {
+					enemy.SpinAngle++
+					if enemy.SpinAngle > 360 {
+						enemy.SpinAngle = 0
+					}
+					enemy.SpinTimer = 0
+				} else {
+					enemy.SpinTimer++
 				}
 			} else {
 				ui.renderer.Copy(enemy.Texture, nil, &sdl.Rect{int32(enemy.X), int32(enemy.Y), int32(enemy.W), int32(enemy.H)})
@@ -626,7 +636,11 @@ func (ui *ui) DrawBullet(level *game.Level) {
 			}
 			bullet.Xvel = 0
 			bullet.Yvel = 0
-			ui.renderer.Copy(fireTex, nil, &sdl.Rect{int32(bullet.X), int32(bullet.Y), w / 2, h / 2})
+			if bullet.FiredByEnemy {
+				ui.renderer.Copy(fireTex, nil, &sdl.Rect{int32(bullet.X), int32(bullet.Y + bullet.H), w / 2, h / 2})
+			} else {
+				ui.renderer.Copy(fireTex, nil, &sdl.Rect{int32(bullet.X), int32(bullet.Y), w / 2, h / 2})
+			}
 			bullet.ExplodeCounter++
 		} else {
 			if bullet.ExplodeCounter >= 5 && bullet.IsColliding && !bullet.DestroyAnimationPlayed {

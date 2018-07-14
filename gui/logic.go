@@ -28,7 +28,7 @@ func (ui *ui) pause() {
 	}
 }
 
-func (ui *ui) menu() {
+func (ui *ui) openCloseMenu() {
 	if ui.menuOpen {
 		ui.menuOpen = false
 		ui.paused = false
@@ -44,7 +44,8 @@ func (ui *ui) SpawnEnemies(level *game.Level) {
 		enemyOrMeteor := ui.randNumGen.Intn(2)
 		var texName string
 		if enemyOrMeteor == 1 {
-			texName = ui.enemyTextureNames[ui.randNumGen.Intn(len(ui.enemyTextureNames))]
+			texName = "ufo3d"
+			//texName = ui.enemyTextureNames[ui.randNumGen.Intn(len(ui.enemyTextureNames))]
 		} else {
 			texName = ui.meteorTextureNames[ui.randNumGen.Intn(len(ui.meteorTextureNames))]
 		}
