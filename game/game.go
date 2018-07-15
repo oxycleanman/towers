@@ -61,11 +61,11 @@ type Character struct {
 	Strength                      int32
 	DestroyedAnimationTextureName string
 	DestroyedAnimationPlayed      bool
-	DestroyedAnimationCounter     int
+	DestroyedAnimationCounter     float64
 	DestroyedSoundPlayed          bool
 	IsDestroyed                   bool
-	FireRateTimer                 int
-	FireRateResetValue            int
+	FireRateTimer                 float64
+	FireRateResetValue            float64
 	IsFiring                      bool
 	ShieldHitpoints               int32
 	EngineFireAnimationCounter    int
@@ -73,8 +73,8 @@ type Character struct {
 
 type Shooter interface {
 	// Should return FireRateTimer, FireRateResetValue, and whether the entity is the player
-	GetFireSettings() (int, int, bool)
-	SetFireTimer(int)
+	GetFireSettings() (float64, float64, bool)
+	SetFireTimer(float64)
 	GetSelf() *Character
 }
 
@@ -82,7 +82,7 @@ type Shooter interface {
 
 func NewGame() *Game {
 	game := &Game{}
-	game.InputChan = make(chan *Input, 8)
+	game.InputChan = make(chan *Input, 2)
 	game.LevelChan = make(chan *Level, 2)
 
 	game.initLevels()
@@ -98,28 +98,17 @@ func (game *Game) handleInput(input *Input) {
 	if input.Pressed {
 		switch input.Type {
 		case Up:
-			if game.Level.Player.Yvel >= 0 {
-				game.Level.Player.Yvel = -game.Level.Player.Speed
-			}
-			game.Level.Player.Yvel -= game.Level.Player.Speed
+
+			game.Level.Player.Yvel = -game.Level.Player.Speed
 			break
 		case Down:
-			if game.Level.Player.Yvel <= 0 {
-				game.Level.Player.Yvel = game.Level.Player.Speed
-			}
-			game.Level.Player.Yvel += game.Level.Player.Speed
+			game.Level.Player.Yvel = game.Level.Player.Speed
 			break
 		case Left:
-			if game.Level.Player.Xvel >= 0 {
-				game.Level.Player.Xvel = -game.Level.Player.Speed
-			}
-			game.Level.Player.Xvel -= game.Level.Player.Speed
+			game.Level.Player.Xvel = -game.Level.Player.Speed
 			break
 		case Right:
-			if game.Level.Player.Xvel <= 0 {
-				game.Level.Player.Xvel = game.Level.Player.Speed
-			}
-			game.Level.Player.Xvel += game.Level.Player.Speed
+			game.Level.Player.Xvel = game.Level.Player.Speed
 			break
 		case FirePrimary:
 			game.Level.Player.IsFiring = true
@@ -173,44 +162,36 @@ func FindDegreeRotation(originY, originX, pointY, pointX int32) float64 {
 	return math.Atan2(float64(pointY-originY), float64(pointX-originX)) * (180.0 / math.Pi)
 }
 
+func (game *Game) checkInput(input *Input) {
+	switch input.Type {
+	case None:
+		break
+	case Quit:
+		close(game.LevelChan)
+		close(game.InputChan)
+		os.Exit(0)
+		break
+	case LevelComplete:
+		// Move to the next level
+		currentLevel := game.Level.LevelNumber
+		currentPlayer := game.Level.Player
+		if !(currentLevel >= len(game.Levels)) {
+			game.Level = game.Levels[currentLevel]
+			game.Level.Player = currentPlayer
+		} else {
+			// TODO: Need some end game, or just generate levels and track points?
+		}
+		break
+	default:
+		game.handleInput(input)
+		game.LevelChan <- game.Level
+	}
+}
+
 func (game *Game) Run() {
 	game.LevelChan <- game.Level
 
 	for input := range game.InputChan {
-		switch input.Type {
-		case None:
-			break
-		case Quit:
-			close(game.LevelChan)
-			close(game.InputChan)
-			os.Exit(0)
-			break
-		case LevelComplete:
-			// Move to the next level
-			currentLevel := game.Level.LevelNumber
-			currentPlayer := game.Level.Player
-			if !(currentLevel >= len(game.Levels)) {
-				game.Level = game.Levels[currentLevel]
-				game.Level.Player = currentPlayer
-			} else {
-				// TODO: Need some end game, or just generate levels and track points?
-			}
-			break
-		default:
-			game.handleInput(input)
-			game.LevelChan <- game.Level
-		}
-		//if input.Type == None {
-		//	continue
-		//}
-		//if input.Type == Quit {
-		//	close(game.LevelChan)
-		//	close(game.InputChan)
-		//	os.Exit(0)
-		//}
-		//if input.Type == LevelComplete {
-		//
-		//}
-
+		go game.checkInput(input)
 	}
 }

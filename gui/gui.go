@@ -87,9 +87,9 @@ type ui struct {
 	levelComplete                bool
 	levelCompleteMessageTimer    int
 	levelCompleteMessageShowTime int
-	AnimationSpeed int
+	AnimationSpeed float64
 	shouldClampFramerate bool
-	FramerateClamp int
+	FramerateClamp uint32
 }
 
 const (
@@ -104,6 +104,10 @@ const (
 	innerHudTexture    = "metalPanel_plate"
 	backgroundTexture  = "purple"
 	fontSize           = 24
+	texturePath = "gui/assets/images/"
+	soundFilePath = "gui/assets/sounds/"
+	fontPath = "gui/assets/fonts/kenvector_future.ttf"
+	gameTitle = "Some Shitty Space Game"
 )
 
 var fontColor = sdl.Color{0, 0, 0, 1}
@@ -144,14 +148,15 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 	ui.mapMoveDelay = 5
 	ui.muted = false
 	ui.levelCompleteMessageShowTime = 150
-	ui.AnimationSpeed = 500
+	ui.AnimationSpeed = 100
+	ui.FramerateClamp = 300
 
 	var err error
-	ui.window, err = sdl.CreateWindow("Some Shitty Space Game", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED, int32(ui.WinWidth), int32(ui.WinHeight), sdl.WINDOW_SHOWN)
+	ui.window, err = sdl.CreateWindow(gameTitle, sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED, ui.WinWidth, ui.WinHeight, sdl.WINDOW_SHOWN)
 	if err != nil {
 		panic(err)
 	}
-	ui.font, err = ttf.OpenFont("gui/assets/fonts/kenvector_future.ttf", fontSize)
+	ui.font, err = ttf.OpenFont(fontPath, fontSize)
 	if err != nil {
 		panic(err)
 	}
@@ -159,7 +164,7 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 	ui.currentMouseX = int32(ui.WinWidth / 2)
 	ui.currentMouseY = int32(ui.WinHeight / 2)
 
-	renderer, err := sdl.CreateRenderer(ui.window, -1, sdl.RENDERER_ACCELERATED)
+	renderer, err := sdl.CreateRenderer(ui.window, -1, sdl.RENDERER_ACCELERATED | sdl.RENDERER_PRESENTVSYNC)
 	if err != nil {
 		panic(err)
 	}
@@ -167,8 +172,8 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 	sdl.ShowCursor(0)
 	sdl.SetHint(sdl.HINT_RENDER_SCALE_QUALITY, "1")
 
-	ui.loadTextures("gui/assets/images/")
-	ui.loadSounds("gui/assets/sounds/")
+	ui.loadTextures(texturePath)
+	ui.loadSounds(soundFilePath)
 	return ui
 }
 
@@ -191,8 +196,9 @@ func (ui *ui) DrawBackground(level *game.Level) {
 	//ui.renderer.Copy(ui.backgroundTexture, nil, destRect)
 }
 
-func (ui *ui) DrawSpeedLines() {
+func (ui *ui) DrawSpeedLines(deltaTime uint32) {
 	// TODO: Maybe the number of lines changes as the player moves towards the top of the screen/accelerates?
+	deltaTimeS := float64(deltaTime)/1000
 	for _, line := range ui.uiSpeedLines {
 		if line.BoundBox.Y > ui.WinHeight {
 			spawnX := float64(ui.randNumGen.Intn(int(ui.WinWidth)))
@@ -201,7 +207,7 @@ func (ui *ui) DrawSpeedLines() {
 			line.Y = spawnY
 		}
 		//This should be in Logic, not GUI (movement)
-		line.Y += 5
+		line.Y += 5 * ui.AnimationSpeed * deltaTimeS
 		line.BoundBox.X = int32(line.X)
 		line.BoundBox.Y = int32(line.Y)
 		ui.renderer.Copy(line.texture, nil, line.BoundBox)
@@ -453,10 +459,11 @@ func (ui *ui) DrawPlayer(level *game.Level, deltaTime uint32) {
 		level.Player.Texture = tex
 		_, _, w, h, err := tex.Query()
 		if err != nil {
+			fmt.Println("ERROR: Invalid Texture:", level.Player.TextureName)
 			panic(err)
 		}
-		level.Player.BoundBox.W = w
-		level.Player.BoundBox.H = h
+		level.Player.BoundBox.W = w/2
+		level.Player.BoundBox.H = h/2
 		level.Player.X = float64(ui.WinWidth/2 - level.Player.BoundBox.W/2)
 		level.Player.Y = float64(ui.WinHeight/2 - level.Player.BoundBox.H/2)
 		level.Player.FireOffsetX = 0
@@ -472,9 +479,10 @@ func (ui *ui) DrawPlayer(level *game.Level, deltaTime uint32) {
 	}
 	if player.Xvel > 0 {
 		if !strings.Contains(player.TextureName, "left") {
+			// Play the turn right animation for the player
 			if int(player.AnimationCounter) <= player.TurnAnimationCount && !player.TurnAnimationPlayed {
 				player.TextureName = "turn_right" + strconv.Itoa(int(player.AnimationCounter))
-				player.AnimationCounter += 100 * deltaTimeS
+				player.AnimationCounter += ui.AnimationSpeed * deltaTimeS
 			} else {
 				player.AnimationCounter = 0
 				player.TurnAnimationPlayed = true
@@ -482,28 +490,31 @@ func (ui *ui) DrawPlayer(level *game.Level, deltaTime uint32) {
 		}
 	} else {
 		if !(player.TextureName == "player") && !strings.Contains(player.TextureName, "left") {
+			// Player texture is somewhere in the turn right animation, reverse it
 			n, err := strconv.Atoi(strings.Replace(player.TextureName, "turn_right", "", 1))
 			if err != nil {
 				panic(err)
 			}
-			if int(player.AnimationCounter) >= player.TurnAnimationCount {
-				if n < 0 {
-					player.TextureName = "player"
-				} else {
-					player.TextureName = "turn_right" + strconv.Itoa(int(player.AnimationCounter))
-				}
-				player.AnimationCounter -= 100 * deltaTimeS
+			if player.ReverseAnimationCounter == 0 {
+				player.ReverseAnimationCounter = float64(n)
+			}
+			if int(player.ReverseAnimationCounter) >= 0 {
+				player.TextureName = "turn_right" + strconv.Itoa(int(player.ReverseAnimationCounter))
+				player.ReverseAnimationCounter -= 100 * deltaTimeS
 			} else {
-				player.AnimationCounter = 0
+				player.TextureName = "player"
+				player.ReverseAnimationCounter = 0
+				player.AnimationCounter = 1
 				player.TurnAnimationPlayed = false
 			}
 		}
 	}
 	if player.Xvel < 0 {
 		if !strings.Contains(player.TextureName, "right") {
+			// Play the turn right animation for the player
 			if int(player.AnimationCounter) <= player.TurnAnimationCount && !player.TurnAnimationPlayed {
 				player.TextureName = "turn_left" + strconv.Itoa(int(player.AnimationCounter))
-				player.AnimationCounter += 1 * deltaTimeS
+				player.AnimationCounter += ui.AnimationSpeed * deltaTimeS
 			} else {
 				player.AnimationCounter = 0
 				player.TurnAnimationPlayed = true
@@ -511,19 +522,27 @@ func (ui *ui) DrawPlayer(level *game.Level, deltaTime uint32) {
 		}
 	} else {
 		if !(player.TextureName == "player") && !strings.Contains(player.TextureName, "right") {
+			// Player texture is somewhere in the turn right animation, reverse it
 			n, err := strconv.Atoi(strings.Replace(player.TextureName, "turn_left", "", 1))
 			if err != nil {
 				panic(err)
 			}
-			if n > 0 {
-				n--
-				player.TextureName = "turn_left" + strconv.Itoa(n)
+			if player.ReverseAnimationCounter == 0 {
+				player.ReverseAnimationCounter = float64(n)
+			}
+			if int(player.ReverseAnimationCounter) >= 0 {
+				player.TextureName = "turn_left" + strconv.Itoa(int(player.ReverseAnimationCounter))
+				player.ReverseAnimationCounter -= 100 * deltaTimeS
 			} else {
 				player.TextureName = "player"
+				player.ReverseAnimationCounter = 0
+				player.AnimationCounter = 1
 				player.TurnAnimationPlayed = false
-				player.AnimationCounter = 0
 			}
 		}
+	}
+	if player.TurnAnimationPlayed && player.TextureName == "player" {
+		player.TurnAnimationPlayed = false
 	}
 	player.Texture = ui.textureMap[player.TextureName]
 	tex := player.Texture
@@ -571,7 +590,7 @@ func (ui *ui) DrawPlayer(level *game.Level, deltaTime uint32) {
 
 func (ui *ui) DrawEnemies(level *game.Level, deltaTime uint32) {
 	// TODO: Have large meteors break up into smaller ones
-	deltaTimeS := float64(deltaTime)/10
+	deltaTimeS := float64(deltaTime)/1000
 	for _, enemy := range level.Enemies {
 		if enemy.Texture == nil {
 			enemy.Texture = ui.textureMap[enemy.TextureName]
@@ -589,15 +608,15 @@ func (ui *ui) DrawEnemies(level *game.Level, deltaTime uint32) {
 		enemy.BoundBox.Y = int32(enemy.Y)
 		if !enemy.IsDestroyed {
 			if enemy.ShouldSpin {
-				ui.renderer.CopyEx(enemy.Texture, nil, enemy.BoundBox, enemy.SpinAngle * (enemy.SpinSpeed * deltaTimeS), nil, sdl.FLIP_NONE)
-				if enemy.SpinTimer == 3 * deltaTimeS {
-					enemy.SpinAngle += deltaTimeS
-					if enemy.SpinAngle > 360 {
+				ui.renderer.CopyEx(enemy.Texture, nil, enemy.BoundBox, enemy.SpinAngle, nil, sdl.FLIP_NONE)
+				if enemy.SpinTimer >= 3 {
+					enemy.SpinAngle += enemy.SpinSpeed
+					if enemy.SpinAngle >= 360 {
 						enemy.SpinAngle = 0
 					}
 					enemy.SpinTimer = 0
 				} else {
-					enemy.SpinTimer += deltaTimeS
+					enemy.SpinTimer += ui.AnimationSpeed * deltaTimeS
 				}
 			} else {
 				ui.renderer.Copy(enemy.Texture, nil, enemy.BoundBox)
@@ -606,7 +625,8 @@ func (ui *ui) DrawEnemies(level *game.Level, deltaTime uint32) {
 	}
 }
 
-func (ui *ui) DrawExplosions(level *game.Level) {
+func (ui *ui) DrawExplosions(level *game.Level, deltaTime uint32) {
+	deltaTimeS := float64(deltaTime)/1000
 	index := 0
 	for _, enemy := range level.Enemies {
 		if enemy.IsDestroyed && !enemy.DestroyedAnimationPlayed {
@@ -616,7 +636,7 @@ func (ui *ui) DrawExplosions(level *game.Level) {
 				enemyDestroyedSound.Play(-1, 0)
 				enemy.DestroyedSoundPlayed = true
 			}
-			seconds := enemy.DestroyedAnimationCounter
+			seconds := int(enemy.DestroyedAnimationCounter)
 			frameNumber := seconds % 64
 			colNumber := frameNumber % 8
 			rowNumber := frameNumber / 8
@@ -626,8 +646,8 @@ func (ui *ui) DrawExplosions(level *game.Level) {
 			tex := ui.textureMap[enemy.DestroyedAnimationTextureName]
 			srcRect := &sdl.Rect{int32(colNumber * 256), int32(rowNumber * 256), 256, 256}
 			ui.renderer.Copy(tex, srcRect, &sdl.Rect{enemy.BoundBox.X - enemy.BoundBox.W/2, enemy.BoundBox.Y - enemy.BoundBox.H/2, enemy.BoundBox.W * 2, enemy.BoundBox.H * 2})
-			enemy.DestroyedAnimationCounter++
-			if enemy.DestroyedAnimationCounter == 64 {
+			enemy.DestroyedAnimationCounter += ui.AnimationSpeed * deltaTimeS
+			if enemy.DestroyedAnimationCounter >= 64 {
 				enemy.DestroyedAnimationPlayed = true
 			}
 			// WHY DOES THIS NOT WORK THE SAME AS THE BULLETS???!!!
@@ -746,15 +766,12 @@ func (ui *ui) DrawLevelComplete(level *game.Level) {
 // Remember to always draw from the ground up
 func (ui *ui) Draw(level *game.Level, deltaTime uint32) {
 	ui.renderer.Clear()
-	if !ui.paused {
-		ui.Update(level, deltaTime)
-	}
 	ui.DrawBackground(level)
-	ui.DrawSpeedLines()
+	ui.DrawSpeedLines(deltaTime)
 	ui.DrawBullet(level)
 	ui.DrawPlayer(level, deltaTime)
 	ui.DrawEnemies(level, deltaTime)
-	ui.DrawExplosions(level)
+	ui.DrawExplosions(level, deltaTime)
 	ui.DrawUiElements(level)
 	ui.DrawMenu()
 	if level.Complete {
@@ -768,15 +785,14 @@ func (ui *ui) Run() {
 	var deltaTime uint32 = 0
 	var frameStart uint32 = 0
 	var frameEnd uint32 = 0
-	var targetFrameRate uint32 = 30
-	var targetFrameTime = 1000 / targetFrameRate
 	var level *game.Level
 
 	for {
+		targetFrameTime := 1000 / ui.FramerateClamp
 		// Enforce at least a 1ms delay between frames
-		if deltaTime < targetFrameTime {
+		if deltaTime < 1 {
 			frameStart = sdl.GetTicks()
-			sdl.Delay(targetFrameTime - deltaTime)
+			sdl.Delay(1)
 			frameEnd = sdl.GetTicks()
 			deltaTime = frameEnd - frameStart
 		}
@@ -784,7 +800,6 @@ func (ui *ui) Run() {
 
 		select {
 		case newLevel := <-ui.levelChan:
-			fmt.Println("Got New Level")
 			if level != nil && newLevel.LevelNumber > level.LevelNumber {
 				ui.levelCompleteMessageTimer = 0
 			}
@@ -795,17 +810,14 @@ func (ui *ui) Run() {
 				}
 				ui.levelCompleteMessageTimer++
 			}
-			ui.Draw(level, deltaTime)
 			break
 		default:
 			if level.Complete {
 				if ui.levelCompleteMessageTimer >= ui.levelCompleteMessageShowTime {
-					fmt.Println("Put LC Input on input channel, size", len(ui.inputChan))
 					ui.inputChan <- &game.Input{Type: game.LevelComplete}
 				}
 				ui.levelCompleteMessageTimer++
 			}
-			ui.Draw(level, deltaTime)
 		}
 
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
@@ -815,14 +827,12 @@ func (ui *ui) Run() {
 			case *sdl.KeyboardEvent:
 				input := determineInputType(e)
 				if !ui.paused {
-					fmt.Println("Put Key Input on input channel, size", len(ui.inputChan))
 					ui.inputChan <- input
 				}
 				break
 			case *sdl.MouseButtonEvent:
 				input := ui.determineMouseButtonInput(e)
 				if input.Type != game.None && !level.Complete {
-					fmt.Println("Put MB Input on input channel, size", len(ui.inputChan))
 					ui.inputChan <- input
 				}
 				break
@@ -832,12 +842,25 @@ func (ui *ui) Run() {
 				ui.currentMouseY = e.Y
 				break
 			default:
-				fmt.Println("Put None Input on input channel, size", len(ui.inputChan))
 				ui.inputChan <- &game.Input{Type: game.None}
 			}
 		}
 
+		if !ui.paused {
+			ui.Update(level, deltaTime)
+		}
+
+		ui.Draw(level, deltaTime)
+
 		frameEnd = sdl.GetTicks()
-		deltaTime = frameEnd - frameStart
+
+		if frameEnd - frameStart < targetFrameTime {
+			delayStart := sdl.GetTicks()
+			sdl.Delay(targetFrameTime - (frameEnd - frameStart))
+			delayEnd := sdl.GetTicks()
+			deltaTime = (frameEnd + (delayEnd - delayStart)) - frameStart
+		} else {
+			deltaTime = frameEnd - frameStart
+		}
 	}
 }

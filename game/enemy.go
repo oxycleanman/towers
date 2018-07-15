@@ -17,11 +17,11 @@ type Enemy struct {
 }
 
 // Implement Shooter Interface
-func (enemy *Enemy) GetFireSettings() (int, int, bool) {
+func (enemy *Enemy) GetFireSettings() (float64, float64, bool) {
 	return enemy.FireRateTimer, enemy.FireRateResetValue, false
 }
 
-func (enemy *Enemy) SetFireTimer(value int) {
+func (enemy *Enemy) SetFireTimer(value float64) {
 	enemy.FireRateTimer = value
 }
 
@@ -61,7 +61,7 @@ func (level *Level) InitEnemy(initX, initY float64, enemyOrMeteor int, texName s
 		enemy.ConstantMotion = true
 		enemy.ShouldSpin = true
 		enemy.SpinAngle = 0
-		enemy.SpinSpeed = 1
+		enemy.SpinSpeed = 5
 		enemy.CanFire = false
 	}
 	enemy.IsDestroyed = false

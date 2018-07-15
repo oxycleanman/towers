@@ -64,7 +64,7 @@ func (ui *ui) UpdateEnemies(level *game.Level, deltaTime uint32) {
 				enemy.DestroyedAnimationPlayed = true
 			}
 			if enemy.CanFire {
-				ui.CheckFiring(level, enemy)
+				ui.CheckFiring(level, enemy, deltaTime)
 			}
 			enemy.Move(level, deltaTime)
 		}
@@ -72,7 +72,8 @@ func (ui *ui) UpdateEnemies(level *game.Level, deltaTime uint32) {
 }
 
 // TODO: Make it so that clicking fires as slow as holding down the mouse button (Fire Speed will be an upgrade)
-func (ui *ui) CheckFiring(level *game.Level, entity game.Shooter) {
+func (ui *ui) CheckFiring(level *game.Level, entity game.Shooter, deltaTime uint32) {
+	deltaTimeS := float64(deltaTime)/1000
 	timer, reset, isPlayer := entity.GetFireSettings()
 	if timer >= reset {
 		var texName string
@@ -92,7 +93,7 @@ func (ui *ui) CheckFiring(level *game.Level, entity game.Shooter) {
 		entity.SetFireTimer(0)
 		laserFireSound.Play(-1, 0)
 	} else if !isPlayer {
-		entity.SetFireTimer(timer + 1)
+		entity.SetFireTimer(timer + ui.AnimationSpeed * deltaTimeS)
 	}
 }
 
@@ -189,6 +190,6 @@ func (ui *ui) Update(level *game.Level, deltaTime uint32) {
 		ui.UpdateEnemies(level, deltaTime)
 		ui.checkCollisions(level)
 		ui.SpawnEnemies(level)
-		ui.CheckFiring(level, level.Player)
+		ui.CheckFiring(level, level.Player, deltaTime)
 	}
 }

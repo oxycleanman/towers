@@ -9,16 +9,17 @@ type Player struct {
 	Points                                           int32
 	AtTop, AtBottom, AtLeft, AtRight, IsAccelerating bool
 	AnimationCounter                                 float64
+	ReverseAnimationCounter	float64
 	TurnAnimationCount                               int
 	TurnAnimationPlayed                              bool
 }
 
 // Implement Shooter Interface
-func (player *Player) GetFireSettings() (int, int, bool) {
+func (player *Player) GetFireSettings() (float64, float64, bool) {
 	return player.FireRateTimer, player.FireRateResetValue, true
 }
 
-func (player *Player) SetFireTimer(value int) {
+func (player *Player) SetFireTimer(value float64) {
 	player.FireRateTimer = value
 }
 
@@ -34,7 +35,7 @@ func (level *Level) initPlayer() {
 	player.ShieldHitpoints = 100
 	player.Points = 0
 	player.Strength = 10
-	player.Speed = 100.0
+	player.Speed = 800.0
 	player.FireRateTimer = 0
 	player.FireRateResetValue = 50
 	player.AtBottom = false
