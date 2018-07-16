@@ -9,21 +9,21 @@ func (ui *ui) mute() {
 	if mix.Volume(-1, -1) > 0 {
 		mix.Volume(-1, 0)
 		ui.muted = true
-		ui.clickableElementMap["muteButton"].textTexture = ui.stringToTexture("unmute", fontColor)
+		ui.clickableElementMap["muteButton"].textTexture = ui.stringToNormalFontTexture("unmute", fontColor)
 	} else {
 		mix.Volume(-1, 128)
 		ui.muted = false
-		ui.clickableElementMap["muteButton"].textTexture = ui.stringToTexture("mute", fontColor)
+		ui.clickableElementMap["muteButton"].textTexture = ui.stringToNormalFontTexture("mute", fontColor)
 	}
 }
 
 func (ui *ui) pause() {
 	if !ui.paused {
 		ui.paused = true
-		ui.clickableElementMap["pauseButton"].textTexture = ui.stringToTexture("unpause", fontColor)
+		ui.clickableElementMap["pauseButton"].textTexture = ui.stringToNormalFontTexture("unpause", fontColor)
 	} else {
 		ui.paused = false
-		ui.clickableElementMap["pauseButton"].textTexture = ui.stringToTexture("pause", fontColor)
+		ui.clickableElementMap["pauseButton"].textTexture = ui.stringToNormalFontTexture("pause", fontColor)
 	}
 }
 
@@ -37,7 +37,8 @@ func (ui *ui) openCloseMenu() {
 	}
 }
 
-func (ui *ui) SpawnEnemies(level *game.Level) {
+func (ui *ui) SpawnEnemies(level *game.Level, deltaTime uint32) {
+	deltaTimeS := float64(deltaTime)/1000
 	if level.EnemySpawnTimer >= level.EnemySpawnFrequency && len(level.Enemies) < level.MaxNumberEnemies {
 		spawnX := float64(ui.randNumGen.Intn(int(ui.WinWidth)))
 		enemyOrMeteor := ui.randNumGen.Intn(2)
@@ -51,7 +52,7 @@ func (ui *ui) SpawnEnemies(level *game.Level) {
 		level.Enemies = append(level.Enemies, level.InitEnemy(spawnX, -100, enemyOrMeteor, texName))
 		level.EnemySpawnTimer = 0
 	} else {
-		level.EnemySpawnTimer++
+		level.EnemySpawnTimer += ui.AnimationSpeed * deltaTimeS
 	}
 }
 
@@ -138,14 +139,12 @@ func (ui *ui) checkCollisions(level *game.Level) {
 					}
 				}
 			} else {
-				if level.Player.BoundBox.HasIntersection(bullet.BoundBox) {
+				if level.Player.BoundBox.HasIntersection(bullet.BoundBox) && !level.Player.IsDestroyed {
 					bullet.IsColliding = true
 					if level.Player.ShieldHitpoints > 0 {
 						level.Player.ShieldHitpoints -= bullet.Damage
-						ui.hud.shieldBar.horzTiles = level.Player.ShieldHitpoints/5
 					} else {
 						level.Player.Hitpoints -= bullet.Damage
-						ui.hud.healthBar.horzTiles = level.Player.Hitpoints/5
 					}
 					if level.Player.Hitpoints <= 0 {
 						level.Player.IsDestroyed = true
@@ -156,25 +155,27 @@ func (ui *ui) checkCollisions(level *game.Level) {
 	}
 
 	// Enemy Collisions With Player
-	for _, enemy := range level.Enemies {
-		if !enemy.IsDestroyed {
-			if enemy.BoundBox.HasIntersection(level.Player.BoundBox) {
-				if !enemy.IsBoss {
-					enemy.Hitpoints = 0
-					enemy.IsDestroyed = true
-					if level.Player.ShieldHitpoints > 0 {
-						level.Player.ShieldHitpoints -= enemy.Strength * 2
-						ui.hud.shieldBar.horzTiles = level.Player.ShieldHitpoints / 5
+	if !level.Player.IsDestroyed {
+		for _, enemy := range level.Enemies {
+			if !enemy.IsDestroyed {
+				if enemy.BoundBox.HasIntersection(level.Player.BoundBox) {
+					if !enemy.IsBoss {
+						enemy.Hitpoints = 0
+						enemy.IsDestroyed = true
+						if level.Player.ShieldHitpoints > 0 {
+							level.Player.ShieldHitpoints -= enemy.Strength * 2
+							ui.hud.shieldBar.horzTiles = level.Player.ShieldHitpoints / 5
+						} else {
+							level.Player.Hitpoints -= enemy.Strength * 2
+							ui.hud.healthBar.horzTiles = level.Player.Hitpoints / 5
+						}
+						if level.Player.Hitpoints <= 0 {
+							level.Player.IsDestroyed = true
+						}
 					} else {
-						level.Player.Hitpoints -= enemy.Strength * 2
-						ui.hud.healthBar.horzTiles = level.Player.Hitpoints / 5
-					}
-					if level.Player.Hitpoints <= 0 {
+						level.Player.Hitpoints = 0
 						level.Player.IsDestroyed = true
 					}
-				} else {
-					level.Player.Hitpoints = 0
-					level.Player.IsDestroyed = true
 				}
 			}
 		}
@@ -183,13 +184,25 @@ func (ui *ui) checkCollisions(level *game.Level) {
 	// Player collisions with power-ups
 }
 
+func (ui *ui) checkPlayerDeath(level *game.Level) {
+	if level.Player.IsDestroyed && level.Player.DestroyedAnimationPlayed && level.Player.Lives > 0{
+		level.InitPlayer(false)
+	}
+	if level.Player.Lives == 0 {
+		ui.gameOver = true
+	}
+}
+
 func (ui *ui) Update(level *game.Level, deltaTime uint32) {
-	ui.UpdatePlayer(level, deltaTime)
-	if !level.Complete {
-		ui.UpdateBullets(level, deltaTime)
-		ui.UpdateEnemies(level, deltaTime)
-		ui.checkCollisions(level)
-		ui.SpawnEnemies(level)
-		ui.CheckFiring(level, level.Player, deltaTime)
+	if ! ui.gameOver {
+		ui.UpdatePlayer(level, deltaTime)
+		if !level.Complete {
+			ui.UpdateBullets(level, deltaTime)
+			ui.UpdateEnemies(level, deltaTime)
+			ui.checkCollisions(level)
+			ui.SpawnEnemies(level, deltaTime)
+			ui.checkPlayerDeath(level)
+			ui.CheckFiring(level, level.Player, deltaTime)
+		}
 	}
 }

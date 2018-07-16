@@ -37,7 +37,7 @@ func (level *Level) InitEnemy(initX, initY float64, enemyOrMeteor int, texName s
 		enemy.TextureName = texName
 		enemy.Hitpoints = int32(50 * level.EnemyDifficultyMultiplier)
 		enemy.PointValue = 25
-		enemy.Strength = int32(10 * level.EnemyDifficultyMultiplier)
+		enemy.Strength = int32(100 * level.EnemyDifficultyMultiplier)
 		enemy.Speed = 150 * level.EnemyDifficultyMultiplier
 		enemy.ConstantMotion = false
 		if strings.Contains(enemy.TextureName, "ufo") {

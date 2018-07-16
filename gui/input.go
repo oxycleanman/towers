@@ -21,6 +21,10 @@ func determineInputType(event *sdl.KeyboardEvent) *game.Input {
 			input.Type = game.Right
 		case sdl.SCANCODE_TAB:
 			input.Type = game.Pause
+		case sdl.SCANCODE_Q:
+			input.Type = game.BoostLeft
+		case sdl.SCANCODE_E:
+			input.Type = game.BoostRight
 		}
 	case sdl.KEYUP:
 		input.Pressed = false
@@ -35,6 +39,10 @@ func determineInputType(event *sdl.KeyboardEvent) *game.Input {
 			input.Type = game.Right
 		case sdl.SCANCODE_TAB:
 			input.Type = game.Pause
+		case sdl.SCANCODE_Q:
+			input.Type = game.BoostLeft
+		case sdl.SCANCODE_E:
+			input.Type = game.BoostRight
 		}
 	}
 	return input

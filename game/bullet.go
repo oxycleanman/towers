@@ -8,8 +8,8 @@ type Bullet struct {
 	FiredBy                *Character
 	FiredByEnemy           bool
 	Damage                 int32
-	FlashCounter           int
-	ExplodeCounter         int
+	FlashCounter           float64
+	ExplodeCounter         float64
 	FireAnimationPlayed    bool
 	DestroyAnimationPlayed bool
 	IsColliding            bool

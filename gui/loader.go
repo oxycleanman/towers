@@ -64,7 +64,7 @@ func (ui *ui) loadUiElements() {
 		pauseButton.X = 20
 		pauseButton.Y = float64(ui.WinHeight - h - 20)
 		pauseButton.BoundBox = &sdl.Rect{int32(pauseButton.X), int32(pauseButton.Y), w, h}
-		pauseButton.textTexture = ui.stringToTexture("pause", fontColor)
+		pauseButton.textTexture = ui.stringToNormalFontTexture("pause", fontColor)
 		_, _, tw, th, err := pauseButton.textTexture.Query()
 		if err != nil {
 			panic(err)
@@ -85,7 +85,7 @@ func (ui *ui) loadUiElements() {
 		menuButton.X = ui.hud.horzOffset + 20
 		menuButton.Y = float64(int32(ui.WinHeight) - ui.hud.BoundBox.H/2 - 10)
 		menuButton.BoundBox = &sdl.Rect{int32(menuButton.X), int32(menuButton.Y), w, h}
-		menuButton.textTexture = ui.stringToTexture("menu", fontColor)
+		menuButton.textTexture = ui.stringToNormalFontTexture("menu", fontColor)
 		_, _, tw, th, err := menuButton.textTexture.Query()
 		if err != nil {
 			panic(err)
@@ -107,7 +107,7 @@ func (ui *ui) loadUiElements() {
 		muteButton.X = pauseButton.X + float64(pauseButton.BoundBox.W + 20)
 		muteButton.Y = float64(ui.WinHeight - h - 20)
 		muteButton.BoundBox = &sdl.Rect{int32(muteButton.X), int32(muteButton.Y), w, h}
-		muteButton.textTexture = ui.stringToTexture("mute", fontColor)
+		muteButton.textTexture = ui.stringToNormalFontTexture("mute", fontColor)
 		_, _, tw, th, err := pauseButton.textTexture.Query()
 		if err != nil {
 			panic(err)

@@ -21,6 +21,8 @@ const (
 	Down
 	Left
 	Right
+	BoostLeft
+	BoostRight
 	Quit
 	FirePrimary
 	FireSecondary
@@ -68,7 +70,7 @@ type Character struct {
 	FireRateResetValue            float64
 	IsFiring                      bool
 	ShieldHitpoints               int32
-	EngineFireAnimationCounter    int
+	EngineFireAnimationCounter    float64
 }
 
 type Shooter interface {
@@ -85,10 +87,8 @@ func NewGame() *Game {
 	game.InputChan = make(chan *Input, 2)
 	game.LevelChan = make(chan *Level, 2)
 
-	game.initLevels()
-
-	game.Level = game.Levels[0]
-	game.Level.initPlayer()
+	game.Level = game.getNewLevel(nil)
+	game.Level.InitPlayer(true)
 
 	return game
 }
@@ -98,7 +98,6 @@ func (game *Game) handleInput(input *Input) {
 	if input.Pressed {
 		switch input.Type {
 		case Up:
-
 			game.Level.Player.Yvel = -game.Level.Player.Speed
 			break
 		case Down:
@@ -109,6 +108,12 @@ func (game *Game) handleInput(input *Input) {
 			break
 		case Right:
 			game.Level.Player.Xvel = game.Level.Player.Speed
+			break
+		case BoostLeft:
+			game.Level.Player.Xvel = -game.Level.Player.Speed * 5
+			break
+		case BoostRight:
+			game.Level.Player.Xvel = game.Level.Player.Speed * 5
 			break
 		case FirePrimary:
 			game.Level.Player.IsFiring = true
@@ -129,12 +134,12 @@ func (game *Game) handleInput(input *Input) {
 				game.Level.Player.Yvel = 0
 			}
 			break
-		case Left:
+		case BoostLeft, Left:
 			if game.Level.Player.Xvel < 0 {
 				game.Level.Player.Xvel = 0
 			}
 			break
-		case Right:
+		case BoostRight, Right:
 			if game.Level.Player.Xvel > 0 {
 				game.Level.Player.Xvel = 0
 			}
@@ -173,14 +178,8 @@ func (game *Game) checkInput(input *Input) {
 		break
 	case LevelComplete:
 		// Move to the next level
-		currentLevel := game.Level.LevelNumber
-		currentPlayer := game.Level.Player
-		if !(currentLevel >= len(game.Levels)) {
-			game.Level = game.Levels[currentLevel]
-			game.Level.Player = currentPlayer
-		} else {
-			// TODO: Need some end game, or just generate levels and track points?
-		}
+		game.Level = game.getNewLevel(game.Level)
+		game.LevelChan <- game.Level
 		break
 	default:
 		game.handleInput(input)

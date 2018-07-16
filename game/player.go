@@ -10,7 +10,7 @@ type Player struct {
 	AtTop, AtBottom, AtLeft, AtRight, IsAccelerating bool
 	AnimationCounter                                 float64
 	ReverseAnimationCounter	float64
-	TurnAnimationCount                               int
+	TurnAnimationCounter                              int
 	TurnAnimationPlayed                              bool
 }
 
@@ -27,26 +27,44 @@ func (player *Player) GetSelf() *Character {
 	return &player.Character
 }
 
-func (level *Level) initPlayer() {
-	player := &Player{}
-	player.TextureName = "player"
-	player.IsDestroyed = false
-	player.Hitpoints = 100
-	player.ShieldHitpoints = 100
-	player.Points = 0
-	player.Strength = 10
-	player.Speed = 800.0
-	player.FireRateTimer = 0
-	player.FireRateResetValue = 50
-	player.AtBottom = false
-	player.AtLeft = false
-	player.AtRight = false
-	player.AtTop = false
-	player.EngineFireAnimationCounter = 1
-	player.TurnAnimationCount = 20
-	player.IsAccelerating = false
-	player.BoundBox = &sdl.Rect{}
-	level.Player = player
+func (level *Level) InitPlayer(isNewPlayer bool) {
+	if isNewPlayer {
+		player := &Player{}
+		player.TextureName = "player"
+		player.IsDestroyed = false
+		player.Hitpoints = 100
+		player.ShieldHitpoints = 100
+		player.Points = 0
+		player.Strength = 10
+		player.Speed = 800.0
+		player.FireRateTimer = 0
+		player.FireRateResetValue = 50
+		player.AtBottom = false
+		player.AtLeft = false
+		player.AtRight = false
+		player.AtTop = false
+		player.EngineFireAnimationCounter = 1
+		player.TurnAnimationCounter = 20
+		player.IsAccelerating = false
+		player.Lives = 3
+		player.BoundBox = &sdl.Rect{}
+		level.Player = player
+	} else {
+		level.Player.TextureName = "player"
+		level.Player.Hitpoints = 100
+		level.Player.ShieldHitpoints = 100
+		level.Player.AtBottom = false
+		level.Player.AtLeft = false
+		level.Player.AtRight = false
+		level.Player.AtTop = false
+		level.Player.IsAccelerating = false
+		level.Player.DestroyedAnimationPlayed = false
+		level.Player.DestroyedAnimationPlayed = false
+		level.Player.DestroyedAnimationTextureName = ""
+		level.Player.DestroyedAnimationCounter = 0
+		level.Player.IsDestroyed = false
+		level.Player.Lives--
+	}
 }
 
 func (player *Player) Move(topBound, bottomBound, leftBound, rightBound int32, deltaTime uint32) {

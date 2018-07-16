@@ -48,7 +48,7 @@ func imgFileToTexture(renderer *sdl.Renderer, filename string) *sdl.Texture {
 	return tex
 }
 
-func (ui *ui) stringToTexture(s string, color sdl.Color) *sdl.Texture {
+func (ui *ui) stringToNormalFontTexture(s string, color sdl.Color) *sdl.Texture {
 	if ui.fontTextureMap[s] != nil {
 		return ui.fontTextureMap[s]
 	}
@@ -62,4 +62,20 @@ func (ui *ui) stringToTexture(s string, color sdl.Color) *sdl.Texture {
 	}
 	ui.fontTextureMap[s] = tex
 	return ui.fontTextureMap[s]
+}
+
+func (ui *ui) stringToLargeFontTexture(s string, color sdl.Color) *sdl.Texture {
+	if ui.largeFontTextureMap[s] != nil {
+		return ui.largeFontTextureMap[s]
+	}
+	font, err := ui.fontLarge.RenderUTF8Blended(s, color)
+	if err != nil {
+		panic(err)
+	}
+	tex, err := ui.renderer.CreateTextureFromSurface(font)
+	if err != nil {
+		panic(err)
+	}
+	ui.largeFontTextureMap[s] = tex
+	return ui.largeFontTextureMap[s]
 }
