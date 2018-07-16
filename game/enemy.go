@@ -11,6 +11,7 @@ type Enemy struct {
 	ConstantMotion bool
 	SpinTimer float64
 	ShouldSpin bool
+	IsUfo bool
 	SpinSpeed float64
 	SpinAngle float64
 	IsBoss bool
@@ -40,8 +41,9 @@ func (level *Level) InitEnemy(initX, initY float64, enemyOrMeteor int, texName s
 		enemy.Strength = int32(100 * level.EnemyDifficultyMultiplier)
 		enemy.Speed = 150 * level.EnemyDifficultyMultiplier
 		enemy.ConstantMotion = false
-		if strings.Contains(enemy.TextureName, "ufo") {
+		if strings.Contains(enemy.TextureName, "00") {
 			enemy.ShouldSpin = true
+			enemy.IsUfo = true
 		}
 		enemy.SpinAngle = 0
 		enemy.SpinSpeed = 5

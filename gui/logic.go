@@ -44,7 +44,7 @@ func (ui *ui) SpawnEnemies(level *game.Level, deltaTime uint32) {
 		enemyOrMeteor := ui.randNumGen.Intn(2)
 		var texName string
 		if enemyOrMeteor == 1 {
-			texName = "ufo3d"
+			texName = "0000"
 			//texName = ui.enemyTextureNames[ui.randNumGen.Intn(len(ui.enemyTextureNames))]
 		} else {
 			texName = ui.meteorTextureNames[ui.randNumGen.Intn(len(ui.meteorTextureNames))]

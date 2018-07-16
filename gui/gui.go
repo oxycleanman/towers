@@ -623,7 +623,30 @@ func (ui *ui) DrawEnemies(level *game.Level, deltaTime uint32) {
 		enemy.BoundBox.X = int32(enemy.X)
 		enemy.BoundBox.Y = int32(enemy.Y)
 		if !enemy.IsDestroyed {
-			if enemy.ShouldSpin {
+			if enemy.IsUfo {
+				ui.renderer.Copy(enemy.Texture, nil, enemy.BoundBox)
+				fmt.Println(enemy.TextureName)
+				if enemy.SpinTimer >= 3 {
+					seconds := int(enemy.DestroyedAnimationCounter)
+					if seconds > 20 {
+						seconds = 0
+						enemy.DestroyedAnimationCounter = 0
+					}
+					frameNumber := seconds % 21
+					var texName string
+					if frameNumber < 10 {
+						texName = "000" + strconv.Itoa(frameNumber)
+					} else {
+						texName = "00" + strconv.Itoa(frameNumber)
+					}
+					enemy.TextureName = texName
+					enemy.Texture = ui.textureMap[enemy.TextureName]
+					enemy.DestroyedAnimationCounter += ui.AnimationSpeed * deltaTimeS
+					enemy.SpinTimer = 0
+				} else {
+					enemy.SpinTimer += ui.AnimationSpeed * deltaTimeS
+				}
+			} else if enemy.ShouldSpin {
 				ui.renderer.CopyEx(enemy.Texture, nil, enemy.BoundBox, enemy.SpinAngle, nil, sdl.FLIP_NONE)
 				if enemy.SpinTimer >= 3 {
 					enemy.SpinAngle += enemy.SpinSpeed
