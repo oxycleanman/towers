@@ -47,7 +47,8 @@ func (ui *ui) SpawnEnemies(level *game.Level, deltaTime uint32) {
 			texName = "0000"
 			//texName = ui.enemyTextureNames[ui.randNumGen.Intn(len(ui.enemyTextureNames))]
 		} else {
-			texName = ui.meteorTextureNames[ui.randNumGen.Intn(len(ui.meteorTextureNames))]
+			//texName = ui.meteorTextureNames[ui.randNumGen.Intn(len(ui.meteorTextureNames))]
+			texName = "meteor_large1"
 		}
 		level.Enemies = append(level.Enemies, level.InitEnemy(spawnX, -100, enemyOrMeteor, texName))
 		level.EnemySpawnTimer = 0
@@ -187,6 +188,8 @@ func (ui *ui) checkCollisions(level *game.Level) {
 func (ui *ui) checkPlayerDeath(level *game.Level) {
 	if level.Player.IsDestroyed && level.Player.DestroyedAnimationPlayed && level.Player.Lives > 0{
 		level.InitPlayer(false)
+		level.Player.X = float64(ui.WinWidth/2 - level.Player.BoundBox.W/2)
+		level.Player.Y = float64(ui.WinHeight/2 - level.Player.BoundBox.H/2)
 	}
 	if level.Player.Lives == 0 {
 		ui.gameOver = true
@@ -196,12 +199,12 @@ func (ui *ui) checkPlayerDeath(level *game.Level) {
 func (ui *ui) Update(level *game.Level, deltaTime uint32) {
 	if ! ui.gameOver {
 		ui.UpdatePlayer(level, deltaTime)
-		if !level.Complete {
+		ui.checkPlayerDeath(level)
+		if !level.Complete && !level.Player.IsDestroyed {
 			ui.UpdateBullets(level, deltaTime)
 			ui.UpdateEnemies(level, deltaTime)
 			ui.checkCollisions(level)
 			ui.SpawnEnemies(level, deltaTime)
-			ui.checkPlayerDeath(level)
 			ui.CheckFiring(level, level.Player, deltaTime)
 		}
 	}

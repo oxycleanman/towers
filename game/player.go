@@ -69,35 +69,37 @@ func (level *Level) InitPlayer(isNewPlayer bool) {
 
 func (player *Player) Move(topBound, bottomBound, leftBound, rightBound int32, deltaTime uint32) {
 	deltaTimeS := float64(deltaTime)/1000
-	newX := int32(player.X + player.Xvel * deltaTimeS + float64(player.BoundBox.W/2))
-	newY := int32(player.Y + player.Yvel * deltaTimeS + float64(player.BoundBox.H/2))
-	if player.Xvel != 0 && newX <= rightBound && newX >= leftBound {
-		player.X += player.Xvel * deltaTimeS
-		player.AtRight = false
-		player.AtLeft = false
-	} else {
-		if newX >= rightBound {
-			player.AtRight = true
-		}
-		if newX <= leftBound {
-			player.AtLeft = true
-		}
-	}
-	if player.Yvel != 0 && newY < bottomBound && newY > topBound {
-		player.Y += player.Yvel * deltaTimeS
-		if player.Yvel < 0 {
-			player.IsAccelerating = true
+	if !player.IsDestroyed {
+		newX := int32(player.X + player.Xvel*deltaTimeS + float64(player.BoundBox.W/2))
+		newY := int32(player.Y + player.Yvel*deltaTimeS + float64(player.BoundBox.H/2))
+		if player.Xvel != 0 && newX <= rightBound && newX >= leftBound {
+			player.X += player.Xvel * deltaTimeS
+			player.AtRight = false
+			player.AtLeft = false
 		} else {
-			player.IsAccelerating = false
+			if newX >= rightBound {
+				player.AtRight = true
+			}
+			if newX <= leftBound {
+				player.AtLeft = true
+			}
 		}
-		player.AtBottom = false
-		player.AtTop = false
-	} else {
-		if newY >= bottomBound {
-			player.AtBottom = true
-		}
-		if newY <= topBound {
-			player.AtTop = true
+		if player.Yvel != 0 && newY < bottomBound && newY > topBound {
+			player.Y += player.Yvel * deltaTimeS
+			if player.Yvel < 0 {
+				player.IsAccelerating = true
+			} else {
+				player.IsAccelerating = false
+			}
+			player.AtBottom = false
+			player.AtTop = false
+		} else {
+			if newY >= bottomBound {
+				player.AtBottom = true
+			}
+			if newY <= topBound {
+				player.AtTop = true
+			}
 		}
 	}
 }
