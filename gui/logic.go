@@ -50,7 +50,7 @@ func (ui *ui) SpawnEnemies(level *game.Level, deltaTime uint32) {
 			//texName = ui.meteorTextureNames[ui.randNumGen.Intn(len(ui.meteorTextureNames))]
 			texName = "meteor_large1"
 		}
-		level.Enemies = append(level.Enemies, level.InitEnemy(spawnX, -100, enemyOrMeteor, texName))
+		level.Enemies = append(level.Enemies, level.InitEnemy(spawnX, -100, enemyOrMeteor, texName, false))
 		level.EnemySpawnTimer = 0
 	} else {
 		level.EnemySpawnTimer += ui.AnimationSpeed * deltaTimeS
@@ -116,6 +116,13 @@ func (ui *ui) checkOutOfBounds(x, y float64, w, h int32) bool {
 	return false
 }
 
+func (ui *ui) fractureMeteor(enemy *game.Enemy, level *game.Level) {
+	for i := 0; i < 3; i++ {
+		x := enemy.BoundBox.X + int32(i) * 20
+		level.Enemies = append(level.Enemies, level.InitEnemy(float64(x), float64(enemy.BoundBox.Y), 0, "meteor_small1", true))
+	}
+}
+
 func (ui *ui) checkCollisions(level *game.Level) {
 	// Bullet Collisions
 	for _, bullet := range level.Bullets {
@@ -131,6 +138,9 @@ func (ui *ui) checkCollisions(level *game.Level) {
 								level.Player.Points += enemy.PointValue
 								if level.Player.Points >= level.PointsToComplete {
 									level.Complete = true
+								}
+								if enemy.IsMeteor && !enemy.IsFractured {
+									ui.fractureMeteor(enemy, level)
 								}
 							}
 							bulletImpactSound := ui.soundFileMap[impactSound]
