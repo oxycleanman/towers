@@ -32,7 +32,7 @@ type cursor struct {
 
 type hudElement struct {
 	horzTiles, vertTiles, totalWidth int32
-	horzOffset, vertOffset float64
+	horzOffset, vertOffset           float64
 }
 
 type statusBar struct {
@@ -48,23 +48,23 @@ type menu struct {
 type hud struct {
 	uiElement
 	hudElement
-	healthBar *statusBar
-	shieldBar *statusBar
-	insideTexture                                *sdl.Texture
+	healthBar     *statusBar
+	shieldBar     *statusBar
+	insideTexture *sdl.Texture
 }
 
 type ui struct {
-	WinWidth             int32
-	WinHeight            int32
-	horzTiles, vertTiles int
+	WinWidth                     int32
+	WinHeight                    int32
+	horzTiles, vertTiles         int
 	backgroundTexture            *sdl.Texture
 	cursor                       *cursor
 	hud                          *hud
-	menu	*menu
+	menu                         *menu
 	renderer                     *sdl.Renderer
 	window                       *sdl.Window
 	font                         *ttf.Font
-	fontLarge *ttf.Font
+	fontLarge                    *ttf.Font
 	textureMap                   map[string]*sdl.Texture
 	keyboardState                []uint8
 	inputChan                    chan *game.Input
@@ -73,11 +73,11 @@ type ui struct {
 	currentMouseY                int32
 	playerInit                   bool
 	fontTextureMap               map[string]*sdl.Texture
-	largeFontTextureMap               map[string]*sdl.Texture
+	largeFontTextureMap          map[string]*sdl.Texture
 	soundFileMap                 map[string]*mix.Chunk
 	clickableElementMap          map[string]*uiButton
-	uiFarBackgroundElements                 []*uiElement
-	uiNearBackgroundElements []*uiElement
+	uiFarBackgroundElements      []*uiElement
+	uiNearBackgroundElements     []*uiElement
 	uiSpeedLines                 []*uiElement
 	meteorTextureNames           []string
 	enemyTextureNames            []string
@@ -85,13 +85,13 @@ type ui struct {
 	mapMoveTimer                 int
 	muted                        bool
 	paused                       bool
-	menuOpen bool
+	menuOpen                     bool
 	randNumGen                   *rand.Rand
 	levelComplete                bool
 	levelCompleteMessageTimer    float64
 	levelCompleteMessageShowTime int
-	AnimationSpeed float64
-	gameOver bool
+	AnimationSpeed               float64
+	gameOver                     bool
 }
 
 const (
@@ -106,11 +106,11 @@ const (
 	innerHudTexture    = "metalPanel_plate"
 	backgroundTexture  = "purple"
 	fontSize           = 24
-	largeFontSize = 60
-	texturePath = "gui/assets/images/"
-	soundFilePath = "gui/assets/sounds/"
-	fontPath = "gui/assets/fonts/kenvector_future.ttf"
-	gameTitle = "Some Shitty Space Game"
+	largeFontSize      = 60
+	texturePath        = "gui/assets/images/"
+	soundFilePath      = "gui/assets/sounds/"
+	fontPath           = "gui/assets/fonts/kenvector_future.ttf"
+	gameTitle          = "Some Shitty Space Game"
 )
 
 var fontColor = sdl.Color{0, 0, 0, 1}
@@ -150,7 +150,7 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 	if err != nil {
 		panic(err)
 	}
-	ui.renderer, err = sdl.CreateRenderer(ui.window, -1, sdl.RENDERER_ACCELERATED | sdl.RENDERER_PRESENTVSYNC)
+	ui.renderer, err = sdl.CreateRenderer(ui.window, -1, sdl.RENDERER_ACCELERATED|sdl.RENDERER_PRESENTVSYNC)
 	if err != nil {
 		panic(err)
 	}
@@ -189,7 +189,7 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 
 func (ui *ui) DrawBackground(deltaTime uint32) {
 	// TODO: Draw better background to create illusion of motion
-	deltaTimeS := float64(deltaTime)/1000
+	deltaTimeS := float64(deltaTime) / 1000
 	for _, line := range ui.uiSpeedLines {
 		if line.BoundBox.Y > ui.WinHeight {
 			spawnX := float64(ui.randNumGen.Intn(int(ui.WinWidth)))
@@ -207,7 +207,7 @@ func (ui *ui) DrawBackground(deltaTime uint32) {
 
 func (ui *ui) DrawSpeedLines(deltaTime uint32) {
 	// TODO: Maybe the number of lines changes as the player moves towards the top of the screen/accelerates?
-	deltaTimeS := float64(deltaTime)/1000
+	deltaTimeS := float64(deltaTime) / 1000
 	for _, line := range ui.uiSpeedLines {
 		if line.BoundBox.Y > ui.WinHeight {
 			spawnX := float64(ui.randNumGen.Intn(int(ui.WinWidth)))
@@ -248,8 +248,8 @@ func (ui *ui) DrawMenu() {
 		if err != nil {
 			panic(err)
 		}
-		xPos := ui.WinWidth/2 - w * 2
-		yPos := ui.WinHeight/2 - h * 2
+		xPos := ui.WinWidth/2 - w*2
+		yPos := ui.WinHeight/2 - h*2
 		ui.menu.BoundBox = &sdl.Rect{int32(xPos), int32(yPos), w * 4, h * 4}
 	}
 	if ui.menuOpen {
@@ -260,7 +260,7 @@ func (ui *ui) DrawMenu() {
 func (ui *ui) DrawUiElements(level *game.Level) {
 	// Draw Player Hitpoints, eventually the entire HUD
 	p := level.Player
-	hpTex := ui.stringToNormalFontTexture(strconv.Itoa(int(p.Hitpoints)) + " HP", sdl.Color{255, 255, 255, 1})
+	hpTex := ui.stringToNormalFontTexture(strconv.Itoa(int(p.Hitpoints))+" HP", sdl.Color{255, 255, 255, 1})
 	_, _, hpW, hpH, err := hpTex.Query()
 	if err != nil {
 		panic(err)
@@ -270,12 +270,12 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 	if err != nil {
 		panic(err)
 	}
-	levTex := ui.stringToNormalFontTexture("Level " + strconv.Itoa(level.LevelNumber), sdl.Color{255, 255, 255, 1})
+	levTex := ui.stringToNormalFontTexture("Level "+strconv.Itoa(level.LevelNumber), sdl.Color{255, 255, 255, 1})
 	_, _, levW, levH, err := levTex.Query()
 	if err != nil {
 		panic(err)
 	}
-	lifeTex := ui.stringToNormalFontTexture("Lives: " + strconv.Itoa(level.Player.Lives), sdl.Color{255, 255, 255, 1})
+	lifeTex := ui.stringToNormalFontTexture("Lives: "+strconv.Itoa(level.Player.Lives), sdl.Color{255, 255, 255, 1})
 	_, _, lifeW, lifeH, err := levTex.Query()
 	if err != nil {
 		panic(err)
@@ -304,12 +304,12 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 		ui.hud.healthBar.maxTiles = 20
 		ui.hud.healthBar.horzTiles = ui.hud.healthBar.maxTiles
 		ui.hud.healthBar.vertTiles = 1
-		ui.hud.healthBar.horzOffset = ui.hud.horzOffset + float64(ui.hud.totalWidth - 316)
+		ui.hud.healthBar.horzOffset = ui.hud.horzOffset + float64(ui.hud.totalWidth-316)
 		ui.hud.healthBar.vertOffset = float64(ui.WinHeight - ui.hud.BoundBox.H + 35)
 		ui.hud.shieldBar.maxTiles = 20
 		ui.hud.shieldBar.horzTiles = ui.hud.shieldBar.maxTiles
 		ui.hud.shieldBar.vertTiles = 1
-		ui.hud.shieldBar.horzOffset = ui.hud.horzOffset + float64(ui.hud.totalWidth - 316)
+		ui.hud.shieldBar.horzOffset = ui.hud.horzOffset + float64(ui.hud.totalWidth-316)
 		ui.hud.shieldBar.vertOffset = float64(ui.WinHeight - ui.hud.BoundBox.H + 66)
 		ui.hud.healthBar.BoundBox.W = 16
 		ui.hud.shieldBar.BoundBox.W = 16
@@ -319,17 +319,17 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 		ui.loadUiElements()
 	}
 
-	ui.hud.shieldBar.horzTiles = level.Player.ShieldHitpoints/5
-	ui.hud.healthBar.horzTiles = level.Player.Hitpoints/5
+	ui.hud.shieldBar.horzTiles = level.Player.ShieldHitpoints / 5
+	ui.hud.healthBar.horzTiles = level.Player.Hitpoints / 5
 
 	for i := 0; i < int(ui.hud.horzTiles); i++ {
 		var tex *sdl.Texture
-		ui.hud.BoundBox.X = int32(i) * ui.hud.BoundBox.W + int32(ui.hud.horzOffset)
+		ui.hud.BoundBox.X = int32(i)*ui.hud.BoundBox.W + int32(ui.hud.horzOffset)
 		ui.hud.BoundBox.Y = ui.WinHeight - ui.hud.BoundBox.H
 		if i == 0 {
 			tex = ui.textureMap["metalPanel_blueCorner_noBorder"]
 			ui.renderer.CopyEx(tex, nil, ui.hud.BoundBox, 0, nil, sdl.FLIP_HORIZONTAL)
-		} else if i == int(ui.hud.horzTiles) - 1 {
+		} else if i == int(ui.hud.horzTiles)-1 {
 			tex = ui.textureMap["metalPanel_blueCorner_noBorder"]
 			ui.renderer.Copy(tex, nil, ui.hud.BoundBox)
 		} else {
@@ -345,14 +345,14 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 			tex = ui.textureMap["barHorizontal_shadow_left"]
 			ui.hud.healthBar.BoundBox.W = 6
 			ui.hud.healthBar.BoundBox.H = 26
-			ui.hud.healthBar.BoundBox.X = int32(i) * ui.hud.healthBar.BoundBox.W + int32(ui.hud.healthBar.horzOffset)
+			ui.hud.healthBar.BoundBox.X = int32(i)*ui.hud.healthBar.BoundBox.W + int32(ui.hud.healthBar.horzOffset)
 			ui.hud.healthBar.BoundBox.Y = int32(ui.hud.healthBar.vertOffset)
 			ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
-		} else if i == int(ui.hud.healthBar.maxTiles) - 1 {
+		} else if i == int(ui.hud.healthBar.maxTiles)-1 {
 			tex = ui.textureMap["barHorizontal_shadow_right"]
 			ui.hud.healthBar.BoundBox.W = 6
 			ui.hud.healthBar.BoundBox.H = 26
-			ui.hud.healthBar.BoundBox.X = int32(i) * 16 + int32(ui.hud.healthBar.horzOffset)
+			ui.hud.healthBar.BoundBox.X = int32(i)*16 + int32(ui.hud.healthBar.horzOffset)
 			ui.hud.healthBar.BoundBox.Y = int32(ui.hud.healthBar.vertOffset)
 			ui.hud.healthBar.BoundBox.X -= 10
 			ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
@@ -360,7 +360,7 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 			tex = ui.textureMap["barHorizontal_shadow_mid"]
 			ui.hud.healthBar.BoundBox.W = 16
 			ui.hud.healthBar.BoundBox.H = 26
-			ui.hud.healthBar.BoundBox.X = int32(i) * ui.hud.healthBar.BoundBox.W + int32(ui.hud.healthBar.horzOffset)
+			ui.hud.healthBar.BoundBox.X = int32(i)*ui.hud.healthBar.BoundBox.W + int32(ui.hud.healthBar.horzOffset)
 			ui.hud.healthBar.BoundBox.Y = int32(ui.hud.healthBar.vertOffset)
 			ui.hud.healthBar.BoundBox.X -= 10
 			ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
@@ -368,7 +368,6 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 		tex = ui.textureMap["pill_green"]
 		ui.renderer.Copy(tex, nil, &sdl.Rect{int32(ui.hud.healthBar.horzOffset - 32), int32(ui.hud.healthBar.vertOffset), 22, 22})
 	}
-
 
 	//Draw Shield Bar Container and Badge
 	for i := 0; i < int(ui.hud.shieldBar.maxTiles); i++ {
@@ -408,14 +407,14 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 			tex = ui.textureMap["barHorizontal_green_left"]
 			ui.hud.healthBar.BoundBox.W = 6
 			ui.hud.healthBar.BoundBox.H = 26
-			ui.hud.healthBar.BoundBox.X = int32(i) * ui.hud.healthBar.BoundBox.W + int32(ui.hud.healthBar.horzOffset)
+			ui.hud.healthBar.BoundBox.X = int32(i)*ui.hud.healthBar.BoundBox.W + int32(ui.hud.healthBar.horzOffset)
 			ui.hud.healthBar.BoundBox.Y = int32(ui.hud.healthBar.vertOffset)
 			ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
-		} else if i == int(ui.hud.healthBar.maxTiles) - 1 {
+		} else if i == int(ui.hud.healthBar.maxTiles)-1 {
 			tex = ui.textureMap["barHorizontal_green_right"]
 			ui.hud.healthBar.BoundBox.W = 6
 			ui.hud.healthBar.BoundBox.H = 26
-			ui.hud.healthBar.BoundBox.X = int32(i) * 16 + int32(ui.hud.healthBar.horzOffset)
+			ui.hud.healthBar.BoundBox.X = int32(i)*16 + int32(ui.hud.healthBar.horzOffset)
 			ui.hud.healthBar.BoundBox.Y = int32(ui.hud.healthBar.vertOffset)
 			ui.hud.healthBar.BoundBox.X -= 10
 			ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
@@ -423,7 +422,7 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 			tex = ui.textureMap["barHorizontal_green_mid"]
 			ui.hud.healthBar.BoundBox.W = 16
 			ui.hud.healthBar.BoundBox.H = 26
-			ui.hud.healthBar.BoundBox.X = int32(i) * ui.hud.healthBar.BoundBox.W + int32(ui.hud.healthBar.horzOffset)
+			ui.hud.healthBar.BoundBox.X = int32(i)*ui.hud.healthBar.BoundBox.W + int32(ui.hud.healthBar.horzOffset)
 			ui.hud.healthBar.BoundBox.Y = int32(ui.hud.healthBar.vertOffset)
 			ui.hud.healthBar.BoundBox.X -= 10
 			ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
@@ -437,14 +436,14 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 			tex = ui.textureMap["barHorizontal_yellow_left"]
 			ui.hud.shieldBar.BoundBox.W = 6
 			ui.hud.shieldBar.BoundBox.H = 26
-			ui.hud.shieldBar.BoundBox.X = int32(i) * ui.hud.shieldBar.BoundBox.W + int32(ui.hud.shieldBar.horzOffset)
+			ui.hud.shieldBar.BoundBox.X = int32(i)*ui.hud.shieldBar.BoundBox.W + int32(ui.hud.shieldBar.horzOffset)
 			ui.hud.shieldBar.BoundBox.Y = int32(ui.hud.shieldBar.vertOffset)
 			ui.renderer.Copy(tex, nil, ui.hud.shieldBar.BoundBox)
-		} else if i == int(ui.hud.shieldBar.maxTiles) - 1 {
+		} else if i == int(ui.hud.shieldBar.maxTiles)-1 {
 			tex = ui.textureMap["barHorizontal_yellow_right"]
 			ui.hud.shieldBar.BoundBox.W = 6
 			ui.hud.shieldBar.BoundBox.H = 26
-			ui.hud.shieldBar.BoundBox.X = int32(i) * 16 + int32(ui.hud.shieldBar.horzOffset)
+			ui.hud.shieldBar.BoundBox.X = int32(i)*16 + int32(ui.hud.shieldBar.horzOffset)
 			ui.hud.shieldBar.BoundBox.Y = int32(ui.hud.shieldBar.vertOffset)
 			ui.hud.shieldBar.BoundBox.X -= 10
 			ui.renderer.Copy(tex, nil, ui.hud.shieldBar.BoundBox)
@@ -452,7 +451,7 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 			tex = ui.textureMap["barHorizontal_yellow_mid"]
 			ui.hud.shieldBar.BoundBox.W = 16
 			ui.hud.shieldBar.BoundBox.H = 26
-			ui.hud.shieldBar.BoundBox.X = int32(i) * ui.hud.shieldBar.BoundBox.W + int32(ui.hud.shieldBar.horzOffset)
+			ui.hud.shieldBar.BoundBox.X = int32(i)*ui.hud.shieldBar.BoundBox.W + int32(ui.hud.shieldBar.horzOffset)
 			ui.hud.shieldBar.BoundBox.Y = int32(ui.hud.shieldBar.vertOffset)
 			ui.hud.shieldBar.BoundBox.X -= 10
 			ui.renderer.Copy(tex, nil, ui.hud.shieldBar.BoundBox)
@@ -479,12 +478,12 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 	// Copy HP and Point elements to the renderer
 	ui.renderer.Copy(hpTex, nil, &sdl.Rect{0, 0, hpW, hpH})
 	ui.renderer.Copy(pTex, nil, &sdl.Rect{hpW + 20, 0, pW, pH})
-	ui.renderer.Copy(levTex, nil, &sdl.Rect{int32(ui.WinWidth - 20) - levW, 0, levW, levH})
-	ui.renderer.Copy(lifeTex, nil, &sdl.Rect{int32(ui.WinWidth - 40) - levW - lifeW, 0, lifeW, lifeH})
+	ui.renderer.Copy(levTex, nil, &sdl.Rect{int32(ui.WinWidth-20) - levW, 0, levW, levH})
+	ui.renderer.Copy(lifeTex, nil, &sdl.Rect{int32(ui.WinWidth-40) - levW - lifeW, 0, lifeW, lifeH})
 }
 
 func (ui *ui) DrawPlayer(level *game.Level, deltaTime uint32) {
-	deltaTimeS := float64(deltaTime)/1000
+	deltaTimeS := float64(deltaTime) / 1000
 	if level.Player.Texture == nil {
 		tex := ui.textureMap[level.Player.TextureName]
 		level.Player.Texture = tex
@@ -493,8 +492,8 @@ func (ui *ui) DrawPlayer(level *game.Level, deltaTime uint32) {
 			fmt.Println("ERROR: Invalid Texture:", level.Player.TextureName)
 			panic(err)
 		}
-		level.Player.BoundBox.W = w/2
-		level.Player.BoundBox.H = h/2
+		level.Player.BoundBox.W = w / 2
+		level.Player.BoundBox.H = h / 2
 		level.Player.X = float64(ui.WinWidth/2 - level.Player.BoundBox.W/2)
 		level.Player.Y = float64(ui.WinHeight/2 - level.Player.BoundBox.H/2)
 		level.Player.FireOffsetX = 0
@@ -623,7 +622,7 @@ func (ui *ui) DrawPlayer(level *game.Level, deltaTime uint32) {
 
 func (ui *ui) DrawEnemies(level *game.Level, deltaTime uint32) {
 	// TODO: Have large meteors break up into smaller ones
-	deltaTimeS := float64(deltaTime)/1000
+	deltaTimeS := float64(deltaTime) / 1000
 	for _, enemy := range level.Enemies {
 		if enemy.Texture == nil {
 			enemy.Texture = ui.textureMap[enemy.TextureName]
@@ -676,7 +675,12 @@ func (ui *ui) DrawEnemies(level *game.Level, deltaTime uint32) {
 						frameNumber++
 					}
 					fmt.Println(frameNumber)
-					texName := "meteor_large" + strconv.Itoa(frameNumber)
+					var texName string
+					if !enemy.IsFractured {
+						texName = "meteor_large" + strconv.Itoa(frameNumber)
+					} else {
+						texName = "meteor_small" + strconv.Itoa(frameNumber)
+					}
 					enemy.TextureName = texName
 					enemy.Texture = ui.textureMap[enemy.TextureName]
 					enemy.DestroyedAnimationCounter += ui.AnimationSpeed * deltaTimeS
@@ -692,7 +696,7 @@ func (ui *ui) DrawEnemies(level *game.Level, deltaTime uint32) {
 }
 
 func (ui *ui) DrawExplosions(level *game.Level, deltaTime uint32) {
-	deltaTimeS := float64(deltaTime)/1000
+	deltaTimeS := float64(deltaTime) / 1000
 	index := 0
 
 	// Draw Enemy explosions
@@ -760,7 +764,7 @@ func (ui *ui) DrawExplosions(level *game.Level, deltaTime uint32) {
 }
 
 func (ui *ui) DrawBullet(level *game.Level, deltaTime uint32) {
-	deltaTimeS := float64(deltaTime)/1000
+	deltaTimeS := float64(deltaTime) / 1000
 	index := 0
 	for i, bullet := range level.Bullets {
 		if bullet.Texture == nil {
@@ -772,8 +776,8 @@ func (ui *ui) DrawBullet(level *game.Level, deltaTime uint32) {
 			}
 			bullet.BoundBox.W = w
 			bullet.BoundBox.H = h
-			bullet.X = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2 - bullet.BoundBox.W/2)
-			bullet.Y = bullet.FiredBy.Y + float64(bullet.FiredBy.BoundBox.H/2 - bullet.BoundBox.H/2)
+			bullet.X = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2-bullet.BoundBox.W/2)
+			bullet.Y = bullet.FiredBy.Y + float64(bullet.FiredBy.BoundBox.H/2-bullet.BoundBox.H/2)
 			//bullet.BoundBox.X = int32(bullet.X)
 			//bullet.BoundBox.Y = int32(bullet.Y)
 			bullet.Direction = bullet.FiredBy.Direction
@@ -790,8 +794,8 @@ func (ui *ui) DrawBullet(level *game.Level, deltaTime uint32) {
 			}
 			var posX, posY float64
 			if bullet.FiredByEnemy {
-				posX = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2 - w/4)
-				posY = bullet.FiredBy.Y + float64(bullet.FiredBy.BoundBox.H/2 - h/4) + bullet.FiredBy.FireOffsetY
+				posX = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2-w/4)
+				posY = bullet.FiredBy.Y + float64(bullet.FiredBy.BoundBox.H/2-h/4) + bullet.FiredBy.FireOffsetY
 			} else {
 				posX = (bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2)) - float64(w/4)
 				posY = (bullet.FiredBy.Y + float64(bullet.FiredBy.BoundBox.H/2)) - float64(h/4) - bullet.FiredBy.FireOffsetY
@@ -848,7 +852,7 @@ func (ui *ui) DrawLevelComplete(level *game.Level) {
 	}
 	level.Bullets = nil
 	level.Player.IsFiring = false
-	tex := ui.stringToLargeFontTexture("Level " + strconv.Itoa(level.LevelNumber) + " Complete", sdl.Color{255, 255, 255, 1})
+	tex := ui.stringToLargeFontTexture("Level "+strconv.Itoa(level.LevelNumber)+" Complete", sdl.Color{255, 255, 255, 1})
 	_, _, w, h, err := tex.Query()
 	if err != nil {
 		panic(err)
@@ -922,7 +926,7 @@ func (ui *ui) Run() {
 				if int(ui.levelCompleteMessageTimer) >= ui.levelCompleteMessageShowTime {
 					ui.inputChan <- &game.Input{Type: game.LevelComplete}
 				}
-				ui.levelCompleteMessageTimer += ui.AnimationSpeed * (float64(deltaTime)/1000)
+				ui.levelCompleteMessageTimer += ui.AnimationSpeed * (float64(deltaTime) / 1000)
 			}
 			break
 		default:
@@ -930,7 +934,7 @@ func (ui *ui) Run() {
 				if int(ui.levelCompleteMessageTimer) >= ui.levelCompleteMessageShowTime {
 					ui.inputChan <- &game.Input{Type: game.LevelComplete}
 				}
-				ui.levelCompleteMessageTimer += ui.AnimationSpeed * (float64(deltaTime)/1000)
+				ui.levelCompleteMessageTimer += ui.AnimationSpeed * (float64(deltaTime) / 1000)
 			}
 		}
 

@@ -12,9 +12,11 @@ type Enemy struct {
 	SpinTimer float64
 	ShouldSpin bool
 	IsUfo bool
+	IsMeteor bool
 	SpinSpeed float64
 	SpinAngle float64
 	IsBoss bool
+	IsFractured bool
 }
 
 // Implement Shooter Interface
@@ -31,7 +33,7 @@ func (enemy *Enemy) GetSelf() *Character {
 }
 
 // TODO: Need an enemy factory of some kind here to generate different enemy types
-func (level *Level) InitEnemy(initX, initY float64, enemyOrMeteor int, texName string) *Enemy {
+func (level *Level) InitEnemy(initX, initY float64, enemyOrMeteor int, texName string, isFractured bool) *Enemy {
 	enemy := &Enemy{}
 	// 0 = meteor, 1 = enemy
 	if enemyOrMeteor == 1 {
@@ -65,6 +67,8 @@ func (level *Level) InitEnemy(initX, initY float64, enemyOrMeteor int, texName s
 		enemy.SpinAngle = 0
 		enemy.SpinSpeed = 5
 		enemy.CanFire = false
+		enemy.IsMeteor = true
+		enemy.IsFractured = isFractured
 	}
 	enemy.IsDestroyed = false
 	enemy.FireRateTimer = 0
