@@ -56,7 +56,7 @@ func (level *Level) InitEnemy(initX, initY float64, enemyOrMeteor int, texName s
 		enemy.Hitpoints = 10
 		enemy.PointValue = 5
 		enemy.Strength = 5
-		if strings.Contains(enemy.TextureName, "big") {
+		if strings.Contains(enemy.TextureName, "large") {
 			enemy.Hitpoints = 20
 			enemy.PointValue = 15
 			enemy.Strength = 15

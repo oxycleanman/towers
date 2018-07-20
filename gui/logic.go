@@ -3,6 +3,7 @@ package gui
 import (
 	"github.com/oxycleanman/towers/game"
 	"github.com/veandco/go-sdl2/mix"
+	"strconv"
 )
 
 func (ui *ui) mute() {
@@ -118,8 +119,13 @@ func (ui *ui) checkOutOfBounds(x, y float64, w, h int32) bool {
 
 func (ui *ui) fractureMeteor(enemy *game.Enemy, level *game.Level) {
 	for i := 0; i < 3; i++ {
-		x := enemy.BoundBox.X + int32(i) * 20
-		level.Enemies = append(level.Enemies, level.InitEnemy(float64(x), float64(enemy.BoundBox.Y), 0, "meteor_small1", true))
+		x := enemy.BoundBox.X + int32(i) * int32(ui.randNumGen.Intn(40 - -40)) + -40
+		y := enemy.BoundBox.Y + int32(1) * int32(ui.randNumGen.Intn(40 - -40)) + -40
+		texNum := ui.randNumGen.Intn(48) + 1
+		texName := "meteor_small" + strconv.Itoa(texNum)
+		smallMeteor := level.InitEnemy(float64(x), float64(y), 0, texName, true)
+		smallMeteor.DestroyedAnimationCounter = float64(texNum)
+		level.Enemies = append(level.Enemies, smallMeteor)
 	}
 }
 

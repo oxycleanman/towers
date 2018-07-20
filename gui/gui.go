@@ -92,6 +92,9 @@ type ui struct {
 	levelCompleteMessageShowTime int
 	AnimationSpeed               float64
 	gameOver                     bool
+	fpsTexture *sdl.Texture
+	fps uint32
+	updateFps bool
 }
 
 const (
@@ -255,6 +258,18 @@ func (ui *ui) DrawMenu() {
 	if ui.menuOpen {
 		ui.renderer.Copy(ui.menu.texture, nil, ui.menu.BoundBox)
 	}
+}
+
+func (ui *ui) drawFps() {
+	if ui.updateFps {
+		fpsTex := ui.stringToNormalFontTexture(strconv.Itoa(int(ui.fps))+" FPS", sdl.Color{255, 255, 255, 1})
+		ui.fpsTexture = fpsTex
+	}
+	_, _, w, h, err := ui.fpsTexture.Query()
+	if err != nil {
+		panic(err)
+	}
+	ui.renderer.Copy(ui.fpsTexture, nil, &sdl.Rect{0, 30, w, h})
 }
 
 func (ui *ui) DrawUiElements(level *game.Level) {
@@ -674,7 +689,6 @@ func (ui *ui) DrawEnemies(level *game.Level, deltaTime uint32) {
 					if frameNumber == 0 {
 						frameNumber++
 					}
-					fmt.Println(frameNumber)
 					var texName string
 					if !enemy.IsFractured {
 						texName = "meteor_large" + strconv.Itoa(frameNumber)
@@ -896,6 +910,7 @@ func (ui *ui) Draw(level *game.Level, deltaTime uint32) {
 	ui.DrawUiElements(level)
 	ui.DrawMenu()
 	ui.DrawCursor()
+	ui.drawFps()
 	ui.renderer.Present()
 }
 
@@ -904,6 +919,7 @@ func (ui *ui) Run() {
 	var frameStart uint32 = 0
 	var frameEnd uint32 = 0
 	var level *game.Level
+	var lastPrint uint32 = 0
 
 	for {
 		// Enforce at least a 1ms delay between frames
@@ -968,9 +984,20 @@ func (ui *ui) Run() {
 			ui.Update(level, deltaTime)
 		}
 
-		ui.Draw(level, deltaTime)
+		// Framerate Calculation
+		currentTime := sdl.GetTicks()
+		if currentTime - lastPrint >= 1000 {
+			ui.updateFps = true
+			ui.Draw(level, deltaTime)
+			lastPrint = currentTime
+			ui.fps = 0
+		} else {
+			ui.updateFps = false
+			ui.Draw(level, deltaTime)
+		}
 
 		frameEnd = sdl.GetTicks()
 		deltaTime = frameEnd - frameStart
+		ui.fps++
 	}
 }
