@@ -14,7 +14,6 @@ type Game struct {
 }
 
 type InputType int
-
 const (
 	None          InputType = iota
 	Up

@@ -12,6 +12,7 @@ type Player struct {
 	ReverseAnimationCounter	float64
 	TurnAnimationCounter                              int
 	TurnAnimationPlayed                              bool
+	LaserLevel int32
 }
 
 // Implement Shooter Interface
@@ -35,7 +36,6 @@ func (level *Level) InitPlayer(isNewPlayer bool) {
 		player.Hitpoints = 100
 		player.ShieldHitpoints = 100
 		player.Points = 0
-		player.Strength = 10
 		player.Speed = 800.0
 		player.FireRateTimer = 0
 		player.FireRateResetValue = 50
@@ -47,6 +47,8 @@ func (level *Level) InitPlayer(isNewPlayer bool) {
 		player.TurnAnimationCounter = 20
 		player.IsAccelerating = false
 		player.Lives = 3
+		player.LaserLevel = 1
+		player.Strength = 10 * player.LaserLevel
 		player.BoundBox = &sdl.Rect{}
 		level.Player = player
 	} else {

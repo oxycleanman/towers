@@ -56,10 +56,18 @@ func (ui *ui) determineMouseButtonInput(event *sdl.MouseButtonEvent) *game.Input
 		case sdl.BUTTON_LEFT:
 			for _, element := range ui.clickableElementMap {
 				if element.BoundBox.HasIntersection(&sdl.Rect{event.X, event.Y, 1, 1}) {
-					element.clicked = true
-					element.onClick()
-					input.Type = game.None
-					input.Pressed = true
+					if ui.gameStarted && !element.showOnStartScreen {
+						element.clicked = true
+						element.onClick()
+						input.Type = game.None
+						input.Pressed = true
+					}
+					if !ui.gameStarted && element.showOnStartScreen {
+						element.clicked = true
+						element.onClick()
+						input.Type = game.None
+						input.Pressed = true
+					}
 				} else {
 					input.Type = game.FirePrimary
 					input.Pressed = true

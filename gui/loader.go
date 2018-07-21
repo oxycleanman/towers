@@ -55,6 +55,28 @@ func (ui *ui) loadSounds(dirName string) {
 func (ui *ui) loadUiElements() {
 	// Load Buttons
 	{
+		startButton := &uiButton{}
+		startButton.texture = ui.textureMap["buttonBlue"]
+		_, _, sw, sh, err := startButton.texture.Query()
+		if err != nil {
+			panic(err)
+		}
+		startButton.X = float64(ui.WinWidth/2 - sw/2)
+		startButton.Y = float64(ui.WinHeight/2 + sh + 40)
+		startButton.BoundBox = &sdl.Rect{int32(startButton.X), int32(startButton.Y), sw, sh}
+		startButton.textTexture = ui.stringToNormalFontTexture("start", fontColor)
+		_, _, tw, th, err := startButton.textTexture.Query()
+		if err != nil {
+			panic(err)
+		}
+		textX := startButton.BoundBox.X + startButton.BoundBox.W/2 - tw/2
+		textY := startButton.BoundBox.Y + startButton.BoundBox.H/2 - th/2
+		startButton.textBoundBox = &sdl.Rect{int32(textX), int32(textY), tw, th}
+		startButton.onClick = ui.startGame
+		startButton.showOnStartScreen = true
+		ui.clickableElementMap["startButton"] = startButton
+	}
+	{
 		pauseButton := &uiButton{}
 		pauseButton.texture = ui.textureMap["buttonBlue"]
 		_, _, w, h, err := pauseButton.texture.Query()
@@ -73,6 +95,7 @@ func (ui *ui) loadUiElements() {
 		textY := pauseButton.BoundBox.Y + pauseButton.BoundBox.H/2 - th/2
 		pauseButton.textBoundBox = &sdl.Rect{int32(textX), int32(textY), tw, th}
 		pauseButton.onClick = ui.pause
+		pauseButton.showOnStartScreen = false
 		ui.clickableElementMap["pauseButton"] = pauseButton
 	}
 	{
@@ -94,6 +117,7 @@ func (ui *ui) loadUiElements() {
 		textY := menuButton.BoundBox.Y + menuButton.BoundBox.H/2 - th/2
 		menuButton.textBoundBox = &sdl.Rect{int32(textX), int32(textY), tw, th}
 		menuButton.onClick = ui.openCloseMenu
+		menuButton.showOnStartScreen = false
 		ui.clickableElementMap["menuButton"] = menuButton
 	}
 	{
@@ -116,6 +140,7 @@ func (ui *ui) loadUiElements() {
 		textY := muteButton.BoundBox.Y + muteButton.BoundBox.H/2 - th/2
 		muteButton.textBoundBox = &sdl.Rect{int32(textX), int32(textY), tw, th}
 		muteButton.onClick = ui.mute
+		muteButton.showOnStartScreen = false
 		ui.clickableElementMap["muteButton"] = muteButton
 	}
 

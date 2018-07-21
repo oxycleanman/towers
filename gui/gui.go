@@ -24,6 +24,7 @@ type uiButton struct {
 	clicked      bool
 	onClick      func()
 	textTexture  *sdl.Texture
+	showOnStartScreen bool
 }
 
 type cursor struct {
@@ -95,6 +96,7 @@ type ui struct {
 	fpsTexture *sdl.Texture
 	fps uint32
 	updateFps bool
+	gameStarted bool
 }
 
 const (
@@ -177,6 +179,7 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 	ui.muted = false
 	ui.levelCompleteMessageShowTime = 150
 	ui.AnimationSpeed = 100
+	ui.gameStarted = false
 
 	ui.currentMouseX = int32(ui.WinWidth / 2)
 	ui.currentMouseY = int32(ui.WinHeight / 2)
@@ -260,6 +263,16 @@ func (ui *ui) DrawMenu() {
 	}
 }
 
+func (ui *ui) DrawGameTitle() {
+	// Draw title
+	tex := ui.stringToLargeFontTexture(gameTitle, sdl.Color{255, 255, 255, 1})
+	_, _, w, h, err := tex.Query()
+	if err != nil {
+		panic(err)
+	}
+	ui.renderer.Copy(tex, nil, &sdl.Rect{int32(ui.WinWidth/2) - w/2, int32(ui.WinHeight/2) - h/2, w, h})
+}
+
 func (ui *ui) drawFps() {
 	if ui.updateFps {
 		fpsTex := ui.stringToNormalFontTexture(strconv.Itoa(int(ui.fps))+" FPS", sdl.Color{255, 255, 255, 1})
@@ -273,29 +286,6 @@ func (ui *ui) drawFps() {
 }
 
 func (ui *ui) DrawUiElements(level *game.Level) {
-	// Draw Player Hitpoints, eventually the entire HUD
-	p := level.Player
-	hpTex := ui.stringToNormalFontTexture(strconv.Itoa(int(p.Hitpoints))+" HP", sdl.Color{255, 255, 255, 1})
-	_, _, hpW, hpH, err := hpTex.Query()
-	if err != nil {
-		panic(err)
-	}
-	pTex := ui.stringToNormalFontTexture(strconv.Itoa(int(p.Points)), sdl.Color{255, 255, 255, 1})
-	_, _, pW, pH, err := pTex.Query()
-	if err != nil {
-		panic(err)
-	}
-	levTex := ui.stringToNormalFontTexture("Level "+strconv.Itoa(level.LevelNumber), sdl.Color{255, 255, 255, 1})
-	_, _, levW, levH, err := levTex.Query()
-	if err != nil {
-		panic(err)
-	}
-	lifeTex := ui.stringToNormalFontTexture("Lives: "+strconv.Itoa(level.Player.Lives), sdl.Color{255, 255, 255, 1})
-	_, _, lifeW, lifeH, err := levTex.Query()
-	if err != nil {
-		panic(err)
-	}
-
 	// Initialize and Draw HUD
 	if ui.hud == nil {
 		ui.hud = &hud{}
@@ -330,171 +320,214 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 		ui.hud.shieldBar.BoundBox.W = 16
 	}
 
+	// Initialize Button Map
 	if len(ui.clickableElementMap) == 0 {
 		ui.loadUiElements()
 	}
 
-	ui.hud.shieldBar.horzTiles = level.Player.ShieldHitpoints / 5
-	ui.hud.healthBar.horzTiles = level.Player.Hitpoints / 5
-
-	for i := 0; i < int(ui.hud.horzTiles); i++ {
-		var tex *sdl.Texture
-		ui.hud.BoundBox.X = int32(i)*ui.hud.BoundBox.W + int32(ui.hud.horzOffset)
-		ui.hud.BoundBox.Y = ui.WinHeight - ui.hud.BoundBox.H
-		if i == 0 {
-			tex = ui.textureMap["metalPanel_blueCorner_noBorder"]
-			ui.renderer.CopyEx(tex, nil, ui.hud.BoundBox, 0, nil, sdl.FLIP_HORIZONTAL)
-		} else if i == int(ui.hud.horzTiles)-1 {
-			tex = ui.textureMap["metalPanel_blueCorner_noBorder"]
-			ui.renderer.Copy(tex, nil, ui.hud.BoundBox)
-		} else {
-			tex = ui.textureMap["metalPanel_blue_noBorder"]
-			ui.renderer.Copy(tex, nil, ui.hud.BoundBox)
+	if ui.gameStarted {
+		// Draw Player Hitpoints, eventually the entire HUD
+		p := level.Player
+		hpTex := ui.stringToNormalFontTexture(strconv.Itoa(int(p.Hitpoints))+" HP", sdl.Color{255, 255, 255, 1})
+		_, _, hpW, hpH, err := hpTex.Query()
+		if err != nil {
+			panic(err)
 		}
-	}
-
-	// Draw Health Bar Container and Badge
-	for i := 0; i < int(ui.hud.healthBar.maxTiles); i++ {
-		var tex *sdl.Texture
-		if i == 0 {
-			tex = ui.textureMap["barHorizontal_shadow_left"]
-			ui.hud.healthBar.BoundBox.W = 6
-			ui.hud.healthBar.BoundBox.H = 26
-			ui.hud.healthBar.BoundBox.X = int32(i)*ui.hud.healthBar.BoundBox.W + int32(ui.hud.healthBar.horzOffset)
-			ui.hud.healthBar.BoundBox.Y = int32(ui.hud.healthBar.vertOffset)
-			ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
-		} else if i == int(ui.hud.healthBar.maxTiles)-1 {
-			tex = ui.textureMap["barHorizontal_shadow_right"]
-			ui.hud.healthBar.BoundBox.W = 6
-			ui.hud.healthBar.BoundBox.H = 26
-			ui.hud.healthBar.BoundBox.X = int32(i)*16 + int32(ui.hud.healthBar.horzOffset)
-			ui.hud.healthBar.BoundBox.Y = int32(ui.hud.healthBar.vertOffset)
-			ui.hud.healthBar.BoundBox.X -= 10
-			ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
-		} else {
-			tex = ui.textureMap["barHorizontal_shadow_mid"]
-			ui.hud.healthBar.BoundBox.W = 16
-			ui.hud.healthBar.BoundBox.H = 26
-			ui.hud.healthBar.BoundBox.X = int32(i)*ui.hud.healthBar.BoundBox.W + int32(ui.hud.healthBar.horzOffset)
-			ui.hud.healthBar.BoundBox.Y = int32(ui.hud.healthBar.vertOffset)
-			ui.hud.healthBar.BoundBox.X -= 10
-			ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
+		pTex := ui.stringToNormalFontTexture(strconv.Itoa(int(p.Points)), sdl.Color{255, 255, 255, 1})
+		_, _, pW, pH, err := pTex.Query()
+		if err != nil {
+			panic(err)
 		}
-		tex = ui.textureMap["pill_green"]
-		ui.renderer.Copy(tex, nil, &sdl.Rect{int32(ui.hud.healthBar.horzOffset - 32), int32(ui.hud.healthBar.vertOffset), 22, 22})
-	}
-
-	//Draw Shield Bar Container and Badge
-	for i := 0; i < int(ui.hud.shieldBar.maxTiles); i++ {
-		var tex *sdl.Texture
-		if i == 0 {
-			tex = ui.textureMap["barHorizontal_shadow_left"]
-			ui.hud.shieldBar.BoundBox.W = 6
-			ui.hud.shieldBar.BoundBox.H = 26
-			ui.hud.shieldBar.BoundBox.X = int32(i)*ui.hud.shieldBar.BoundBox.W + int32(ui.hud.shieldBar.horzOffset)
-			ui.hud.shieldBar.BoundBox.Y = int32(ui.hud.shieldBar.vertOffset)
-			ui.renderer.Copy(tex, nil, ui.hud.shieldBar.BoundBox)
-		} else if i == int(ui.hud.shieldBar.maxTiles)-1 {
-			tex = ui.textureMap["barHorizontal_shadow_right"]
-			ui.hud.shieldBar.BoundBox.W = 6
-			ui.hud.shieldBar.BoundBox.H = 26
-			ui.hud.shieldBar.BoundBox.X = int32(i)*16 + int32(ui.hud.shieldBar.horzOffset)
-			ui.hud.shieldBar.BoundBox.Y = int32(ui.hud.shieldBar.vertOffset)
-			ui.hud.shieldBar.BoundBox.X -= 10
-			ui.renderer.Copy(tex, nil, ui.hud.shieldBar.BoundBox)
-		} else {
-			tex = ui.textureMap["barHorizontal_shadow_mid"]
-			ui.hud.shieldBar.BoundBox.W = 16
-			ui.hud.shieldBar.BoundBox.H = 26
-			ui.hud.shieldBar.BoundBox.X = int32(i)*ui.hud.shieldBar.BoundBox.W + int32(ui.hud.shieldBar.horzOffset)
-			ui.hud.shieldBar.BoundBox.Y = int32(ui.hud.shieldBar.vertOffset)
-			ui.hud.shieldBar.BoundBox.X -= 10
-			ui.renderer.Copy(tex, nil, ui.hud.shieldBar.BoundBox)
+		levTex := ui.stringToNormalFontTexture("Level "+strconv.Itoa(level.LevelNumber), sdl.Color{255, 255, 255, 1})
+		_, _, levW, levH, err := levTex.Query()
+		if err != nil {
+			panic(err)
 		}
-		tex = ui.textureMap["shield_gold"]
-		ui.renderer.Copy(tex, nil, &sdl.Rect{int32(ui.hud.shieldBar.horzOffset - 32), int32(ui.hud.shieldBar.vertOffset), 22, 22})
-	}
-
-	/// Draw Health Bar
-	for i := 0; i < int(ui.hud.healthBar.horzTiles); i++ {
-		var tex *sdl.Texture
-		if i == 0 {
-			tex = ui.textureMap["barHorizontal_green_left"]
-			ui.hud.healthBar.BoundBox.W = 6
-			ui.hud.healthBar.BoundBox.H = 26
-			ui.hud.healthBar.BoundBox.X = int32(i)*ui.hud.healthBar.BoundBox.W + int32(ui.hud.healthBar.horzOffset)
-			ui.hud.healthBar.BoundBox.Y = int32(ui.hud.healthBar.vertOffset)
-			ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
-		} else if i == int(ui.hud.healthBar.maxTiles)-1 {
-			tex = ui.textureMap["barHorizontal_green_right"]
-			ui.hud.healthBar.BoundBox.W = 6
-			ui.hud.healthBar.BoundBox.H = 26
-			ui.hud.healthBar.BoundBox.X = int32(i)*16 + int32(ui.hud.healthBar.horzOffset)
-			ui.hud.healthBar.BoundBox.Y = int32(ui.hud.healthBar.vertOffset)
-			ui.hud.healthBar.BoundBox.X -= 10
-			ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
-		} else {
-			tex = ui.textureMap["barHorizontal_green_mid"]
-			ui.hud.healthBar.BoundBox.W = 16
-			ui.hud.healthBar.BoundBox.H = 26
-			ui.hud.healthBar.BoundBox.X = int32(i)*ui.hud.healthBar.BoundBox.W + int32(ui.hud.healthBar.horzOffset)
-			ui.hud.healthBar.BoundBox.Y = int32(ui.hud.healthBar.vertOffset)
-			ui.hud.healthBar.BoundBox.X -= 10
-			ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
+		lifeTex := ui.stringToNormalFontTexture("Lives: "+strconv.Itoa(level.Player.Lives), sdl.Color{255, 255, 255, 1})
+		_, _, lifeW, lifeH, err := levTex.Query()
+		if err != nil {
+			panic(err)
 		}
-	}
 
-	// Draw Shield Bar
-	for i := 0; i < int(ui.hud.shieldBar.horzTiles); i++ {
-		var tex *sdl.Texture
-		if i == 0 {
-			tex = ui.textureMap["barHorizontal_yellow_left"]
-			ui.hud.shieldBar.BoundBox.W = 6
-			ui.hud.shieldBar.BoundBox.H = 26
-			ui.hud.shieldBar.BoundBox.X = int32(i)*ui.hud.shieldBar.BoundBox.W + int32(ui.hud.shieldBar.horzOffset)
-			ui.hud.shieldBar.BoundBox.Y = int32(ui.hud.shieldBar.vertOffset)
-			ui.renderer.Copy(tex, nil, ui.hud.shieldBar.BoundBox)
-		} else if i == int(ui.hud.shieldBar.maxTiles)-1 {
-			tex = ui.textureMap["barHorizontal_yellow_right"]
-			ui.hud.shieldBar.BoundBox.W = 6
-			ui.hud.shieldBar.BoundBox.H = 26
-			ui.hud.shieldBar.BoundBox.X = int32(i)*16 + int32(ui.hud.shieldBar.horzOffset)
-			ui.hud.shieldBar.BoundBox.Y = int32(ui.hud.shieldBar.vertOffset)
-			ui.hud.shieldBar.BoundBox.X -= 10
-			ui.renderer.Copy(tex, nil, ui.hud.shieldBar.BoundBox)
-		} else {
-			tex = ui.textureMap["barHorizontal_yellow_mid"]
-			ui.hud.shieldBar.BoundBox.W = 16
-			ui.hud.shieldBar.BoundBox.H = 26
-			ui.hud.shieldBar.BoundBox.X = int32(i)*ui.hud.shieldBar.BoundBox.W + int32(ui.hud.shieldBar.horzOffset)
-			ui.hud.shieldBar.BoundBox.Y = int32(ui.hud.shieldBar.vertOffset)
-			ui.hud.shieldBar.BoundBox.X -= 10
-			ui.renderer.Copy(tex, nil, ui.hud.shieldBar.BoundBox)
+		ui.hud.shieldBar.horzTiles = level.Player.ShieldHitpoints / 5
+		ui.hud.healthBar.horzTiles = level.Player.Hitpoints / 5
+
+		for i := 0; i < int(ui.hud.horzTiles); i++ {
+			var tex *sdl.Texture
+			ui.hud.BoundBox.X = int32(i)*ui.hud.BoundBox.W + int32(ui.hud.horzOffset)
+			ui.hud.BoundBox.Y = ui.WinHeight - ui.hud.BoundBox.H
+			if i == 0 {
+				tex = ui.textureMap["metalPanel_blueCorner_noBorder"]
+				ui.renderer.CopyEx(tex, nil, ui.hud.BoundBox, 0, nil, sdl.FLIP_HORIZONTAL)
+			} else if i == int(ui.hud.horzTiles)-1 {
+				tex = ui.textureMap["metalPanel_blueCorner_noBorder"]
+				ui.renderer.Copy(tex, nil, ui.hud.BoundBox)
+			} else {
+				tex = ui.textureMap["metalPanel_blue_noBorder"]
+				ui.renderer.Copy(tex, nil, ui.hud.BoundBox)
+			}
 		}
+
+		// Draw Health Bar Container and Badge
+		for i := 0; i < int(ui.hud.healthBar.maxTiles); i++ {
+			var tex *sdl.Texture
+			if i == 0 {
+				tex = ui.textureMap["barHorizontal_shadow_left"]
+				ui.hud.healthBar.BoundBox.W = 6
+				ui.hud.healthBar.BoundBox.H = 26
+				ui.hud.healthBar.BoundBox.X = int32(i)*ui.hud.healthBar.BoundBox.W + int32(ui.hud.healthBar.horzOffset)
+				ui.hud.healthBar.BoundBox.Y = int32(ui.hud.healthBar.vertOffset)
+				ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
+			} else if i == int(ui.hud.healthBar.maxTiles)-1 {
+				tex = ui.textureMap["barHorizontal_shadow_right"]
+				ui.hud.healthBar.BoundBox.W = 6
+				ui.hud.healthBar.BoundBox.H = 26
+				ui.hud.healthBar.BoundBox.X = int32(i)*16 + int32(ui.hud.healthBar.horzOffset)
+				ui.hud.healthBar.BoundBox.Y = int32(ui.hud.healthBar.vertOffset)
+				ui.hud.healthBar.BoundBox.X -= 10
+				ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
+			} else {
+				tex = ui.textureMap["barHorizontal_shadow_mid"]
+				ui.hud.healthBar.BoundBox.W = 16
+				ui.hud.healthBar.BoundBox.H = 26
+				ui.hud.healthBar.BoundBox.X = int32(i)*ui.hud.healthBar.BoundBox.W + int32(ui.hud.healthBar.horzOffset)
+				ui.hud.healthBar.BoundBox.Y = int32(ui.hud.healthBar.vertOffset)
+				ui.hud.healthBar.BoundBox.X -= 10
+				ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
+			}
+			tex = ui.textureMap["pill_green"]
+			ui.renderer.Copy(tex, nil, &sdl.Rect{int32(ui.hud.healthBar.horzOffset - 32), int32(ui.hud.healthBar.vertOffset), 22, 22})
+		}
+
+		//Draw Shield Bar Container and Badge
+		for i := 0; i < int(ui.hud.shieldBar.maxTiles); i++ {
+			var tex *sdl.Texture
+			if i == 0 {
+				tex = ui.textureMap["barHorizontal_shadow_left"]
+				ui.hud.shieldBar.BoundBox.W = 6
+				ui.hud.shieldBar.BoundBox.H = 26
+				ui.hud.shieldBar.BoundBox.X = int32(i)*ui.hud.shieldBar.BoundBox.W + int32(ui.hud.shieldBar.horzOffset)
+				ui.hud.shieldBar.BoundBox.Y = int32(ui.hud.shieldBar.vertOffset)
+				ui.renderer.Copy(tex, nil, ui.hud.shieldBar.BoundBox)
+			} else if i == int(ui.hud.shieldBar.maxTiles)-1 {
+				tex = ui.textureMap["barHorizontal_shadow_right"]
+				ui.hud.shieldBar.BoundBox.W = 6
+				ui.hud.shieldBar.BoundBox.H = 26
+				ui.hud.shieldBar.BoundBox.X = int32(i)*16 + int32(ui.hud.shieldBar.horzOffset)
+				ui.hud.shieldBar.BoundBox.Y = int32(ui.hud.shieldBar.vertOffset)
+				ui.hud.shieldBar.BoundBox.X -= 10
+				ui.renderer.Copy(tex, nil, ui.hud.shieldBar.BoundBox)
+			} else {
+				tex = ui.textureMap["barHorizontal_shadow_mid"]
+				ui.hud.shieldBar.BoundBox.W = 16
+				ui.hud.shieldBar.BoundBox.H = 26
+				ui.hud.shieldBar.BoundBox.X = int32(i)*ui.hud.shieldBar.BoundBox.W + int32(ui.hud.shieldBar.horzOffset)
+				ui.hud.shieldBar.BoundBox.Y = int32(ui.hud.shieldBar.vertOffset)
+				ui.hud.shieldBar.BoundBox.X -= 10
+				ui.renderer.Copy(tex, nil, ui.hud.shieldBar.BoundBox)
+			}
+			tex = ui.textureMap["shield_gold"]
+			ui.renderer.Copy(tex, nil, &sdl.Rect{int32(ui.hud.shieldBar.horzOffset - 32), int32(ui.hud.shieldBar.vertOffset), 22, 22})
+		}
+
+		/// Draw Health Bar
+		for i := 0; i < int(ui.hud.healthBar.horzTiles); i++ {
+			var tex *sdl.Texture
+			if i == 0 {
+				tex = ui.textureMap["barHorizontal_green_left"]
+				ui.hud.healthBar.BoundBox.W = 6
+				ui.hud.healthBar.BoundBox.H = 26
+				ui.hud.healthBar.BoundBox.X = int32(i)*ui.hud.healthBar.BoundBox.W + int32(ui.hud.healthBar.horzOffset)
+				ui.hud.healthBar.BoundBox.Y = int32(ui.hud.healthBar.vertOffset)
+				ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
+			} else if i == int(ui.hud.healthBar.maxTiles)-1 {
+				tex = ui.textureMap["barHorizontal_green_right"]
+				ui.hud.healthBar.BoundBox.W = 6
+				ui.hud.healthBar.BoundBox.H = 26
+				ui.hud.healthBar.BoundBox.X = int32(i)*16 + int32(ui.hud.healthBar.horzOffset)
+				ui.hud.healthBar.BoundBox.Y = int32(ui.hud.healthBar.vertOffset)
+				ui.hud.healthBar.BoundBox.X -= 10
+				ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
+			} else {
+				tex = ui.textureMap["barHorizontal_green_mid"]
+				ui.hud.healthBar.BoundBox.W = 16
+				ui.hud.healthBar.BoundBox.H = 26
+				ui.hud.healthBar.BoundBox.X = int32(i)*ui.hud.healthBar.BoundBox.W + int32(ui.hud.healthBar.horzOffset)
+				ui.hud.healthBar.BoundBox.Y = int32(ui.hud.healthBar.vertOffset)
+				ui.hud.healthBar.BoundBox.X -= 10
+				ui.renderer.Copy(tex, nil, ui.hud.healthBar.BoundBox)
+			}
+		}
+
+		// Draw Shield Bar
+		for i := 0; i < int(ui.hud.shieldBar.horzTiles); i++ {
+			var tex *sdl.Texture
+			if i == 0 {
+				tex = ui.textureMap["barHorizontal_yellow_left"]
+				ui.hud.shieldBar.BoundBox.W = 6
+				ui.hud.shieldBar.BoundBox.H = 26
+				ui.hud.shieldBar.BoundBox.X = int32(i)*ui.hud.shieldBar.BoundBox.W + int32(ui.hud.shieldBar.horzOffset)
+				ui.hud.shieldBar.BoundBox.Y = int32(ui.hud.shieldBar.vertOffset)
+				ui.renderer.Copy(tex, nil, ui.hud.shieldBar.BoundBox)
+			} else if i == int(ui.hud.shieldBar.maxTiles)-1 {
+				tex = ui.textureMap["barHorizontal_yellow_right"]
+				ui.hud.shieldBar.BoundBox.W = 6
+				ui.hud.shieldBar.BoundBox.H = 26
+				ui.hud.shieldBar.BoundBox.X = int32(i)*16 + int32(ui.hud.shieldBar.horzOffset)
+				ui.hud.shieldBar.BoundBox.Y = int32(ui.hud.shieldBar.vertOffset)
+				ui.hud.shieldBar.BoundBox.X -= 10
+				ui.renderer.Copy(tex, nil, ui.hud.shieldBar.BoundBox)
+			} else {
+				tex = ui.textureMap["barHorizontal_yellow_mid"]
+				ui.hud.shieldBar.BoundBox.W = 16
+				ui.hud.shieldBar.BoundBox.H = 26
+				ui.hud.shieldBar.BoundBox.X = int32(i)*ui.hud.shieldBar.BoundBox.W + int32(ui.hud.shieldBar.horzOffset)
+				ui.hud.shieldBar.BoundBox.Y = int32(ui.hud.shieldBar.vertOffset)
+				ui.hud.shieldBar.BoundBox.X -= 10
+				ui.renderer.Copy(tex, nil, ui.hud.shieldBar.BoundBox)
+			}
+		}
+
+		// Copy HP and Point elements to the renderer
+		ui.renderer.Copy(hpTex, nil, &sdl.Rect{0, 0, hpW, hpH})
+		ui.renderer.Copy(pTex, nil, &sdl.Rect{hpW + 20, 0, pW, pH})
+		ui.renderer.Copy(levTex, nil, &sdl.Rect{int32(ui.WinWidth-20) - levW, 0, levW, levH})
+		ui.renderer.Copy(lifeTex, nil, &sdl.Rect{int32(ui.WinWidth-40) - levW - lifeW, 0, lifeW, lifeH})
 	}
 
 	// Draw Clickable Elements
 	for _, element := range ui.clickableElementMap {
-		if element.mouseOver && !element.clicked {
-			element.texture.SetBlendMode(sdl.BLENDMODE_ADD)
-			ui.renderer.Copy(element.texture, nil, element.BoundBox)
-		} else if element.clicked {
-			element.texture.SetBlendMode(sdl.BLENDMODE_BLEND)
-			element.texture.SetColorMod(220, 220, 220)
-			ui.renderer.CopyEx(element.texture, nil, element.BoundBox, 0, nil, sdl.FLIP_VERTICAL)
-		} else {
-			element.texture.SetColorMod(255, 255, 255)
-			element.texture.SetBlendMode(sdl.BLENDMODE_BLEND)
-			ui.renderer.Copy(element.texture, nil, element.BoundBox)
+		if ui.gameStarted && !element.showOnStartScreen {
+			if element.mouseOver && !element.clicked {
+				element.texture.SetBlendMode(sdl.BLENDMODE_ADD)
+				ui.renderer.Copy(element.texture, nil, element.BoundBox)
+			} else if element.clicked {
+				element.texture.SetBlendMode(sdl.BLENDMODE_BLEND)
+				element.texture.SetColorMod(220, 220, 220)
+				ui.renderer.CopyEx(element.texture, nil, element.BoundBox, 0, nil, sdl.FLIP_VERTICAL)
+			} else {
+				element.texture.SetColorMod(255, 255, 255)
+				element.texture.SetBlendMode(sdl.BLENDMODE_BLEND)
+				ui.renderer.Copy(element.texture, nil, element.BoundBox)
+			}
+			ui.renderer.Copy(element.textTexture, nil, element.textBoundBox)
 		}
-		ui.renderer.Copy(element.textTexture, nil, element.textBoundBox)
+		if !ui.gameStarted && element.showOnStartScreen {
+			if element.mouseOver && !element.clicked {
+				element.texture.SetBlendMode(sdl.BLENDMODE_ADD)
+				ui.renderer.Copy(element.texture, nil, element.BoundBox)
+			} else if element.clicked {
+				element.texture.SetBlendMode(sdl.BLENDMODE_BLEND)
+				element.texture.SetColorMod(220, 220, 220)
+				ui.renderer.CopyEx(element.texture, nil, element.BoundBox, 0, nil, sdl.FLIP_VERTICAL)
+			} else {
+				element.texture.SetColorMod(255, 255, 255)
+				element.texture.SetBlendMode(sdl.BLENDMODE_BLEND)
+				ui.renderer.Copy(element.texture, nil, element.BoundBox)
+			}
+			ui.renderer.Copy(element.textTexture, nil, element.textBoundBox)
+		}
 	}
-
-	// Copy HP and Point elements to the renderer
-	ui.renderer.Copy(hpTex, nil, &sdl.Rect{0, 0, hpW, hpH})
-	ui.renderer.Copy(pTex, nil, &sdl.Rect{hpW + 20, 0, pW, pH})
-	ui.renderer.Copy(levTex, nil, &sdl.Rect{int32(ui.WinWidth-20) - levW, 0, levW, levH})
-	ui.renderer.Copy(lifeTex, nil, &sdl.Rect{int32(ui.WinWidth-40) - levW - lifeW, 0, lifeW, lifeH})
 }
 
 func (ui *ui) DrawPlayer(level *game.Level, deltaTime uint32) {
@@ -781,21 +814,6 @@ func (ui *ui) DrawBullet(level *game.Level, deltaTime uint32) {
 	deltaTimeS := float64(deltaTime) / 1000
 	index := 0
 	for i, bullet := range level.Bullets {
-		if bullet.Texture == nil {
-			tex := ui.textureMap[bullet.TextureName]
-			bullet.Texture = tex
-			_, _, w, h, err := tex.Query()
-			if err != nil {
-				panic(err)
-			}
-			bullet.BoundBox.W = w
-			bullet.BoundBox.H = h
-			bullet.X = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2-bullet.BoundBox.W/2)
-			bullet.Y = bullet.FiredBy.Y + float64(bullet.FiredBy.BoundBox.H/2-bullet.BoundBox.H/2)
-			//bullet.BoundBox.X = int32(bullet.X)
-			//bullet.BoundBox.Y = int32(bullet.Y)
-			bullet.Direction = bullet.FiredBy.Direction
-		}
 		tex := bullet.Texture
 		bullet.BoundBox.X = int32(bullet.X)
 		bullet.BoundBox.Y = int32(bullet.Y)
@@ -890,27 +908,33 @@ func (ui *ui) DrawGameOver(level *game.Level) {
 	}
 	ui.renderer.Copy(tex, nil, &sdl.Rect{int32(ui.WinWidth/2) - w/2, int32(ui.WinHeight/2) - h/2, w, h})
 }
-
+d
 // Remember to always draw from the ground up
 func (ui *ui) Draw(level *game.Level, deltaTime uint32) {
 	ui.renderer.Clear()
-	ui.DrawBackground(deltaTime)
-	ui.DrawSpeedLines(deltaTime)
-	if level.Complete {
-		ui.DrawLevelComplete(level)
-	}
-	if !ui.gameOver {
-		ui.DrawBullet(level, deltaTime)
-		ui.DrawPlayer(level, deltaTime)
-		ui.DrawEnemies(level, deltaTime)
-		ui.DrawExplosions(level, deltaTime)
+	if ui.gameStarted {
+		ui.DrawBackground(deltaTime)
+		ui.DrawSpeedLines(deltaTime)
+		if level.Complete {
+			ui.DrawLevelComplete(level)
+		}
+		if !ui.gameOver {
+			ui.DrawBullet(level, deltaTime)
+			ui.DrawPlayer(level, deltaTime)
+			ui.DrawEnemies(level, deltaTime)
+			ui.DrawExplosions(level, deltaTime)
+		} else {
+			ui.DrawGameOver(level)
+		}
+		ui.DrawUiElements(level)
+		ui.DrawMenu()
+		ui.DrawCursor()
+		//ui.drawFps()
 	} else {
-		ui.DrawGameOver(level)
+		ui.DrawGameTitle()
+		ui.DrawUiElements(level)
+		ui.DrawCursor()
 	}
-	ui.DrawUiElements(level)
-	ui.DrawMenu()
-	ui.DrawCursor()
-	ui.drawFps()
 	ui.renderer.Present()
 }
 

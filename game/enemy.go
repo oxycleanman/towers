@@ -5,18 +5,29 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
+type PowerUpType int
+const (
+	Health PowerUpType = iota
+	Shield
+	Laser
+	Life
+	Empty
+)
+
 type Enemy struct {
 	Character
-	CanFire bool
+	CanFire        bool
 	ConstantMotion bool
-	SpinTimer float64
-	ShouldSpin bool
-	IsUfo bool
-	IsMeteor bool
-	SpinSpeed float64
-	SpinAngle float64
-	IsBoss bool
-	IsFractured bool
+	SpinTimer      float64
+	ShouldSpin     bool
+	IsUfo          bool
+	IsMeteor       bool
+	SpinSpeed      float64
+	SpinAngle      float64
+	IsBoss         bool
+	IsFractured    bool
+	IsPowerUp      bool
+	PowerUpType    PowerUpType
 }
 
 // Implement Shooter Interface
@@ -33,25 +44,11 @@ func (enemy *Enemy) GetSelf() *Character {
 }
 
 // TODO: Need an enemy factory of some kind here to generate different enemy types
-func (level *Level) InitEnemy(initX, initY float64, enemyOrMeteor int, texName string, isFractured bool) *Enemy {
+func (level *Level) InitEnemy(initX, initY float64, spawnType int, texName string, isFractured bool, powerUpType PowerUpType) *Enemy {
 	enemy := &Enemy{}
-	// 0 = meteor, 1 = enemy
-	if enemyOrMeteor == 1 {
-		enemy.TextureName = texName
-		enemy.Hitpoints = int32(50 * level.EnemyDifficultyMultiplier)
-		enemy.PointValue = 25
-		enemy.Strength = int32(100 * level.EnemyDifficultyMultiplier)
-		enemy.Speed = 150 * level.EnemyDifficultyMultiplier
-		enemy.ConstantMotion = false
-		if strings.Contains(enemy.TextureName, "00") {
-			enemy.ShouldSpin = true
-			enemy.IsUfo = true
-		}
-		enemy.SpinAngle = 0
-		enemy.SpinSpeed = 5
-		enemy.CanFire = true
-		enemy.IsBoss = false
-	} else {
+	// spawnType 0 = meteor, 1 = enemy, >=2 = power up
+	switch spawnType {
+	case 0:
 		enemy.TextureName = texName
 		enemy.Hitpoints = 10
 		enemy.PointValue = 5
@@ -69,6 +66,38 @@ func (level *Level) InitEnemy(initX, initY float64, enemyOrMeteor int, texName s
 		enemy.CanFire = false
 		enemy.IsMeteor = true
 		enemy.IsFractured = isFractured
+		break
+	case 1:
+		enemy.TextureName = texName
+		enemy.Hitpoints = int32(50 * level.EnemyDifficultyMultiplier)
+		enemy.PointValue = 25
+		enemy.Strength = int32(15 * level.EnemyDifficultyMultiplier)
+		enemy.Speed = 150 * level.EnemyDifficultyMultiplier
+		enemy.ConstantMotion = false
+		if strings.Contains(enemy.TextureName, "00") {
+			enemy.ShouldSpin = true
+			enemy.IsUfo = true
+		}
+		enemy.SpinAngle = 0
+		enemy.SpinSpeed = 5
+		enemy.CanFire = true
+		enemy.IsBoss = false
+		break
+	case 2:
+		enemy.TextureName = texName
+		enemy.PointValue = 50
+		enemy.Hitpoints = 1
+		enemy.Strength = int32(50 * level.EnemyDifficultyMultiplier)
+		enemy.Speed = 180 * level.EnemyDifficultyMultiplier
+		enemy.ConstantMotion = true
+		enemy.ShouldSpin = false
+		enemy.CanFire = false
+		enemy.IsMeteor = false
+		enemy.IsFractured = false
+		enemy.IsPowerUp = true
+		enemy.IsBoss = false
+		enemy.PowerUpType = powerUpType
+		break
 	}
 	enemy.IsDestroyed = false
 	enemy.FireRateTimer = 0

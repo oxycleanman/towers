@@ -38,6 +38,10 @@ func (ui *ui) openCloseMenu() {
 	}
 }
 
+func (ui *ui) startGame() {
+	ui.gameStarted = !ui.gameStarted
+}
+
 func (ui *ui) SpawnEnemies(level *game.Level, deltaTime uint32) {
 	deltaTimeS := float64(deltaTime)/1000
 	if level.EnemySpawnTimer >= level.EnemySpawnFrequency && len(level.Enemies) < level.MaxNumberEnemies {
@@ -51,10 +55,38 @@ func (ui *ui) SpawnEnemies(level *game.Level, deltaTime uint32) {
 			//texName = ui.meteorTextureNames[ui.randNumGen.Intn(len(ui.meteorTextureNames))]
 			texName = "meteor_large1"
 		}
-		level.Enemies = append(level.Enemies, level.InitEnemy(spawnX, -100, enemyOrMeteor, texName, false))
+		level.Enemies = append(level.Enemies, level.InitEnemy(spawnX, -100, enemyOrMeteor, texName, false, game.Empty))
 		level.EnemySpawnTimer = 0
 	} else {
 		level.EnemySpawnTimer += ui.AnimationSpeed * deltaTimeS
+	}
+}
+
+func (ui *ui) SpawnPowerUps(level *game.Level, deltaTime uint32) {
+	deltaTimeS := float64(deltaTime)/1000
+	// TODO: Should the max number of enemies affect power ups?
+	if level.PowerUpSpawnTimer >= level.PowerUpSpawnFrequency && len(level.Enemies) < level.MaxNumberEnemies {
+		spawnX := float64(ui.randNumGen.Intn(int(ui.WinWidth)))
+		randPowerUp := game.PowerUpType(ui.randNumGen.Intn(4))
+		var texName string
+		switch randPowerUp {
+		case game.Health:
+			texName = "pill_green"
+			break
+		case game.Life:
+			texName = "powerupBlue"
+			break
+		case game.Laser:
+			texName = "powerupRed"
+			break
+		case game.Shield:
+			texName = "shield_gold"
+			break
+		}
+		level.Enemies = append(level.Enemies, level.InitEnemy(spawnX, -100, 2, texName, false, randPowerUp))
+		level.PowerUpSpawnTimer = 0
+	} else {
+		level.PowerUpSpawnTimer += ui.AnimationSpeed * deltaTimeS
 	}
 }
 
@@ -84,15 +116,61 @@ func (ui *ui) CheckFiring(level *game.Level, entity game.Shooter, deltaTime uint
 		if isPlayer {
 			texName = playerLaserTexture
 			laserFireSound = ui.soundFileMap[playerLaserSound]
+			for i := 0; i < int(level.Player.LaserLevel); i++ {
+				bullet := level.InitBullet(texName)
+				tex := ui.textureMap[bullet.TextureName]
+				bullet.Texture = tex
+				_, _, w, h, err := tex.Query()
+				if err != nil {
+					panic(err)
+				}
+				bullet.BoundBox.W = w
+				bullet.BoundBox.H = h
+				bullet.FiredBy = entity.GetSelf()
+				bullet.Direction = bullet.FiredBy.Direction
+				// Correctly draw single, double, and triple lasers
+				if level.Player.LaserLevel == 1 {
+					bullet.X = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2-bullet.BoundBox.W/2)
+				} else if level.Player.LaserLevel == 2 {
+					if i == 0 {
+						bullet.X = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2-bullet.BoundBox.W/2) * (float64(i) + 0.5)
+					} else {
+						bullet.X = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2-bullet.BoundBox.W/2) * (float64(i) + 0.5)
+					}
+				} else {
+					if i == 0 {
+						bullet.X = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2-bullet.BoundBox.W/2)
+					} else if i == 1 {
+						bullet.X = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2-bullet.BoundBox.W/2)*(float64(i)+0.5)
+					} else {
+						bullet.X = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2-bullet.BoundBox.W/2)*(float64(i)-1.5)
+					}
+				}
+				bullet.Y = bullet.FiredBy.Y + float64(bullet.FiredBy.BoundBox.H/2-bullet.BoundBox.H/2)
+				bullet.FiredByEnemy = !isPlayer
+				bullet.Damage = bullet.FiredBy.Strength
+				level.Bullets = append(level.Bullets, bullet)
+			}
 		} else {
 			texName = enemyLaserTexture
 			laserFireSound = ui.soundFileMap[enemyLaserSound]
+			bullet := level.InitBullet(texName)
+			tex := ui.textureMap[bullet.TextureName]
+			bullet.Texture = tex
+			_, _, w, h, err := tex.Query()
+			if err != nil {
+				panic(err)
+			}
+			bullet.BoundBox.W = w
+			bullet.BoundBox.H = h
+			bullet.FiredBy = entity.GetSelf()
+			bullet.Direction = bullet.FiredBy.Direction
+			bullet.X = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2-bullet.BoundBox.W/2)
+			bullet.Y = bullet.FiredBy.Y + float64(bullet.FiredBy.BoundBox.H/2-bullet.BoundBox.H/2)
+			bullet.FiredByEnemy = !isPlayer
+			bullet.Damage = bullet.FiredBy.Strength
+			level.Bullets = append(level.Bullets, bullet)
 		}
-		bullet := level.InitBullet(texName)
-		bullet.FiredByEnemy = !isPlayer
-		bullet.FiredBy = entity.GetSelf()
-		bullet.Damage = bullet.FiredBy.Strength
-		level.Bullets = append(level.Bullets, bullet)
 		entity.SetFireTimer(0)
 		laserFireSound.Play(-1, 0)
 	} else if !isPlayer {
@@ -123,7 +201,7 @@ func (ui *ui) fractureMeteor(enemy *game.Enemy, level *game.Level) {
 		y := enemy.BoundBox.Y + int32(1) * int32(ui.randNumGen.Intn(40 - -40)) + -40
 		texNum := ui.randNumGen.Intn(48) + 1
 		texName := "meteor_small" + strconv.Itoa(texNum)
-		smallMeteor := level.InitEnemy(float64(x), float64(y), 0, texName, true)
+		smallMeteor := level.InitEnemy(float64(x), float64(y), 0, texName, true, game.Empty)
 		smallMeteor.DestroyedAnimationCounter = float64(texNum)
 		level.Enemies = append(level.Enemies, smallMeteor)
 	}
@@ -135,7 +213,7 @@ func (ui *ui) checkCollisions(level *game.Level) {
 		if !bullet.IsColliding {
 			if !bullet.FiredByEnemy {
 				for _, enemy := range level.Enemies {
-					if !enemy.IsDestroyed {
+					if !enemy.IsDestroyed && !enemy.IsPowerUp {
 						if enemy.BoundBox.HasIntersection(bullet.BoundBox) {
 							bullet.IsColliding = true
 							enemy.Hitpoints -= bullet.Damage
@@ -176,7 +254,7 @@ func (ui *ui) checkCollisions(level *game.Level) {
 		for _, enemy := range level.Enemies {
 			if !enemy.IsDestroyed {
 				if enemy.BoundBox.HasIntersection(level.Player.BoundBox) {
-					if !enemy.IsBoss {
+					if !enemy.IsBoss && !enemy.IsPowerUp {
 						enemy.Hitpoints = 0
 						enemy.IsDestroyed = true
 						if level.Player.ShieldHitpoints > 0 {
@@ -188,6 +266,33 @@ func (ui *ui) checkCollisions(level *game.Level) {
 						}
 						if level.Player.Hitpoints <= 0 {
 							level.Player.IsDestroyed = true
+						}
+					} else if !enemy.IsBoss && enemy.IsPowerUp {
+						enemy.Hitpoints = 0
+						enemy.IsDestroyed = true
+						enemy.DestroyedAnimationPlayed = true
+						level.Player.Points += enemy.PointValue
+						switch enemy.PowerUpType {
+						case game.Health:
+							level.Player.Hitpoints += enemy.Strength
+							if level.Player.Hitpoints > 100 {
+								level.Player.Hitpoints = 100
+							}
+							break
+						case game.Life:
+							level.Player.Lives++
+							break
+						case game.Laser:
+							if !(level.Player.LaserLevel == 3) {
+								level.Player.LaserLevel++
+							}
+							break
+						case game.Shield:
+							level.Player.ShieldHitpoints += enemy.Strength
+							if level.Player.ShieldHitpoints > 100 {
+								level.Player.ShieldHitpoints = 100
+							}
+							break
 						}
 					} else {
 						level.Player.Hitpoints = 0
@@ -221,6 +326,7 @@ func (ui *ui) Update(level *game.Level, deltaTime uint32) {
 			ui.UpdateEnemies(level, deltaTime)
 			ui.checkCollisions(level)
 			ui.SpawnEnemies(level, deltaTime)
+			ui.SpawnPowerUps(level, deltaTime)
 			ui.CheckFiring(level, level.Player, deltaTime)
 		}
 	}
