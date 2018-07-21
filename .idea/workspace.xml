@@ -2,14 +2,51 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="aa15563f-51fd-49f7-9a92-a4a96db69d25" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/game/enemy.go" beforeDir="false" afterPath="$PROJECT_DIR$/game/enemy.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game/game.go" beforeDir="false" afterPath="$PROJECT_DIR$/game/game.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game/levels.go" beforeDir="false" afterPath="$PROJECT_DIR$/game/levels.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game/player.go" beforeDir="false" afterPath="$PROJECT_DIR$/game/player.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/player.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/player.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left0.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left0.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left1.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left10.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left10.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left11.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left11.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left12.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left12.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left13.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left13.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left14.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left14.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left15.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left15.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left16.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left16.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left17.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left17.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left18.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left18.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left19.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left19.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left2.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left20.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left20.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left3.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left4.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left4.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left5.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left5.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left6.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left6.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left7.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left7.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left8.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left8.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left9.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_left9.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right0.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right0.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right1.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right10.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right10.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right11.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right11.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right12.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right12.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right13.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right13.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right14.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right14.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right15.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right15.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right16.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right16.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right17.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right17.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right18.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right18.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right19.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right19.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right2.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right20.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right20.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right3.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right4.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right4.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right5.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right5.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right6.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right6.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right7.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right7.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right8.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right8.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right9.png" beforeDir="false" afterPath="$PROJECT_DIR$/gui/assets/images/Player3d/turn_right9.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gui/gui.go" beforeDir="false" afterPath="$PROJECT_DIR$/gui/gui.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gui/input.go" beforeDir="false" afterPath="$PROJECT_DIR$/gui/input.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gui/loader.go" beforeDir="false" afterPath="$PROJECT_DIR$/gui/loader.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gui/logic.go" beforeDir="false" afterPath="$PROJECT_DIR$/gui/logic.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -39,8 +76,8 @@
           <file leaf-file-name="gui.go" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/gui/gui.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="991">
-                  <caret line="910" lean-forward="true" selection-start-line="910" selection-end-line="910" />
+                <state relative-caret-position="527">
+                  <caret line="211" column="1" selection-start-line="211" selection-start-column="1" selection-end-line="211" selection-end-column="1" />
                   <folding>
                     <element signature="e#230#272#0" />
                     <element signature="e#288#419#0" />
@@ -59,6 +96,7 @@
                     <element signature="n#!!block;n#DrawMenu#0" />
                     <element signature="n#!!block;n#DrawStartScreen#0" />
                     <element signature="n#!!block;n#drawFps#0" />
+                    <element signature="n#!!block;n#DrawUiElements#0" />
                     <element signature="n#!!block;n#DrawPlayer#0" />
                     <element signature="n#!!block;n#DrawEnemies#0" />
                     <element signature="n#!!block;n#DrawExplosions#0" />
@@ -85,7 +123,7 @@
             <entry file="file://$PROJECT_DIR$/gui/input.go">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="141">
-                  <caret line="69" column="21" lean-forward="true" selection-start-line="69" selection-start-column="21" selection-end-line="69" selection-end-column="21" />
+                  <caret line="69" column="21" selection-start-line="69" selection-start-column="21" selection-end-line="69" selection-end-column="21" />
                   <folding>
                     <element signature="e#13#95#0" expanded="true" />
                   </folding>
@@ -97,7 +135,7 @@
             <entry file="file://$PROJECT_DIR$/gui/loader.go">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="2499">
-                  <caret line="152" column="28" lean-forward="true" selection-start-line="152" selection-start-column="28" selection-end-line="152" selection-end-column="28" />
+                  <caret line="152" column="28" selection-start-line="152" selection-start-column="28" selection-end-line="152" selection-end-column="28" />
                 </state>
               </provider>
             </entry>
@@ -122,7 +160,7 @@
             <entry file="file://$PROJECT_DIR$/game/bullet.go">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="459">
-                  <caret line="27" column="17" lean-forward="true" selection-start-line="27" selection-start-column="17" selection-end-line="27" selection-end-column="17" />
+                  <caret line="27" column="17" selection-start-line="27" selection-start-column="17" selection-end-line="27" selection-end-column="17" />
                 </state>
               </provider>
             </entry>
@@ -131,7 +169,7 @@
             <entry file="file://$PROJECT_DIR$/game/levels.go">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="459">
-                  <caret line="27" column="39" lean-forward="true" selection-start-line="27" selection-start-column="39" selection-end-line="27" selection-end-column="39" />
+                  <caret line="27" column="39" selection-start-line="27" selection-start-column="39" selection-end-line="27" selection-end-column="39" />
                 </state>
               </provider>
             </entry>
@@ -140,7 +178,7 @@
             <entry file="file://$PROJECT_DIR$/game/game.go">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="17">
-                  <caret line="13" column="1" lean-forward="true" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
+                  <caret line="13" column="1" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
                   <folding>
                     <element signature="e#14#72#0" expanded="true" />
                   </folding>
@@ -172,7 +210,7 @@
           <file leaf-file-name="player.go" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/game/player.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="374">
+                <state relative-caret-position="498">
                   <caret line="49" column="29" selection-start-line="49" selection-start-column="29" selection-end-line="49" selection-end-column="29" />
                 </state>
               </provider>
@@ -233,9 +271,9 @@
         <option value="$PROJECT_DIR$/gui/input.go" />
         <option value="$PROJECT_DIR$/game/levels.go" />
         <option value="$PROJECT_DIR$/game/enemy.go" />
+        <option value="$PROJECT_DIR$/gui/logic.go" />
         <option value="$PROJECT_DIR$/gui/gui.go" />
         <option value="$PROJECT_DIR$/game/player.go" />
-        <option value="$PROJECT_DIR$/gui/logic.go" />
       </list>
     </option>
   </component>
@@ -298,7 +336,7 @@
               <item name="gui" type="462c0819:PsiDirectoryNode" />
               <item name="assets" type="462c0819:PsiDirectoryNode" />
               <item name="images" type="462c0819:PsiDirectoryNode" />
-              <item name="Power-ups" type="462c0819:PsiDirectoryNode" />
+              <item name="Player3d" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -483,9 +521,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/gui/assets/images/Power-ups/pill_blue.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/gui/assets/images/Power-ups/shield_bronze.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
@@ -617,7 +652,7 @@
     <entry file="file://$PROJECT_DIR$/game/levels.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="459">
-          <caret line="27" column="39" lean-forward="true" selection-start-line="27" selection-start-column="39" selection-end-line="27" selection-end-column="39" />
+          <caret line="27" column="39" selection-start-line="27" selection-start-column="39" selection-end-line="27" selection-end-column="39" />
         </state>
       </provider>
     </entry>
@@ -634,24 +669,17 @@
     <entry file="file://$PROJECT_DIR$/game/bullet.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="459">
-          <caret line="27" column="17" lean-forward="true" selection-start-line="27" selection-start-column="17" selection-end-line="27" selection-end-column="17" />
+          <caret line="27" column="17" selection-start-line="27" selection-start-column="17" selection-end-line="27" selection-end-column="17" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/game/game.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
-          <caret line="13" column="1" lean-forward="true" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
+          <caret line="13" column="1" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
           <folding>
             <element signature="e#14#72#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/game/player.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="49" column="29" selection-start-line="49" selection-start-column="29" selection-end-line="49" selection-end-column="29" />
         </state>
       </provider>
     </entry>
@@ -665,24 +693,34 @@
     <entry file="file://$PROJECT_DIR$/gui/loader.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2499">
-          <caret line="152" column="28" lean-forward="true" selection-start-line="152" selection-start-column="28" selection-end-line="152" selection-end-column="28" />
+          <caret line="152" column="28" selection-start-line="152" selection-start-column="28" selection-end-line="152" selection-end-column="28" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gui/input.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="141">
-          <caret line="69" column="21" lean-forward="true" selection-start-line="69" selection-start-column="21" selection-end-line="69" selection-end-column="21" />
+          <caret line="69" column="21" selection-start-line="69" selection-start-column="21" selection-end-line="69" selection-end-column="21" />
           <folding>
             <element signature="e#13#95#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/gui/assets/images/Player3d/player.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game/player.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="498">
+          <caret line="49" column="29" selection-start-line="49" selection-start-column="29" selection-end-line="49" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/gui/gui.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="991">
-          <caret line="910" lean-forward="true" selection-start-line="910" selection-end-line="910" />
+        <state relative-caret-position="527">
+          <caret line="211" column="1" selection-start-line="211" selection-start-column="1" selection-end-line="211" selection-end-column="1" />
           <folding>
             <element signature="e#230#272#0" />
             <element signature="e#288#419#0" />
@@ -701,6 +739,7 @@
             <element signature="n#!!block;n#DrawMenu#0" />
             <element signature="n#!!block;n#DrawStartScreen#0" />
             <element signature="n#!!block;n#drawFps#0" />
+            <element signature="n#!!block;n#DrawUiElements#0" />
             <element signature="n#!!block;n#DrawPlayer#0" />
             <element signature="n#!!block;n#DrawEnemies#0" />
             <element signature="n#!!block;n#DrawExplosions#0" />

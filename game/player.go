@@ -38,7 +38,7 @@ func (level *Level) InitPlayer(isNewPlayer bool) {
 		player.Points = 0
 		player.Speed = 800.0
 		player.FireRateTimer = 0
-		player.FireRateResetValue = 50
+		player.FireRateResetValue = 35
 		player.AtBottom = false
 		player.AtLeft = false
 		player.AtRight = false

@@ -908,7 +908,7 @@ func (ui *ui) DrawGameOver(level *game.Level) {
 	}
 	ui.renderer.Copy(tex, nil, &sdl.Rect{int32(ui.WinWidth/2) - w/2, int32(ui.WinHeight/2) - h/2, w, h})
 }
-d
+
 // Remember to always draw from the ground up
 func (ui *ui) Draw(level *game.Level, deltaTime uint32) {
 	ui.renderer.Clear()
