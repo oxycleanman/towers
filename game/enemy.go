@@ -65,7 +65,11 @@ func (level *Level) InitEnemy(initX, initY float64, spawnType int, texName strin
 		enemy.SpinSpeed = 5
 		enemy.CanFire = false
 		enemy.IsMeteor = true
-		enemy.IsFractured = isFractured
+		if strings.Contains(enemy.TextureName, "small") {
+			enemy.IsFractured = true
+		} else {
+			enemy.IsFractured = isFractured
+		}
 		break
 	case 1:
 		enemy.TextureName = texName

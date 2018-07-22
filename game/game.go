@@ -145,6 +145,7 @@ func (game *Game) handleInput(input *Input) {
 			break
 		case FirePrimary:
 			game.Level.Player.IsFiring = false
+			game.Level.Player.FireRateTimer = 0
 			break
 		default:
 			//fmt.Println("Some input not pressed")

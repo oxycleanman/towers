@@ -76,6 +76,7 @@ type ui struct {
 	fontTextureMap               map[string]*sdl.Texture
 	largeFontTextureMap          map[string]*sdl.Texture
 	soundFileMap                 map[string]*mix.Chunk
+	musicFileMap map[string]*mix.Music
 	clickableElementMap          map[string]*uiButton
 	uiFarBackgroundElements      []*uiElement
 	uiNearBackgroundElements     []*uiElement
@@ -114,6 +115,7 @@ const (
 	largeFontSize      = 60
 	texturePath        = "gui/assets/images/"
 	soundFilePath      = "gui/assets/sounds/"
+	musicFilePath      = "gui/assets/music/"
 	fontPath           = "gui/assets/fonts/kenvector_future.ttf"
 	gameTitle          = "Some Shitty Space Game"
 )
@@ -134,7 +136,7 @@ func init() {
 	if err := mix.Init(mix.INIT_OGG); err != nil {
 		panic(err)
 	}
-	mix.AllocateChannels(16)
+	mix.AllocateChannels(32)
 }
 
 func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
@@ -172,6 +174,7 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 	ui.fontTextureMap = make(map[string]*sdl.Texture)
 	ui.largeFontTextureMap = make(map[string]*sdl.Texture)
 	ui.soundFileMap = make(map[string]*mix.Chunk)
+	ui.musicFileMap = make(map[string]*mix.Music)
 	ui.clickableElementMap = make(map[string]*uiButton)
 	ui.playerInit = false
 	ui.mapMoveTimer = 0
@@ -187,11 +190,10 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 	// Load Assets
 	ui.loadTextures(texturePath)
 	ui.loadSounds(soundFilePath)
+	ui.loadMusic(musicFilePath)
 
 	return ui
 }
-
-// TODO: Add draw func and logic to add Power-Ups
 
 func (ui *ui) DrawBackground(deltaTime uint32) {
 	// TODO: Draw better background to create illusion of motion
@@ -274,7 +276,7 @@ func (ui *ui) DrawGameTitle() {
 }
 
 func (ui *ui) drawFps() {
-	if ui.updateFps {
+	if ui.updateFps || ui.fpsTexture == nil {
 		fpsTex := ui.stringToNormalFontTexture(strconv.Itoa(int(ui.fps))+" FPS", sdl.Color{255, 255, 255, 1})
 		ui.fpsTexture = fpsTex
 	}
@@ -537,7 +539,6 @@ func (ui *ui) DrawPlayer(level *game.Level, deltaTime uint32) {
 		level.Player.Texture = tex
 		_, _, w, h, err := tex.Query()
 		if err != nil {
-			fmt.Println("ERROR: Invalid Texture:", level.Player.TextureName)
 			panic(err)
 		}
 		level.Player.BoundBox.W = w / 2
@@ -560,7 +561,11 @@ func (ui *ui) DrawPlayer(level *game.Level, deltaTime uint32) {
 			if !strings.Contains(player.TextureName, "left") {
 				// Play the turn right animation for the player
 				if int(player.AnimationCounter) <= player.TurnAnimationCounter && !player.TurnAnimationPlayed {
-					player.TextureName = "turn_right" + strconv.Itoa(int(player.AnimationCounter))
+					if player.LaserLevel > 1 {
+						player.TextureName = "turn_right_guns" + strconv.Itoa(int(player.AnimationCounter))
+					} else {
+						player.TextureName = "turn_right" + strconv.Itoa(int(player.AnimationCounter))
+					}
 					player.AnimationCounter += ui.AnimationSpeed * deltaTimeS
 				} else {
 					player.AnimationCounter = 0
@@ -568,20 +573,37 @@ func (ui *ui) DrawPlayer(level *game.Level, deltaTime uint32) {
 				}
 			}
 		} else {
-			if !(player.TextureName == "player") && !strings.Contains(player.TextureName, "left") {
+			if !(player.TextureName == "player" || player.TextureName == "player_guns") && !strings.Contains(player.TextureName, "left") {
 				// Player texture is somewhere in the turn right animation, reverse it
-				n, err := strconv.Atoi(strings.Replace(player.TextureName, "turn_right", "", 1))
-				if err != nil {
-					panic(err)
+				var n int
+				var err error
+				if player.LaserLevel > 1 && strings.Contains(player.TextureName, "guns") {
+					n, err = strconv.Atoi(strings.Replace(player.TextureName, "turn_right_guns", "", 1))
+					if err != nil {
+						panic(err)
+					}
+				} else {
+					n, err = strconv.Atoi(strings.Replace(player.TextureName, "turn_right", "", 1))
+					if err != nil {
+						panic(err)
+					}
 				}
 				if player.ReverseAnimationCounter == 0 {
 					player.ReverseAnimationCounter = float64(n)
 				}
 				if int(player.ReverseAnimationCounter) >= 0 {
-					player.TextureName = "turn_right" + strconv.Itoa(int(player.ReverseAnimationCounter))
+					if player.LaserLevel > 1 && strings.Contains(player.TextureName, "guns") {
+						player.TextureName = "turn_right_guns" + strconv.Itoa(int(player.ReverseAnimationCounter))
+					} else {
+						player.TextureName = "turn_right" + strconv.Itoa(int(player.ReverseAnimationCounter))
+					}
 					player.ReverseAnimationCounter -= 100 * deltaTimeS
 				} else {
-					player.TextureName = "player"
+					if player.LaserLevel > 1 {
+						player.TextureName = "player_guns"
+					} else {
+						player.TextureName = "player"
+					}
 					player.ReverseAnimationCounter = 0
 					player.AnimationCounter = 1
 					player.TurnAnimationPlayed = false
@@ -592,7 +614,11 @@ func (ui *ui) DrawPlayer(level *game.Level, deltaTime uint32) {
 			if !strings.Contains(player.TextureName, "right") {
 				// Play the turn right animation for the player
 				if int(player.AnimationCounter) <= player.TurnAnimationCounter && !player.TurnAnimationPlayed {
-					player.TextureName = "turn_left" + strconv.Itoa(int(player.AnimationCounter))
+					if player.LaserLevel > 1 {
+						player.TextureName = "turn_left_guns" + strconv.Itoa(int(player.AnimationCounter))
+					} else {
+						player.TextureName = "turn_left" + strconv.Itoa(int(player.AnimationCounter))
+					}
 					player.AnimationCounter += ui.AnimationSpeed * deltaTimeS
 				} else {
 					player.AnimationCounter = 0
@@ -600,27 +626,44 @@ func (ui *ui) DrawPlayer(level *game.Level, deltaTime uint32) {
 				}
 			}
 		} else {
-			if !(player.TextureName == "player") && !strings.Contains(player.TextureName, "right") {
+			if !(player.TextureName == "player" || player.TextureName == "player_guns") && !strings.Contains(player.TextureName, "right") {
 				// Player texture is somewhere in the turn right animation, reverse it
-				n, err := strconv.Atoi(strings.Replace(player.TextureName, "turn_left", "", 1))
-				if err != nil {
-					panic(err)
+				var n int
+				var err error
+				if player.LaserLevel > 1 && strings.Contains(player.TextureName, "guns") {
+					n, err = strconv.Atoi(strings.Replace(player.TextureName, "turn_left_guns", "", 1))
+					if err != nil {
+						panic(err)
+					}
+				} else {
+					n, err = strconv.Atoi(strings.Replace(player.TextureName, "turn_left", "", 1))
+					if err != nil {
+						panic(err)
+					}
 				}
 				if player.ReverseAnimationCounter == 0 {
 					player.ReverseAnimationCounter = float64(n)
 				}
 				if int(player.ReverseAnimationCounter) >= 0 {
-					player.TextureName = "turn_left" + strconv.Itoa(int(player.ReverseAnimationCounter))
+					if player.LaserLevel > 1 && strings.Contains(player.TextureName, "guns") {
+						player.TextureName = "turn_left_guns" + strconv.Itoa(int(player.ReverseAnimationCounter))
+					} else {
+						player.TextureName = "turn_left" + strconv.Itoa(int(player.ReverseAnimationCounter))
+					}
 					player.ReverseAnimationCounter -= 100 * deltaTimeS
 				} else {
-					player.TextureName = "player"
+					if player.LaserLevel > 1 {
+						player.TextureName = "player_guns"
+					} else {
+						player.TextureName = "player"
+					}
 					player.ReverseAnimationCounter = 0
 					player.AnimationCounter = 1
 					player.TurnAnimationPlayed = false
 				}
 			}
 		}
-		if player.TurnAnimationPlayed && player.TextureName == "player" {
+		if player.TurnAnimationPlayed && (player.TextureName == "player" || player.TextureName == "player_guns") {
 			player.TurnAnimationPlayed = false
 		}
 		player.Texture = ui.textureMap[player.TextureName]
@@ -743,6 +786,8 @@ func (ui *ui) DrawEnemies(level *game.Level, deltaTime uint32) {
 }
 
 func (ui *ui) DrawExplosions(level *game.Level, deltaTime uint32) {
+	// TODO: Add special explosion for power up pickups
+
 	deltaTimeS := float64(deltaTime) / 1000
 	index := 0
 
@@ -817,28 +862,29 @@ func (ui *ui) DrawBullet(level *game.Level, deltaTime uint32) {
 		tex := bullet.Texture
 		bullet.BoundBox.X = int32(bullet.X)
 		bullet.BoundBox.Y = int32(bullet.Y)
+		// TODO: Rework fire animation so it works with multiple lasers on player
 		// Fire Animation
-		if bullet.FlashCounter < 5 && !bullet.FireAnimationPlayed {
-			fireTex := ui.textureMap[explosionTexture]
-			_, _, w, h, err := fireTex.Query()
-			if err != nil {
-				panic(err)
-			}
-			var posX, posY float64
-			if bullet.FiredByEnemy {
-				posX = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2-w/4)
-				posY = bullet.FiredBy.Y + float64(bullet.FiredBy.BoundBox.H/2-h/4) + bullet.FiredBy.FireOffsetY
-			} else {
-				posX = (bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2)) - float64(w/4)
-				posY = (bullet.FiredBy.Y + float64(bullet.FiredBy.BoundBox.H/2)) - float64(h/4) - bullet.FiredBy.FireOffsetY
-			}
-			ui.renderer.Copy(fireTex, nil, &sdl.Rect{int32(posX), int32(posY), w / 2, h / 2})
-			bullet.FlashCounter += ui.AnimationSpeed * deltaTimeS
-		}
-		if bullet.FlashCounter >= 5 && !bullet.FireAnimationPlayed {
-			bullet.FlashCounter = 0
-			bullet.FireAnimationPlayed = true
-		}
+		//if bullet.FlashCounter < 5 && !bullet.FireAnimationPlayed {
+		//	fireTex := ui.textureMap[explosionTexture]
+		//	_, _, w, h, err := fireTex.Query()
+		//	if err != nil {
+		//		panic(err)
+		//	}
+		//	var posX, posY float64
+		//	if bullet.FiredByEnemy {
+		//		posX = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2-w/4)
+		//		posY = bullet.FiredBy.Y + float64(bullet.FiredBy.BoundBox.H/2-h/4) + bullet.FiredBy.FireOffsetY
+		//	} else {
+		//		posX = (bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2)) - float64(w/4)
+		//		posY = (bullet.FiredBy.Y + float64(bullet.FiredBy.BoundBox.H/2)) - float64(h/4) - bullet.FiredBy.FireOffsetY
+		//	}
+		//	ui.renderer.Copy(fireTex, nil, &sdl.Rect{int32(posX), int32(posY), w / 2, h / 2})
+		//	bullet.FlashCounter += ui.AnimationSpeed * deltaTimeS
+		//}
+		//if bullet.FlashCounter >= 5 && !bullet.FireAnimationPlayed {
+		//	bullet.FlashCounter = 0
+		//	bullet.FireAnimationPlayed = true
+		//}
 
 		// Collision Animation && Normal Travel
 		if bullet.ExplodeCounter < 5 && bullet.IsColliding && !bullet.DestroyAnimationPlayed {
@@ -929,7 +975,7 @@ func (ui *ui) Draw(level *game.Level, deltaTime uint32) {
 		ui.DrawUiElements(level)
 		ui.DrawMenu()
 		ui.DrawCursor()
-		//ui.drawFps()
+		ui.drawFps()
 	} else {
 		ui.DrawGameTitle()
 		ui.DrawUiElements(level)
@@ -984,7 +1030,7 @@ func (ui *ui) Run() {
 				return
 			case *sdl.KeyboardEvent:
 				input := determineInputType(e)
-				if !ui.paused && !ui.gameOver {
+				if !ui.paused && !ui.gameOver && ui.gameStarted {
 					ui.inputChan <- input
 				}
 				break
@@ -1004,7 +1050,7 @@ func (ui *ui) Run() {
 			}
 		}
 
-		if !ui.paused {
+		if !ui.paused && ui.gameStarted {
 			ui.Update(level, deltaTime)
 		}
 

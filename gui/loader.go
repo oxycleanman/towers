@@ -52,6 +52,27 @@ func (ui *ui) loadSounds(dirName string) {
 	}
 }
 
+func (ui *ui) loadMusic(dirName string) {
+	files, err := ioutil.ReadDir(dirName)
+	if err != nil {
+		panic(err)
+	}
+	for _, file := range files {
+		if file.IsDir() {
+			newFilepath := dirName + "/" + file.Name() + "/"
+			ui.loadSounds(newFilepath)
+		} else {
+			filename := file.Name()[:len(file.Name())-4]
+			filepath := dirName + "/" + file.Name()
+			music, err := mix.LoadMUS(filepath)
+			if err != nil {
+				panic(err)
+			}
+			ui.musicFileMap[filename] = music
+		}
+	}
+}
+
 func (ui *ui) loadUiElements() {
 	// Load Buttons
 	{

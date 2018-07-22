@@ -40,6 +40,10 @@ func (ui *ui) openCloseMenu() {
 
 func (ui *ui) startGame() {
 	ui.gameStarted = !ui.gameStarted
+	backgroundMusic := ui.musicFileMap["track1"]
+	// TODO: Music volume should be adjustable through the menu
+	mix.VolumeMusic(50)
+	backgroundMusic.Play(100)
 }
 
 func (ui *ui) SpawnEnemies(level *game.Level, deltaTime uint32) {
@@ -52,8 +56,8 @@ func (ui *ui) SpawnEnemies(level *game.Level, deltaTime uint32) {
 			texName = "0000"
 			//texName = ui.enemyTextureNames[ui.randNumGen.Intn(len(ui.enemyTextureNames))]
 		} else {
-			//texName = ui.meteorTextureNames[ui.randNumGen.Intn(len(ui.meteorTextureNames))]
-			texName = "meteor_large1"
+			texName = ui.meteorTextureNames[ui.randNumGen.Intn(len(ui.meteorTextureNames))]
+			//texName = "meteor_large1"
 		}
 		level.Enemies = append(level.Enemies, level.InitEnemy(spawnX, -100, enemyOrMeteor, texName, false, game.Empty))
 		level.EnemySpawnTimer = 0
@@ -68,6 +72,7 @@ func (ui *ui) SpawnPowerUps(level *game.Level, deltaTime uint32) {
 	if level.PowerUpSpawnTimer >= level.PowerUpSpawnFrequency && len(level.Enemies) < level.MaxNumberEnemies {
 		spawnX := float64(ui.randNumGen.Intn(int(ui.WinWidth)))
 		randPowerUp := game.PowerUpType(ui.randNumGen.Intn(4))
+		//randPowerUp := game.PowerUpType(2)
 		var texName string
 		switch randPowerUp {
 		case game.Health:
@@ -129,21 +134,22 @@ func (ui *ui) CheckFiring(level *game.Level, entity game.Shooter, deltaTime uint
 				bullet.FiredBy = entity.GetSelf()
 				bullet.Direction = bullet.FiredBy.Direction
 				// Correctly draw single, double, and triple lasers
+				// Offsets used here are to line up lasers with upgraded guns (+0.53, +0.49, etc.)
 				if level.Player.LaserLevel == 1 {
 					bullet.X = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2-bullet.BoundBox.W/2)
 				} else if level.Player.LaserLevel == 2 {
 					if i == 0 {
-						bullet.X = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2-bullet.BoundBox.W/2) * (float64(i) + 0.5)
+						bullet.X = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2-bullet.BoundBox.W/2) * (float64(i) + 0.53)
 					} else {
-						bullet.X = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2-bullet.BoundBox.W/2) * (float64(i) + 0.5)
+						bullet.X = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2-bullet.BoundBox.W/2) * (float64(i) + 0.49)
 					}
 				} else {
 					if i == 0 {
 						bullet.X = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2-bullet.BoundBox.W/2)
 					} else if i == 1 {
-						bullet.X = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2-bullet.BoundBox.W/2)*(float64(i)+0.5)
+						bullet.X = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2-bullet.BoundBox.W/2)*(float64(i) + 0.49)
 					} else {
-						bullet.X = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2-bullet.BoundBox.W/2)*(float64(i)-1.5)
+						bullet.X = bullet.FiredBy.X + float64(bullet.FiredBy.BoundBox.W/2-bullet.BoundBox.W/2)*(float64(i) - 1.475)
 					}
 				}
 				bullet.Y = bullet.FiredBy.Y + float64(bullet.FiredBy.BoundBox.H/2-bullet.BoundBox.H/2)
@@ -211,7 +217,7 @@ func (ui *ui) checkCollisions(level *game.Level) {
 	// Bullet Collisions
 	for _, bullet := range level.Bullets {
 		if !bullet.IsColliding {
-			if !bullet.FiredByEnemy {
+			if !bullet.FiredByEnemy { // Player Bullets hitting enemies
 				for _, enemy := range level.Enemies {
 					if !enemy.IsDestroyed && !enemy.IsPowerUp {
 						if enemy.BoundBox.HasIntersection(bullet.BoundBox) {
@@ -233,7 +239,7 @@ func (ui *ui) checkCollisions(level *game.Level) {
 						}
 					}
 				}
-			} else {
+			} else { // Enemy bullets hitting player
 				if level.Player.BoundBox.HasIntersection(bullet.BoundBox) && !level.Player.IsDestroyed {
 					bullet.IsColliding = true
 					if level.Player.ShieldHitpoints > 0 {
@@ -254,7 +260,7 @@ func (ui *ui) checkCollisions(level *game.Level) {
 		for _, enemy := range level.Enemies {
 			if !enemy.IsDestroyed {
 				if enemy.BoundBox.HasIntersection(level.Player.BoundBox) {
-					if !enemy.IsBoss && !enemy.IsPowerUp {
+					if !enemy.IsBoss && !enemy.IsPowerUp { // Normal enemy, not boss or power up
 						enemy.Hitpoints = 0
 						enemy.IsDestroyed = true
 						if level.Player.ShieldHitpoints > 0 {
@@ -267,7 +273,7 @@ func (ui *ui) checkCollisions(level *game.Level) {
 						if level.Player.Hitpoints <= 0 {
 							level.Player.IsDestroyed = true
 						}
-					} else if !enemy.IsBoss && enemy.IsPowerUp {
+					} else if !enemy.IsBoss && enemy.IsPowerUp { // Power Up
 						enemy.Hitpoints = 0
 						enemy.IsDestroyed = true
 						enemy.DestroyedAnimationPlayed = true
@@ -285,6 +291,11 @@ func (ui *ui) checkCollisions(level *game.Level) {
 						case game.Laser:
 							if !(level.Player.LaserLevel == 3) {
 								level.Player.LaserLevel++
+								if level.Player.TextureName == "player" {
+									level.Player.TextureName = "player_guns"
+								}
+								weaponUpgradeSound := ui.soundFileMap["weapload"]
+								weaponUpgradeSound.Play(-1, 0)
 							}
 							break
 						case game.Shield:
@@ -294,7 +305,7 @@ func (ui *ui) checkCollisions(level *game.Level) {
 							}
 							break
 						}
-					} else {
+					} else { // Enemy is a boss, kill player
 						level.Player.Hitpoints = 0
 						level.Player.IsDestroyed = true
 					}
@@ -302,8 +313,6 @@ func (ui *ui) checkCollisions(level *game.Level) {
 			}
 		}
 	}
-
-	// Player collisions with power-ups
 }
 
 func (ui *ui) checkPlayerDeath(level *game.Level) {
