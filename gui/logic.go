@@ -276,7 +276,7 @@ func (ui *ui) checkCollisions(level *game.Level) {
 					} else if !enemy.IsBoss && enemy.IsPowerUp { // Power Up
 						enemy.Hitpoints = 0
 						enemy.IsDestroyed = true
-						enemy.DestroyedAnimationPlayed = true
+						//enemy.DestroyedAnimationPlayed = true
 						level.Player.Points += enemy.PointValue
 						switch enemy.PowerUpType {
 						case game.Health:

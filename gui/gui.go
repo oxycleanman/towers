@@ -793,7 +793,7 @@ func (ui *ui) DrawExplosions(level *game.Level, deltaTime uint32) {
 
 	// Draw Enemy explosions
 	for _, enemy := range level.Enemies {
-		if enemy.IsDestroyed && !enemy.DestroyedAnimationPlayed {
+		if !enemy.IsPowerUp && enemy.IsDestroyed && !enemy.DestroyedAnimationPlayed {
 			if !enemy.DestroyedSoundPlayed {
 				explosionSound := "boom" + strconv.Itoa(int(ui.randNumGen.Intn(9)+1))
 				enemyDestroyedSound := ui.soundFileMap[explosionSound]
@@ -815,6 +815,37 @@ func (ui *ui) DrawExplosions(level *game.Level, deltaTime uint32) {
 				enemy.DestroyedAnimationPlayed = true
 			}
 			// WHY DOES THIS NOT WORK THE SAME AS THE BULLETS???!!!
+			if !enemy.DestroyedAnimationPlayed {
+				level.Enemies[index] = enemy
+				index++
+			}
+		} else if enemy.IsPowerUp && enemy.IsDestroyed && !enemy.DestroyedAnimationPlayed {
+			if !enemy.DestroyedAnimationPlayed && enemy.DestroyedAnimationCounter <= 100 {
+				enemy.DestroyedAnimationCounter += ui.AnimationSpeed * deltaTimeS
+				var pickUpText string
+				switch enemy.PowerUpType {
+				case game.Health:
+					pickUpText = "+ Health"
+					break
+				case game.Life:
+					pickUpText = "Extra Life"
+					break
+				case game.Laser:
+					pickUpText = "Weapon Upgrade"
+					break
+				case game.Shield:
+					pickUpText = "+ Shield"
+					break
+				}
+				textTexture := ui.stringToNormalFontTexture(pickUpText, sdl.Color{255, 255, 255, 1})
+				_, _, w, h, err := textTexture.Query()
+				if err != nil {
+					panic(err)
+				}
+				ui.renderer.Copy(textTexture, nil, &sdl.Rect{enemy.BoundBox.X - w/2, enemy.BoundBox.Y - h/2, w, h})
+			} else {
+				enemy.DestroyedAnimationPlayed = true
+			}
 			if !enemy.DestroyedAnimationPlayed {
 				level.Enemies[index] = enemy
 				index++
@@ -926,6 +957,9 @@ func (ui *ui) DrawLevelComplete(level *game.Level) {
 		if !enemy.IsDestroyed {
 			enemy.Hitpoints = 0
 			enemy.IsDestroyed = true
+			if enemy.IsPowerUp {
+				enemy.DestroyedAnimationPlayed = true
+			}
 		}
 	}
 	level.Bullets = nil

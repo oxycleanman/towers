@@ -1,8 +1,8 @@
 package game
 
 import (
-	"strings"
 	"github.com/veandco/go-sdl2/sdl"
+	"strings"
 )
 
 type PowerUpType int
