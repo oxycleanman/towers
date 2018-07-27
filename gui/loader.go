@@ -5,6 +5,7 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 	"io/ioutil"
 	"strings"
+	"strconv"
 )
 
 func (ui *ui) loadTextures(dirName string) {
@@ -74,6 +75,19 @@ func (ui *ui) loadMusic(dirName string) {
 }
 
 func (ui *ui) loadUiElements() {
+	// Load Menu
+	if ui.menu == nil {
+		ui.menu = &menu{}
+		ui.menu.texture = ui.textureMap["glassPanel_cornerBR"]
+		_, _, w, h, err := ui.menu.texture.Query()
+		if err != nil {
+			panic(err)
+		}
+		xPos := ui.WinWidth/2 - w*2
+		yPos := ui.WinHeight/2 - h*2
+		ui.menu.BoundBox = &sdl.Rect{int32(xPos), int32(yPos), w * 4, h * 4}
+	}
+
 	// Load Buttons
 	{
 		startButton := &uiButton{}
@@ -117,6 +131,7 @@ func (ui *ui) loadUiElements() {
 		pauseButton.textBoundBox = &sdl.Rect{int32(textX), int32(textY), tw, th}
 		pauseButton.onClick = ui.pause
 		pauseButton.showOnStartScreen = false
+		pauseButton.showOnMenu = true
 		ui.clickableElementMap["pauseButton"] = pauseButton
 	}
 	{
@@ -162,6 +177,7 @@ func (ui *ui) loadUiElements() {
 		muteButton.textBoundBox = &sdl.Rect{int32(textX), int32(textY), tw, th}
 		muteButton.onClick = ui.mute
 		muteButton.showOnStartScreen = false
+		muteButton.showOnMenu = true
 		ui.clickableElementMap["muteButton"] = muteButton
 	}
 
@@ -182,5 +198,45 @@ func (ui *ui) loadUiElements() {
 		line.BoundBox.X = int32(line.X)
 		line.BoundBox.Y = int32(line.Y)
 		ui.uiSpeedLines = append(ui.uiSpeedLines, line)
+	}
+
+	// Load various background elements
+	for i := 0; i < 5; i++ {
+		nearStarTextureName := "star" + strconv.Itoa(ui.randNumGen.Intn(3) + 1)
+		nearStarTexture := ui.textureMap[nearStarTextureName]
+		_, _, w, h, err = nearStarTexture.Query()
+		if err != nil {
+			panic(err)
+		}
+		nearStar := &uiElement{}
+		nearStar.texture = nearStarTexture
+		//nearStar.texture.SetColorMod(100, 100, 0)
+		nearStar.X = float64(ui.randNumGen.Intn(int(ui.WinWidth)))
+		nearStar.Y = -float64(ui.randNumGen.Intn(int(ui.WinHeight)))
+		nearStar.BoundBox = &sdl.Rect{}
+		nearStar.BoundBox.W = w*2
+		nearStar.BoundBox.H = h*2
+		nearStar.BoundBox.X = int32(nearStar.X)
+		nearStar.BoundBox.Y = int32(nearStar.Y)
+		ui.uiNearBackgroundElements = append(ui.uiNearBackgroundElements, nearStar)
+	}
+	for i := 0; i < 15; i++ {
+		starTextureName := "star" + strconv.Itoa(ui.randNumGen.Intn(3) + 1)
+		starTexture := ui.textureMap[starTextureName]
+		_, _, w, h, err := starTexture.Query()
+		if err != nil {
+			panic(err)
+		}
+		star := &uiElement{}
+		star.texture = starTexture
+		//star.texture.SetColorMod(50, 50, 0)
+		star.X = float64(ui.randNumGen.Intn(int(ui.WinWidth)))
+		star.Y = -float64(ui.randNumGen.Intn(int(ui.WinHeight)))
+		star.BoundBox = &sdl.Rect{}
+		star.BoundBox.W = w
+		star.BoundBox.H = h
+		star.BoundBox.X = int32(star.X)
+		star.BoundBox.Y = int32(star.Y)
+		ui.uiFarBackgroundElements = append(ui.uiFarBackgroundElements, star)
 	}
 }

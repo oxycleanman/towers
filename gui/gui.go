@@ -25,6 +25,7 @@ type uiButton struct {
 	onClick      func()
 	textTexture  *sdl.Texture
 	showOnStartScreen bool
+	showOnMenu bool
 }
 
 type cursor struct {
@@ -198,18 +199,31 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 func (ui *ui) DrawBackground(deltaTime uint32) {
 	// TODO: Draw better background to create illusion of motion
 	deltaTimeS := float64(deltaTime) / 1000
-	for _, line := range ui.uiSpeedLines {
-		if line.BoundBox.Y > ui.WinHeight {
+	for _, star := range ui.uiNearBackgroundElements {
+		if star.BoundBox.Y > ui.WinHeight {
 			spawnX := float64(ui.randNumGen.Intn(int(ui.WinWidth)))
 			spawnY := -float64(ui.randNumGen.Intn(int(ui.WinHeight)))
-			line.X = spawnX
-			line.Y = spawnY
+			star.X = spawnX
+			star.Y = spawnY
 		}
 		//This should be in Logic, not GUI (movement)
-		line.Y += 5 * ui.AnimationSpeed * deltaTimeS
-		line.BoundBox.X = int32(line.X)
-		line.BoundBox.Y = int32(line.Y)
-		ui.renderer.Copy(line.texture, nil, line.BoundBox)
+		star.Y += 10 * ui.AnimationSpeed * deltaTimeS
+		star.BoundBox.X = int32(star.X)
+		star.BoundBox.Y = int32(star.Y)
+		ui.renderer.Copy(star.texture, nil, star.BoundBox)
+	}
+	for _, star := range ui.uiFarBackgroundElements {
+		if star.BoundBox.Y > ui.WinHeight {
+			spawnX := float64(ui.randNumGen.Intn(int(ui.WinWidth)))
+			spawnY := -float64(ui.randNumGen.Intn(int(ui.WinHeight)))
+			star.X = spawnX
+			star.Y = spawnY
+		}
+		//This should be in Logic, not GUI (movement)
+		star.Y += 2 * ui.AnimationSpeed * deltaTimeS
+		star.BoundBox.X = int32(star.X)
+		star.BoundBox.Y = int32(star.Y)
+		ui.renderer.Copy(star.texture, nil, star.BoundBox)
 	}
 }
 
@@ -224,7 +238,7 @@ func (ui *ui) DrawSpeedLines(deltaTime uint32) {
 			line.Y = spawnY
 		}
 		//This should be in Logic, not GUI (movement)
-		line.Y += 5 * ui.AnimationSpeed * deltaTimeS
+		line.Y += 10 * ui.AnimationSpeed * deltaTimeS
 		line.BoundBox.X = int32(line.X)
 		line.BoundBox.Y = int32(line.Y)
 		ui.renderer.Copy(line.texture, nil, line.BoundBox)
@@ -249,17 +263,6 @@ func (ui *ui) DrawCursor() {
 }
 
 func (ui *ui) DrawMenu() {
-	if ui.menu == nil {
-		ui.menu = &menu{}
-		ui.menu.texture = ui.textureMap["glassPanel_cornerBR"]
-		_, _, w, h, err := ui.menu.texture.Query()
-		if err != nil {
-			panic(err)
-		}
-		xPos := ui.WinWidth/2 - w*2
-		yPos := ui.WinHeight/2 - h*2
-		ui.menu.BoundBox = &sdl.Rect{int32(xPos), int32(yPos), w * 4, h * 4}
-	}
 	if ui.menuOpen {
 		ui.renderer.Copy(ui.menu.texture, nil, ui.menu.BoundBox)
 	}

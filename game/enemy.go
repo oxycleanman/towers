@@ -43,7 +43,6 @@ func (enemy *Enemy) GetSelf() *Character {
 	return &enemy.Character
 }
 
-// TODO: Need an enemy factory of some kind here to generate different enemy types
 func (level *Level) InitEnemy(initX, initY float64, spawnType int, texName string, isFractured bool, powerUpType PowerUpType) *Enemy {
 	enemy := &Enemy{}
 	// spawnType 0 = meteor, 1 = enemy, >=2 = power up
