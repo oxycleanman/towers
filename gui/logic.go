@@ -4,27 +4,43 @@ import (
 	"github.com/oxycleanman/towers/game"
 	"github.com/veandco/go-sdl2/mix"
 	"strconv"
+	"github.com/veandco/go-sdl2/sdl"
 )
 
 func (ui *ui) mute() {
+	muteButton := ui.clickableElementMap["muteButton"]
 	if mix.Volume(-1, -1) > 0 {
 		mix.Volume(-1, 0)
 		ui.muted = true
-		ui.clickableElementMap["muteButton"].textTexture = ui.stringToNormalFontTexture("unmute", fontColor)
+		muteButton.textTexture = ui.stringToNormalFontTexture("unmute", fontColor)
+		_, _, w, h, err := muteButton.textTexture.Query()
+		if err != nil {
+			panic(err)
+		}
+		textX := muteButton.BoundBox.X + muteButton.BoundBox.W/2 - w/2
+		textY := muteButton.BoundBox.Y + muteButton.BoundBox.H/2 - h/2
+		muteButton.textBoundBox = &sdl.Rect{int32(textX), int32(textY), w, h}
 	} else {
 		mix.Volume(-1, 128)
 		ui.muted = false
-		ui.clickableElementMap["muteButton"].textTexture = ui.stringToNormalFontTexture("mute", fontColor)
+		muteButton.textTexture = ui.stringToNormalFontTexture("mute", fontColor)
+		_, _, w, h, err := muteButton.textTexture.Query()
+		if err != nil {
+			panic(err)
+		}
+		textX := muteButton.BoundBox.X + muteButton.BoundBox.W/2 - w/2
+		textY := muteButton.BoundBox.Y + muteButton.BoundBox.H/2 - h/2
+		muteButton.textBoundBox = &sdl.Rect{int32(textX), int32(textY), w, h}
 	}
 }
 
 func (ui *ui) pause() {
 	if !ui.paused {
 		ui.paused = true
-		ui.clickableElementMap["pauseButton"].textTexture = ui.stringToNormalFontTexture("unpause", fontColor)
+		//ui.clickableElementMap["pauseButton"].textTexture = ui.stringToNormalFontTexture("unpause", fontColor)
 	} else {
 		ui.paused = false
-		ui.clickableElementMap["pauseButton"].textTexture = ui.stringToNormalFontTexture("pause", fontColor)
+		//ui.clickableElementMap["pauseButton"].textTexture = ui.stringToNormalFontTexture("pause", fontColor)
 	}
 }
 

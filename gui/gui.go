@@ -503,23 +503,40 @@ func (ui *ui) DrawUiElements(level *game.Level) {
 	// Draw Clickable Elements
 	for _, element := range ui.clickableElementMap {
 		if ui.gameStarted && !element.showOnStartScreen {
-			if element.mouseOver && !element.clicked {
-				element.texture.SetBlendMode(sdl.BLENDMODE_ADD)
-				ui.renderer.Copy(element.texture, nil, element.BoundBox)
-			} else if element.clicked {
-				element.texture.SetBlendMode(sdl.BLENDMODE_BLEND)
-				element.texture.SetColorMod(220, 220, 220)
-				ui.renderer.CopyEx(element.texture, nil, element.BoundBox, 0, nil, sdl.FLIP_VERTICAL)
-			} else {
-				element.texture.SetColorMod(255, 255, 255)
-				element.texture.SetBlendMode(sdl.BLENDMODE_BLEND)
-				ui.renderer.Copy(element.texture, nil, element.BoundBox)
+			if ui.menuOpen && element.showOnMenu {
+				if element.mouseOver && !element.clicked {
+					element.texture.SetColorMod(240, 240, 240)
+					ui.renderer.Copy(element.texture, nil, element.BoundBox)
+				} else if element.clicked {
+					element.texture.SetBlendMode(sdl.BLENDMODE_BLEND)
+					element.texture.SetColorMod(220, 220, 220)
+					ui.renderer.CopyEx(element.texture, nil, element.BoundBox, 0, nil, sdl.FLIP_VERTICAL)
+				} else {
+					element.texture.SetColorMod(255, 255, 255)
+					element.texture.SetBlendMode(sdl.BLENDMODE_BLEND)
+					ui.renderer.Copy(element.texture, nil, element.BoundBox)
+				}
+				ui.renderer.Copy(element.textTexture, nil, element.textBoundBox)
 			}
-			ui.renderer.Copy(element.textTexture, nil, element.textBoundBox)
+			if !element.showOnMenu {
+				if element.mouseOver && !element.clicked {
+					element.texture.SetColorMod(240, 240, 240)
+					ui.renderer.Copy(element.texture, nil, element.BoundBox)
+				} else if element.clicked {
+					element.texture.SetBlendMode(sdl.BLENDMODE_BLEND)
+					element.texture.SetColorMod(220, 220, 220)
+					ui.renderer.CopyEx(element.texture, nil, element.BoundBox, 0, nil, sdl.FLIP_VERTICAL)
+				} else {
+					element.texture.SetColorMod(255, 255, 255)
+					element.texture.SetBlendMode(sdl.BLENDMODE_BLEND)
+					ui.renderer.Copy(element.texture, nil, element.BoundBox)
+				}
+				ui.renderer.Copy(element.textTexture, nil, element.textBoundBox)
+			}
 		}
 		if !ui.gameStarted && element.showOnStartScreen {
 			if element.mouseOver && !element.clicked {
-				element.texture.SetBlendMode(sdl.BLENDMODE_ADD)
+				element.texture.SetColorMod(240, 240, 240)
 				ui.renderer.Copy(element.texture, nil, element.BoundBox)
 			} else if element.clicked {
 				element.texture.SetBlendMode(sdl.BLENDMODE_BLEND)

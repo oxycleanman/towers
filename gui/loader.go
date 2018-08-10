@@ -111,29 +111,29 @@ func (ui *ui) loadUiElements() {
 		startButton.showOnStartScreen = true
 		ui.clickableElementMap["startButton"] = startButton
 	}
-	{
-		pauseButton := &uiButton{}
-		pauseButton.texture = ui.textureMap["buttonBlue"]
-		_, _, w, h, err := pauseButton.texture.Query()
-		if err != nil {
-			panic(err)
-		}
-		pauseButton.X = 20
-		pauseButton.Y = float64(ui.WinHeight - h - 20)
-		pauseButton.BoundBox = &sdl.Rect{int32(pauseButton.X), int32(pauseButton.Y), w, h}
-		pauseButton.textTexture = ui.stringToNormalFontTexture("pause", fontColor)
-		_, _, tw, th, err := pauseButton.textTexture.Query()
-		if err != nil {
-			panic(err)
-		}
-		textX := pauseButton.BoundBox.X + pauseButton.BoundBox.W/2 - tw/2
-		textY := pauseButton.BoundBox.Y + pauseButton.BoundBox.H/2 - th/2
-		pauseButton.textBoundBox = &sdl.Rect{int32(textX), int32(textY), tw, th}
-		pauseButton.onClick = ui.pause
-		pauseButton.showOnStartScreen = false
-		pauseButton.showOnMenu = true
-		ui.clickableElementMap["pauseButton"] = pauseButton
-	}
+	//{
+	//	pauseButton := &uiButton{}
+	//	pauseButton.texture = ui.textureMap["buttonBlue"]
+	//	_, _, w, h, err := pauseButton.texture.Query()
+	//	if err != nil {
+	//		panic(err)
+	//	}
+	//	pauseButton.X = 20
+	//	pauseButton.Y = float64(ui.WinHeight - h - 20)
+	//	pauseButton.BoundBox = &sdl.Rect{int32(pauseButton.X), int32(pauseButton.Y), w, h}
+	//	pauseButton.textTexture = ui.stringToNormalFontTexture("pause", fontColor)
+	//	_, _, tw, th, err := pauseButton.textTexture.Query()
+	//	if err != nil {
+	//		panic(err)
+	//	}
+	//	textX := pauseButton.BoundBox.X + pauseButton.BoundBox.W/2 - tw/2
+	//	textY := pauseButton.BoundBox.Y + pauseButton.BoundBox.H/2 - th/2
+	//	pauseButton.textBoundBox = &sdl.Rect{int32(textX), int32(textY), tw, th}
+	//	pauseButton.onClick = ui.pause
+	//	pauseButton.showOnStartScreen = false
+	//	pauseButton.showOnMenu = true
+	//	ui.clickableElementMap["pauseButton"] = pauseButton
+	//}
 	{
 		menuButton := &uiButton{}
 		menuButton.texture = ui.textureMap["buttonBlue"]
@@ -157,18 +157,17 @@ func (ui *ui) loadUiElements() {
 		ui.clickableElementMap["menuButton"] = menuButton
 	}
 	{
-		pauseButton := ui.clickableElementMap["pauseButton"]
 		muteButton := &uiButton{}
 		muteButton.texture = ui.textureMap["buttonRed"]
 		_, _, w, h, err := muteButton.texture.Query()
 		if err != nil {
 			panic(err)
 		}
-		muteButton.X = pauseButton.X + float64(pauseButton.BoundBox.W + 20)
-		muteButton.Y = float64(ui.WinHeight - h - 20)
+		muteButton.X = float64(ui.menu.BoundBox.X + ui.menu.BoundBox.W/2 - w/2)
+		muteButton.Y = float64(ui.menu.BoundBox.Y + 40)
 		muteButton.BoundBox = &sdl.Rect{int32(muteButton.X), int32(muteButton.Y), w, h}
 		muteButton.textTexture = ui.stringToNormalFontTexture("mute", fontColor)
-		_, _, tw, th, err := pauseButton.textTexture.Query()
+		_, _, tw, th, err := muteButton.textTexture.Query()
 		if err != nil {
 			panic(err)
 		}
