@@ -22,7 +22,7 @@ func (game *Game) getNewLevel(oldLevel *Level) *Level {
 	if oldLevel == nil {
 		newLevel.EnemyDifficultyMultiplier = 0.5
 		// Lower this number to increase spawn frequency
-		newLevel.EnemySpawnFrequency = 200
+		newLevel.EnemySpawnFrequency = 100
 		newLevel.PowerUpSpawnFrequency = 1200
 		newLevel.MaxNumberEnemies = 15
 		newLevel.PointsToComplete = 150

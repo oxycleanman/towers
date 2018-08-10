@@ -38,7 +38,7 @@ func (level *Level) InitPlayer(isNewPlayer bool) {
 		player.Points = 0
 		player.Speed = 800.0
 		player.FireRateTimer = 0
-		player.FireRateResetValue = 80
+		player.FireRateResetValue = 10
 		player.AtBottom = false
 		player.AtLeft = false
 		player.AtRight = false
@@ -48,7 +48,7 @@ func (level *Level) InitPlayer(isNewPlayer bool) {
 		player.IsAccelerating = false
 		player.Lives = 3
 		player.LaserLevel = 1
-		player.Strength = 10 * player.LaserLevel
+		player.Strength = 10
 		player.BoundBox = &sdl.Rect{}
 		level.Player = player
 	} else {

@@ -122,6 +122,9 @@ func (ui *ui) CheckFiring(level *game.Level, entity game.Shooter, deltaTime uint
 			texName = playerLaserTexture
 			laserFireSound = ui.soundFileMap[playerLaserSound]
 			for i := 0; i < int(level.Player.LaserLevel); i++ {
+				if i == 3 {
+					break
+				}
 				bullet := level.InitBullet(texName)
 				tex := ui.textureMap[bullet.TextureName]
 				bullet.Texture = tex
@@ -289,14 +292,13 @@ func (ui *ui) checkCollisions(level *game.Level) {
 							level.Player.Lives++
 							break
 						case game.Laser:
-							if !(level.Player.LaserLevel == 3) {
-								level.Player.LaserLevel++
-								if level.Player.TextureName == "player" {
-									level.Player.TextureName = "player_guns"
-								}
-								weaponUpgradeSound := ui.soundFileMap["weapload"]
-								weaponUpgradeSound.Play(-1, 0)
+							level.Player.LaserLevel++
+							level.Player.Strength += level.Player.LaserLevel
+							if level.Player.TextureName == "player" {
+								level.Player.TextureName = "player_guns"
 							}
+							weaponUpgradeSound := ui.soundFileMap["weapload"]
+							weaponUpgradeSound.Play(-1, 0)
 							break
 						case game.Shield:
 							level.Player.ShieldHitpoints += enemy.Strength
