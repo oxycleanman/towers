@@ -64,21 +64,27 @@ func (ui *ui) startGame() {
 
 func (ui *ui) SpawnEnemies(level *game.Level, deltaTime uint32) {
 	deltaTimeS := float64(deltaTime)/1000
-	if level.EnemySpawnTimer >= level.EnemySpawnFrequency && len(level.Enemies) < level.MaxNumberEnemies {
-		spawnX := float64(ui.randNumGen.Intn(int(ui.WinWidth)))
-		enemyOrMeteor := ui.randNumGen.Intn(2)
-		var texName string
-		if enemyOrMeteor == 1 {
-			texName = "0000"
-			//texName = ui.enemyTextureNames[ui.randNumGen.Intn(len(ui.enemyTextureNames))]
+	if level.Player.Points < level.PointsToComplete {
+		if level.EnemySpawnTimer >= level.EnemySpawnFrequency && len(level.Enemies) < level.MaxNumberEnemies {
+			spawnX := float64(ui.randNumGen.Intn(int(ui.WinWidth)))
+			enemyOrMeteor := ui.randNumGen.Intn(2)
+			var texName string
+			if enemyOrMeteor == 1 {
+				texName = "0000"
+				//texName = ui.enemyTextureNames[ui.randNumGen.Intn(len(ui.enemyTextureNames))]
+			} else {
+				texName = ui.meteorTextureNames[ui.randNumGen.Intn(len(ui.meteorTextureNames))]
+				//texName = "meteor_large1"
+			}
+			level.Enemies = append(level.Enemies, level.InitEnemy(spawnX, -100, enemyOrMeteor, texName, false, game.Empty))
+			level.EnemySpawnTimer = 0
 		} else {
-			texName = ui.meteorTextureNames[ui.randNumGen.Intn(len(ui.meteorTextureNames))]
-			//texName = "meteor_large1"
+			level.EnemySpawnTimer += ui.AnimationSpeed * deltaTimeS
 		}
-		level.Enemies = append(level.Enemies, level.InitEnemy(spawnX, -100, enemyOrMeteor, texName, false, game.Empty))
-		level.EnemySpawnTimer = 0
-	} else {
-		level.EnemySpawnTimer += ui.AnimationSpeed * deltaTimeS
+	} else if level.HasBoss && !level.BossSpawned {
+		spawnX := float64(ui.randNumGen.Intn(int(ui.WinWidth)))
+		level.Enemies = append(level.Enemies, level.InitEnemy(spawnX, -100, 3, "enemyBlue5", false, game.Empty))
+		level.BossSpawned = true
 	}
 }
 
@@ -127,7 +133,6 @@ func (ui *ui) UpdateEnemies(level *game.Level, deltaTime uint32) {
 	}
 }
 
-// TODO: Make it so that clicking fires as slow as holding down the mouse button (Fire Speed will be an upgrade)
 func (ui *ui) CheckFiring(level *game.Level, entity game.Shooter, deltaTime uint32) {
 	deltaTimeS := float64(deltaTime)/1000
 	timer, reset, isPlayer := entity.GetFireSettings()
@@ -245,11 +250,14 @@ func (ui *ui) checkCollisions(level *game.Level) {
 							if enemy.Hitpoints <= 0 {
 								enemy.IsDestroyed = true
 								level.Player.Points += enemy.PointValue
-								if level.Player.Points >= level.PointsToComplete {
+								if level.Player.Points >= level.PointsToComplete && !level.HasBoss {
 									level.Complete = true
 								}
 								if enemy.IsMeteor && !enemy.IsFractured {
 									ui.fractureMeteor(enemy, level)
+								}
+								if enemy.IsBoss {
+									level.Complete = true
 								}
 							}
 							bulletImpactSound := ui.soundFileMap[impactSound]

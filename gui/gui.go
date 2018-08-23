@@ -197,7 +197,6 @@ func NewUi(inputChan chan *game.Input, levelChan chan *game.Level) *ui {
 }
 
 func (ui *ui) DrawBackground(deltaTime uint32) {
-	// TODO: Draw better background to create illusion of motion
 	deltaTimeS := float64(deltaTime) / 1000
 	for _, star := range ui.uiNearBackgroundElements {
 		if star.BoundBox.Y > ui.WinHeight {
@@ -709,8 +708,6 @@ func (ui *ui) DrawPlayer(level *game.Level, deltaTime uint32) {
 		//}
 		ui.renderer.Copy(tex, nil, player.BoundBox)
 
-		// TODO: Need to add draw logic here to account for player upgrades (better guns, better shield, etc)
-
 		// Engine Fire Animation
 		if player.EngineFireAnimationCounter > 5 {
 			playerEngineFireTexture = ui.textureMap["fire0"+strconv.Itoa(ui.randNumGen.Intn(3)+1)]
@@ -732,7 +729,6 @@ func (ui *ui) DrawPlayer(level *game.Level, deltaTime uint32) {
 }
 
 func (ui *ui) DrawEnemies(level *game.Level, deltaTime uint32) {
-	// TODO: Have large meteors break up into smaller ones
 	deltaTimeS := float64(deltaTime) / 1000
 	for _, enemy := range level.Enemies {
 		if enemy.Texture == nil {

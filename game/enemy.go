@@ -45,7 +45,7 @@ func (enemy *Enemy) GetSelf() *Character {
 
 func (level *Level) InitEnemy(initX, initY float64, spawnType int, texName string, isFractured bool, powerUpType PowerUpType) *Enemy {
 	enemy := &Enemy{}
-	// spawnType 0 = meteor, 1 = enemy, >=2 = power up
+	// spawnType 0 = meteor, 1 = enemy, 2 = power up, 3 = boss
 	switch spawnType {
 	case 0:
 		enemy.TextureName = texName
@@ -85,6 +85,7 @@ func (level *Level) InitEnemy(initX, initY float64, spawnType int, texName strin
 		enemy.SpinSpeed = 5
 		enemy.CanFire = true
 		enemy.IsBoss = false
+		enemy.FireRateResetValue = 150
 		break
 	case 2:
 		enemy.TextureName = texName
@@ -101,10 +102,22 @@ func (level *Level) InitEnemy(initX, initY float64, spawnType int, texName strin
 		enemy.IsBoss = false
 		enemy.PowerUpType = powerUpType
 		break
+	case 3:
+		enemy.TextureName = texName
+		enemy.Hitpoints = int32(350 * level.EnemyDifficultyMultiplier)
+		enemy.PointValue = 100
+		enemy.Strength = int32(30 * level.EnemyDifficultyMultiplier)
+		enemy.Speed = 100 * level.EnemyDifficultyMultiplier
+		enemy.ConstantMotion = false
+		enemy.SpinAngle = 0
+		enemy.SpinSpeed = 0
+		enemy.CanFire = true
+		enemy.IsBoss = true
+		enemy.FireRateResetValue = 75
+		break
 	}
 	enemy.IsDestroyed = false
 	enemy.FireRateTimer = 0
-	enemy.FireRateResetValue = 150
 	enemy.X = initX
 	enemy.Y = initY
 	enemy.BoundBox = &sdl.Rect{X:int32(enemy.X), Y:int32(enemy.Y)}
